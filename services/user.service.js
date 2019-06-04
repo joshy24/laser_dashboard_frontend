@@ -1,7 +1,7 @@
 'use strict'
 
 var User = require('../models/user.model')
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 
 module.exports.createUser = function(data){
     return new Promise((resolve,reject) => {
