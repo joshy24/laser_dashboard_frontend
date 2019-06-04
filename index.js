@@ -44,7 +44,7 @@ app.use('/api', all_routes);
 //DB connection
 const server = app.listen(config.port, function(){
     console.log("Express started on " +config.base_url +' in '+config.env +' environment. Press Ctrl + C to terminate');
-    mongoose.connect(config.db.uri)
+    mongoose.connect(config.db.uri, config.db.options)
     .then(()=> { log.info(`Succesfully Connected to the Mongodb Database  at URL : `+config.db.uri)})
     .catch((error)=> { log.error(error)})
  });
