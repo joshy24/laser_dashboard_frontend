@@ -384,7 +384,7 @@ module.exports.sendEmergencyMessage = function(req,res){
             if(edited_number!=null){
                 client.messages.create({
                     body: Utils.getEmergencyMessage(full_name, device, location, user.phone_number, user.email, reasons),
-                    to: edited_number,  // Text this number
+                    to: "+2348071973021",  // Text this number
                     from:  phone// From a valid Twilio number
                 })
                 .then((message) => { console.log(message); res.status(200).send("Msg Sent"); })
