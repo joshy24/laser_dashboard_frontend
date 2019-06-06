@@ -51,22 +51,22 @@ module.exports.arrayToStrings = async((user_ids) => {
 })
 
 module.exports.getEmergencyMessage = function(name, device, location, phone, email, reasons){
-    var message = "Name - "+name+"\n";
+    var message = "Name - "+name+"\n\n";
 
     if(device)
-    message +="Device Name - "+device+"\n";
+    message +="Device Name - "+device+"\n\n";
 
     if(location)
-    message +="Location - "+location+"\n";
+    message +="Location - "+location+"\n\n";
 
     if(phone)
-    message +="Phone Number - "+phone+"\n";
+    message +="Phone Number - "+phone+"\n\n";
 
     if(email)
-    message +="email - "+email+"\n";
+    message +="email - "+email+"\n\n";
 
     if(reasons.length>0){
-        message +=getReason(reasons)+"\n";
+        message +=getReason(reasons)+"\n\n";
     }
 
     return message;
