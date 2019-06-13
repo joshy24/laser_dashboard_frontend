@@ -16,7 +16,7 @@ module.exports.saveEmergency = function(data){
     });
 }
 
-module.exports.getLocations = function(){
+module.exports.getEmergencies = function(){
     return new Promise((resolve,reject) => {
         Emergency.find({})
                 .exec()

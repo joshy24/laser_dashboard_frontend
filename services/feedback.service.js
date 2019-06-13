@@ -28,3 +28,16 @@ module.exports.getAllFeedback = function(){
                 })
     })
 }
+
+module.exports.getFeedback = function(loc){
+    return new Promise((resolve,reject) => {
+        Feedback.findOne({location: loc})
+                .exec()
+                .then(data => {
+                    resolve(data)
+                })
+                .catch(err => {
+                    reject(err)
+                })
+    })
+}

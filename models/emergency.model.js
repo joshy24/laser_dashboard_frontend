@@ -32,7 +32,9 @@ var EmergencySchema = new Schema({
     device: String,
     emergency_numbers: [{
         type: String
-    }]
+    }],
+    full_address: String,
+    sub_admin_address: String
 
 });
 

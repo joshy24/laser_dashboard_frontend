@@ -9,9 +9,7 @@ var asyncForEach = require('../modules/asyncforeach');
 var filter = require('../modules/filter');
 var twilio = require('twilio');
 
-
 //items in the body of the request need to be checked for the right length and made sure they are properly secured
-
 module.exports.login = function(req,res){
     var phone = req.body.phone_number;
     var email = req.body.email;
@@ -300,6 +298,8 @@ module.exports.saveEmergencyLocation = function(req,res){
     var lat = req.body.latitude;
     var lng = req.body.longitude;
     var action  = req.body.action;
+    var full_address = req.body.full_address;
+    var sub_admin_address = req.body.admin_address;
     var user = req.user;
 
     if(!action){
@@ -319,6 +319,8 @@ module.exports.saveEmergencyLocation = function(req,res){
 
     data.user = user._id;
     data.reason = action;
+    data.full_address = full_address;
+    data.sub_admin_address = sub_admin_address;
 
     LocationService.saveLocation(data)
                 .then(saved => {
@@ -335,6 +337,8 @@ module.exports.sendEmergencyMessage = function(req,res){
     var reasons  = req.body.events;
     var device = req.body.deviceName;
     var numbers = req.body.numbers;
+    var full_address = req.body.full_address;
+    var sub_admin_address = req.body.admin_address;
     var user = req.user;
 
     if(!reasons){
@@ -356,6 +360,9 @@ module.exports.sendEmergencyMessage = function(req,res){
     data.user = user._id;
     data.reasons = reasons;
     data.device = device;
+
+    data.full_address = full_address;
+    data.sub_admin_address = sub_admin_address;
 
     if(numbers.length>0){
         data.emergency_numbers = numbers;
@@ -383,11 +390,14 @@ module.exports.sendEmergencyMessage = function(req,res){
 
             if(edited_number!=null){
                 client.messages.create({
-                    body: Utils.getEmergencyMessage(full_name, device, location, user.phone_number, user.email, reasons),
+                    body: Utils.getEmergencyMessage(full_name, device, full_address, user.phone_number, user.email, reasons),
                     to: "+2348071973021",  // Text this number
                     from:  phone// From a valid Twilio number
                 })
-                .then((message) => { console.log(message); res.status(200).send("Msg Sent"); })
+                .then((message) => { 
+                    console.log(message); 
+                    res.status(200).send("Msg Sent"); 
+                })
                 .catch(err => console.log(err));
             }
         })

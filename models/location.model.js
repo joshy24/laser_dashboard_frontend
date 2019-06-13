@@ -26,7 +26,9 @@ var LocationSchema = new Schema({
     reason: {
         type: String,
         required: true
-    }
+    },
+    full_address: String,
+    sub_admin_address: String
 });
 
 module.exports = mongoose.model('Location', LocationSchema);

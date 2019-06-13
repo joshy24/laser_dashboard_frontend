@@ -57,7 +57,7 @@ module.exports.getEmergencyMessage = function(name, device, location, phone, ema
     message +="Device Name - "+device+"\n\n";
 
     if(location)
-    message +="Location - "+location+"\n\n";
+    message +="Last Location - "+location+"\n\n";
 
     if(phone)
     message +="Phone Number - "+phone+"\n\n";

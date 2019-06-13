@@ -1,0 +1,34 @@
+body{
+  margin:0px;
+}
+
+.laser-top-panel{
+  padding-top: 8px;
+  padding-left: 20px;
+  height: 50px;
+  width: 100%;
+  color: #943126;
+  background-color: #FFFFFF;
+}
+
+.laser-side-bar{
+  position: absolute;
+  right: 0;
+  z-index: 100;
+  height: 100vh;
+  width: 350px;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: 0px;
+  background-color: #FFFFFF;
+  padding: 24px;
+}
+
+.close_btn{
+  text-align: end;
+  height: 30px;
+}
+
+.close_btn:hover{
+  cursor: pointer;
+}

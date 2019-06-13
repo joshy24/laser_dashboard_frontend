@@ -28,10 +28,22 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));//accept strings
 
 app.disable('x-powered-by');
 
+
+
+/* The two block below of app.options and app.use are necessary for allowing CORS in development environment*/
 app.options('*', cors({"origin": "*", //origin value to be changed in production to domain name
 "methods": "GET,POST",
 "preflightContinue": false,
 "optionsSuccessStatus": 204}))
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+/* End of allowing CORS*/
+
+
 
 app.use(helmet({
     frameguard: {action: 'deny'}
@@ -40,6 +52,16 @@ app.use(helmet({
 var all_routes = require('./routes/routes');
 
 app.use('/api', all_routes);
+
+app.use(function(req, res, next) {
+    // Instead of "*" you should enable only specific origins
+    res.header('Access-Control-Allow-Origin', '*');
+    // Supported HTTP verbs
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    // Other custom headers
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
 //DB connection
 const server = app.listen(config.port, function(){
