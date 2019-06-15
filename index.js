@@ -8,6 +8,7 @@ const bluebird = require('bluebird')
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bunyan = require('bunyan');
+global.path = require('path');
 
 global.async = require('asyncawait/async');
 global.await = require('asyncawait/await');
@@ -51,7 +52,14 @@ app.use(helmet({
 
 var all_routes = require('./routes/routes');
 
+app.use(express.static(path.join(__dirname, 'build')));
+
 app.use('/api', all_routes);
+
+// Send all other requests to the Angular app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build/index.html'));
+});
 
 app.use(function(req, res, next) {
     // Instead of "*" you should enable only specific origins

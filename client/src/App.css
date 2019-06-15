@@ -3,12 +3,40 @@ body{
 }
 
 .laser-top-panel{
-  padding-top: 8px;
-  padding-left: 20px;
+  padding-top: 15px;
+  padding-left: 50px;
+  padding-right: 50px;
   height: 50px;
   width: 100%;
-  color: #943126;
-  background-color: #FFFFFF;
+  color: #FFFFFF;
+  background-color: #2E86C1;
+}
+
+.laser-blue-text{
+  color: #2E86C1;
+}
+
+.laser-red-text{
+  color: #A93226;
+}
+
+.laser-controls{
+  margin-left: auto;
+  margin-right: 0px;
+  float: right;
+  margin-top: -7px;
+}
+
+.laser-inline{
+  display: inline;
+}
+
+.laser-100-width{
+  max-width: 100px;
+}
+
+.laser-150-width{
+  max-width: 150px;
 }
 
 .laser-side-bar{
@@ -21,7 +49,11 @@ body{
   margin-left: auto;
   margin-right: 0px;
   background-color: #FFFFFF;
-  padding: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 16px;
+  padding-top: 8px;
+  margin-top: 50px;
 }
 
 .close_btn{
