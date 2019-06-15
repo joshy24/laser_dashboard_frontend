@@ -34,7 +34,7 @@ const controls_style = {
 }
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3077',
+  baseURL: 'http://18.195.71.164',
   timeout: 5000,
   headers: {'Accept': 'application/json;q=0.9,*/*;q=0.8'}
 });
