@@ -69,7 +69,7 @@ module.exports.login = function(req,res){
                         }
                     })
                     .catch(err => {
-                        console.log(err.message);
+                        console.log(err);
                         return res.status(500).send("Server Error");
                     })
     }
@@ -112,7 +112,7 @@ module.exports.login = function(req,res){
                         }
                     })
                     .catch(err => {
-                        console.log(err.message);
+                        console.log(err);
                         return res.status(500).send("Server Error");
                     })
     }
