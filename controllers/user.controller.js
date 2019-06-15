@@ -49,6 +49,7 @@ module.exports.login = function(req,res){
                                                         return res.status(200).send({"user":user, "token":token});
                                                     }
                                                     else{
+                                                        console.log("couldnt update");
                                                         return res.status(500).send("Server Error");
                                                     }
                                             })
@@ -93,6 +94,7 @@ module.exports.login = function(req,res){
                                                         return res.status(200).send({"user":user, "token":token});
                                                     }
                                                     else{
+                                                        console.log("couldnt update");
                                                         return res.status(500).send("Server Error");
                                                     }
                                             })
@@ -110,6 +112,7 @@ module.exports.login = function(req,res){
                         }
                     })
                     .catch(err => {
+                        console.log(err.message);
                         return res.status(500).send("Server Error");
                     })
     }
