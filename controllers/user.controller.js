@@ -386,6 +386,8 @@ module.exports.sendEmergencyMessage = function(req,res){
     var client = new twilio(sid, token);
 
     var location = lat +", " +lng;
+                
+    console.log({full_name});
 
     if(numbers.length>0){
         numbers.map(phone_number => {
@@ -397,11 +399,11 @@ module.exports.sendEmergencyMessage = function(req,res){
                     to: "+2348071973021",  // Text this number
                     from:  phone// From a valid Twilio number
                 })
-                .then((message) => { 
-                    console.log(message); 
-                    res.status(200).send("Msg Sent"); 
+                .then((message) => {
+                    console.log({message});
+                    return res.status(200).send("Msg Sent"); 
                 })
-                .catch(err => console.log(err));
+                .catch(err => console.log({err}));
             }
         })
     }
