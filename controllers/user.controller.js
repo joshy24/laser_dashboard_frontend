@@ -367,7 +367,7 @@ module.exports.sendEmergencyMessage = function(req,res){
     data.full_address = full_address;
     data.sub_admin_address = sub_admin_address;
 
-    if(numbers.length>0){
+    if(numbers&&numbers.length>0){
         data.emergency_numbers = numbers;
     }
 
@@ -400,7 +400,6 @@ module.exports.sendEmergencyMessage = function(req,res){
                     from:  phone// From a valid Twilio number
                 })
                 .then((message) => {
-                    console.log({message});
                     return res.status(200).send("Msg Sent"); 
                 })
                 .catch(err => console.log({err}));
