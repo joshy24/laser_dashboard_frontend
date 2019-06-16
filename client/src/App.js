@@ -350,7 +350,7 @@ class App extends Component{
                     <option>Fire / Safety Services</option>
                     <option>Environmental / Noise Pollution</option>
                     <option>Broken Pipe / Water Leakage</option>
-                    <option>Pothhole / Collapsed Road</option>
+                    <option>Pothole / Collapsed Road</option>
                     <option>None</option>
                 </select>
                 
