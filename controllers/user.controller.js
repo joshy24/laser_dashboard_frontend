@@ -386,9 +386,7 @@ module.exports.sendEmergencyMessage = function(req,res){
     var client = new twilio(sid, token);
 
     var location = lat +", " +lng;
-                
-    console.log({full_name});
-
+     
     if(numbers.length>0){
         numbers.map(phone_number => {
             var edited_number = Utils.parsePhoneNumber(phone_number);
