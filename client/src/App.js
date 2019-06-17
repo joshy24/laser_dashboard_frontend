@@ -114,7 +114,7 @@ class App extends Component{
             console.log({error})
         })
 
-    instance.post(emergencies_url,{date:date})
+    instance.post(emergencies_url,{date:d})
         .then(response => {
           console.log(response);
             if(response&&response.data&&response.data.emergencies){
