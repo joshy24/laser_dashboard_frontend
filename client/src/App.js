@@ -329,7 +329,7 @@ class App extends Component{
     socket.on("emergency", 
       data => {
          if(data){
-             this.setState(state => {{
+             this.setState(state => {
               let arr = state.emergencies;
 
               arr.push(data)
@@ -337,7 +337,7 @@ class App extends Component{
               return {
                   emergencies: arr
               }
-            }})
+            })
          }
       }
     );
@@ -345,15 +345,15 @@ class App extends Component{
     socket.on("call", 
       data => {
         if(data){
-            this.setState(state => {{
-            let arr = state.locations;
+            this.setState(state => {
+              let arr = state.locations;
 
-            arr.push(data)
+              arr.push(data)
 
-            return {
-                locations: arr
-            }
-          }})
+              return {
+                  locations: arr
+              }
+          })
         }
       }
     );
