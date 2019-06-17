@@ -8,6 +8,7 @@ const bluebird = require('bluebird')
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bunyan = require('bunyan');
+
 global.path = require('path');
 
 global.async = require('asyncawait/async');
@@ -22,7 +23,7 @@ var router = express.Router();
 global.config = require('./config/config');
 global.jwt = require('jsonwebtoken');
 
-global.moment = require('moment')
+global.moment = require('moment');
 
 global.log = bunyan.createLogger({name: "nifi"});
 
@@ -30,6 +31,24 @@ app.use(bodyParser.json({ type: 'application/json', limit: '50mb' }));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));//accept strings, arrays and any other type as values
 
 app.disable('x-powered-by');
+
+
+
+/* Start of socket-io stuff*/
+
+var http = require('http').createServer(app);
+global.io = require('socket.io')(http);
+
+io.on("connection", socket => {
+    console.log("New client connected");
+
+    //A special namespace "disconnect" for when a client disconnects
+    socket.on("disconnect", () => console.log("Client disconnected"));
+});
+
+http.listen(config.socket.port, () => console.log(`Socket IO listening on port ${config.socket.port}`));
+
+/* End of socket-io stuff*/
 
 
 
@@ -51,6 +70,7 @@ app.use(function(req, res, next) {
 app.use(helmet({
     frameguard: {action: 'deny'}
 }))
+
 
 var all_routes = require('./routes/routes');
 

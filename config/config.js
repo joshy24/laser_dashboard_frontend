@@ -14,6 +14,9 @@ module.exports = {
         }
     },
     secret: process.env.SECRET_KEY, 
+    socket: {
+        port: process.env.SOCKET_IO_PORT
+    },
     twilio: {
         sid: process.env.TWILIO_SID,
         auth_token: process.env.TWILIO_TOKEN,

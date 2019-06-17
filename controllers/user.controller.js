@@ -327,6 +327,7 @@ module.exports.saveEmergencyLocation = function(req,res){
 
     LocationService.saveLocation(data)
                 .then(saved => {
+                    io.emit("call", data);
                     return res.status(200).send({"response":saved._id});
                 })
                 .catch(err => {
@@ -373,6 +374,7 @@ module.exports.sendEmergencyMessage = function(req,res){
 
     EmergencyService.saveEmergency(data)
                 .then(saved => {
+                    io.emit("emergency", data);
                     return res.status(200).send({"response":saved._id});
                 })
                 .catch(err => {

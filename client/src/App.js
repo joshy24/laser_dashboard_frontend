@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import emergency_icon from './emergency.png'
 import call_icon from './call.png'
 import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-react';
+import socketIOClient from "socket.io-client";
 import Sidebar from './components/Sidebar';
 import LocationSidebar from './components/LocationSideBar';
 
@@ -33,6 +34,8 @@ const controls_style = {
   marginRight: "8px"
 }
 
+const socket_io_url = 'http://18.195.71.164:3080';
+
 const instance = axios.create({
   baseURL: 'http://18.195.71.164',
   timeout: 15000,
@@ -60,6 +63,7 @@ class App extends Component{
       selected_emergency:"Emergencies (All)",
       date: new Date()
      }
+     
      this.closeSideBar = this.closeSideBar.bind(this);
      this.onCallsChanged = this.onCallsChanged.bind(this);
      this.onEmergenciesChanged = this.onEmergenciesChanged.bind(this);
@@ -304,9 +308,13 @@ class App extends Component{
   }
 
   componentDidMount(){
+
+    const socket = socketIOClient(socket_io_url);
+    //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
+    socket.on("emergency", data => console.log({data}));
+
     instance.post(locations_url,{})
         .then(response => {
-          console.log(response);
             if(response&&response.data&&response.data.locations){
               this.setState({
                 locations: response.data.locations,
@@ -326,7 +334,6 @@ class App extends Component{
 
     instance.post(emergencies_url,{})
         .then(response => {
-          console.log(response);
             if(response&&response.data&&response.data.emergencies){
                this.setState({
                   emergencies: response.data.emergencies,
