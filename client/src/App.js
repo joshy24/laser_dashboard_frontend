@@ -36,7 +36,7 @@ const controls_style = {
 
 const socket_io_url = 'http://18.195.71.164';
 
-const today = new Date().toISOString();
+let today = new Date().toISOString();
 
 const instance = axios.create({
   baseURL: 'http://18.195.71.164',
