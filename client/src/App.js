@@ -36,6 +36,8 @@ const controls_style = {
 
 const socket_io_url = 'http://18.195.71.164';
 
+const today = new Date();
+
 const instance = axios.create({
   baseURL: 'http://18.195.71.164',
   timeout: 15000,
@@ -69,6 +71,10 @@ class App extends Component{
      this.onEmergenciesChanged = this.onEmergenciesChanged.bind(this);
      this.onDateChange = this.onDateChange.bind(this);
      this.onCalendarOpen = this.onCalendarOpen.bind(this);
+
+     var year = today.split(/T(.+)/)[0];
+
+     today = year+"T23:00:00.000Z";
   }
 
   onCalendarOpen(){
@@ -310,11 +316,12 @@ class App extends Component{
   componentDidMount(){
 
     const socket = socketIOClient(socket_io_url);
+    
     socket.on("connected", () => console.log("connected to socket io"));
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
     socket.on("emergency", data => console.log({data}));
 
-    instance.post(locations_url,{date: new Date()})
+    instance.post(locations_url,{date: today})
         .then(response => {
             if(response&&response.data&&response.data.locations){
               this.setState({
@@ -333,7 +340,7 @@ class App extends Component{
             console.log({error})
         })
 
-    instance.post(emergencies_url,{date: new Date()})
+    instance.post(emergencies_url,{date: today})
         .then(response => {
             if(response&&response.data&&response.data.emergencies){
                this.setState({
