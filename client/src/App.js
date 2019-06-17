@@ -80,13 +80,14 @@ class App extends Component{
   }
 
   onCalendarOpen(){
-    this.setState({
-      side_bar_open: false, 
-      location_side_bar_open: false
-    })
+      this.setState({
+        side_bar_open: false, 
+        location_side_bar_open: false
+      })
   }
 
   onDateChange(date){
+     console.log({date});
      this.setState({
         date: date
      })
@@ -319,11 +320,17 @@ class App extends Component{
 
     const socket = socketIOClient(socket_io_url);
 
-    socket.on("connect", () => console.log("connected to socket io"));
+    socket.on("connect", 
+      () => console.log("connected to socket io")
+    );
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
-    socket.on("emergency", data => console.log({data}));
+    socket.on("emergency", 
+      data => console.log({data})
+    );
 
-    socket.on("call", data => console.log({data}));
+    socket.on("call", 
+      data => console.log({data})
+    );
 
     instance.post(locations_url,{date: today})
         .then(response => {
