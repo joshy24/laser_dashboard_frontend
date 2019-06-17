@@ -336,6 +336,7 @@ class App extends Component{
 
     instance.post(locations_url,{date: today})
         .then(response => {
+            console.log({response})
             if(response&&response.data&&response.data.locations){
               this.setState({
                 locations: response.data.locations,
@@ -355,6 +356,7 @@ class App extends Component{
 
     instance.post(emergencies_url,{date: today})
         .then(response => {
+            console.log({response})
             if(response&&response.data&&response.data.emergencies){
                this.setState({
                   emergencies: response.data.emergencies,
