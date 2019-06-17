@@ -12,6 +12,7 @@ module.exports.getLocations = function(req,res){
     
     var date = req.body.date;
     console.log({date});
+    
     if(!date){
         date = new Date().toISOString(); 
     }
