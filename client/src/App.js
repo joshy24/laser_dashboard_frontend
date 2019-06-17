@@ -343,7 +343,19 @@ class App extends Component{
     );
 
     socket.on("call", 
-      data => console.log({data})
+      data => {
+        if(data){
+            this.setState(state => {{
+            let arr = state.locations;
+
+            arr.push(data)
+
+            return {
+                locations: arr
+            }
+          }})
+        }
+      }
     );
 
     instance.post(locations_url,{date: today})
