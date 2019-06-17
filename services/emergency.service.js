@@ -23,7 +23,7 @@ module.exports.getEmergencies = function(date){
     var end = new Date(Utils.getEnd(date));
 
     return new Promise((resolve,reject) => {
-        Emergency.find({created: {$gte: start, $lt: end}})
+        Emergency.find({created: {$gte: start, $lte: end}})
                 .exec()
                 .then(data => {
                     resolve(data)
