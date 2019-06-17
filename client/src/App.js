@@ -36,7 +36,7 @@ const controls_style = {
 
 const socket_io_url = 'http://18.195.71.164';
 
-const today = new Date();
+let today = new Date().toISOString();
 
 const instance = axios.create({
   baseURL: 'http://18.195.71.164',
@@ -72,7 +72,11 @@ class App extends Component{
      this.onDateChange = this.onDateChange.bind(this);
      this.onCalendarOpen = this.onCalendarOpen.bind(this);
 
-     console.log({today});
+     var year = today.split(/T(.+)/)[0];
+
+     year = year+"T23:00:00.000Z";
+
+     today = new Date(year);
   }
 
   onCalendarOpen(){
