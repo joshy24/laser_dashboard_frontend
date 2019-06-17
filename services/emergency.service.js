@@ -16,9 +16,9 @@ module.exports.saveEmergency = function(data){
     });
 }
 
-module.exports.getEmergencies = function(){
+module.exports.getEmergencies = function(date){
     return new Promise((resolve,reject) => {
-        Emergency.find({})
+        Emergency.find({created:date})
                 .exec()
                 .then(data => {
                     resolve(data)

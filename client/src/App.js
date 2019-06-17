@@ -78,6 +78,47 @@ class App extends Component{
      this.setState({
         date: date
      })
+
+     instance.post(locations_url,{date:date})
+        .then(response => {
+          console.log(response);
+            if(response&&response.data&&response.data.locations){
+              this.setState({
+                locations: response.data.locations,
+                filtered_locations: response.data.locations
+              })
+            }
+            else{
+              this.setState({
+                locations: [],
+                filtered_locations: []
+              })
+            }
+        })
+        .catch(error => {
+            console.log({error})
+        })
+
+    instance.post(emergencies_url,{date:date})
+        .then(response => {
+          console.log(response);
+            if(response&&response.data&&response.data.emergencies){
+               this.setState({
+                  emergencies: response.data.emergencies,
+                  filtered_emergencies: response.data.emergencies
+               })
+            }
+            else{
+              this.setState({
+                emergencies: [],
+                filtered_emergencies: []
+             })
+            }
+        })
+        .catch(error => {
+          console.log({error})
+        })
+
   }
 
   onCallsChanged(event){

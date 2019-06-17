@@ -16,9 +16,9 @@ module.exports.saveLocation = function(data){
     });
 }
 
-module.exports.getLocations = function(){
+module.exports.getLocations = function(date){
     return new Promise((resolve,reject) => {
-        Location.find({})
+        Location.find({created:date})
                 .exec()
                 .then(data => {
                     resolve(data)

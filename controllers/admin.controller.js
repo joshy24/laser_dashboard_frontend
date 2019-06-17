@@ -9,7 +9,14 @@ var filter = require('../modules/filter');
 var twilio = require('twilio');
 
 module.exports.getLocations = function(req,res){
-    LocationService.getLocations()
+
+    var date = req.body.date;
+
+    if(!date){
+        date = new Date(); 
+    }
+
+    LocationService.getLocations(date)
         .then(locations => {
             
             const results = async(() => {
@@ -50,6 +57,13 @@ module.exports.getLocations = function(req,res){
 }
 
 module.exports.getEmergencies = function(req,res){
+
+    var date = req.body.date;
+
+    if(!date){
+        date = new Date(); 
+    }
+
     EmergencyService.getEmergencies()
         .then(emergencies => {
             return res.status(200).send({"emergencies":emergencies});
