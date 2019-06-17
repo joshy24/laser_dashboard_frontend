@@ -74,9 +74,11 @@ class App extends Component{
 
      var year = today.split(/T(.+)/)[0];
 
-     year = year+"T23:00:00.000Z";
+     year = year+"T00:00:00.000Z";
 
      today = new Date(year);
+
+     console.log({today});
   }
 
   onCalendarOpen(){
