@@ -9,9 +9,9 @@ var filter = require('../modules/filter');
 var twilio = require('twilio');
 
 module.exports.getLocations = function(req,res){
-
+    
     var date = req.body.date;
-
+    console.log({date});
     if(!date){
         date = new Date().toISOString(); 
     }
@@ -59,7 +59,7 @@ module.exports.getLocations = function(req,res){
 module.exports.getEmergencies = function(req,res){
 
     var date = req.body.date;
-
+    console.log({date});
     if(!date){
         date = new Date().toISOString(); 
     }

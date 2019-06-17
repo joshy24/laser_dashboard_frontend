@@ -310,6 +310,7 @@ class App extends Component{
   componentDidMount(){
 
     const socket = socketIOClient(socket_io_url);
+    socket.on("connected", () => console.log("connected to socket io"));
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
     socket.on("emergency", data => console.log({data}));
 
