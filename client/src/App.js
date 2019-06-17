@@ -34,7 +34,7 @@ const controls_style = {
   marginRight: "8px"
 }
 
-const socket_io_url = 'http://18.195.71.164:3080';
+const socket_io_url = 'http://18.195.71.164';
 
 const instance = axios.create({
   baseURL: 'http://18.195.71.164',
@@ -313,7 +313,7 @@ class App extends Component{
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
     socket.on("emergency", data => console.log({data}));
 
-    instance.post(locations_url,{})
+    instance.post(locations_url,{date: new Date()})
         .then(response => {
             if(response&&response.data&&response.data.locations){
               this.setState({
@@ -332,7 +332,7 @@ class App extends Component{
             console.log({error})
         })
 
-    instance.post(emergencies_url,{})
+    instance.post(emergencies_url,{date: new Date()})
         .then(response => {
             if(response&&response.data&&response.data.emergencies){
                this.setState({
