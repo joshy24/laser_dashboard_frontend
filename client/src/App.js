@@ -330,7 +330,7 @@ class App extends Component{
       data => {
          if(data){
              this.setState(state => {{
-              let arr = state;
+              let arr = state.emergencies;
 
               arr.push(data)
 
