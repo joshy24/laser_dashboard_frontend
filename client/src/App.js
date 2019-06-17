@@ -74,7 +74,11 @@ class App extends Component{
 
      var year = today.split(/T(.+)/)[0];
 
-     today = year+"T23:00:00.000Z";
+     year = year+"T23:00:00.000Z";
+     
+     today = new Date(year);
+
+     console.log(today);
   }
 
   onCalendarOpen(){
@@ -320,6 +324,8 @@ class App extends Component{
     socket.on("connect", () => console.log("connected to socket io"));
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
     socket.on("emergency", data => console.log({data}));
+
+    socket.on("call", data => console.log({data}));
 
     instance.post(locations_url,{date: today})
         .then(response => {

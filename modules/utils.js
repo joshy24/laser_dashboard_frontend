@@ -51,7 +51,7 @@ module.exports.arrayToStrings = async((user_ids) => {
 })
 
 module.exports.getEmergencyMessage = function(name, device, location, phone, email, reasons){
-    var message = "Name - "+name+"\n\n";
+    var message = "\n\n"+"Name - "+name+"\n\n";
 
     if(device)
     message +="Device Name - "+device+"\n\n";
