@@ -327,7 +327,19 @@ class App extends Component{
     );
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
     socket.on("emergency", 
-      data => console.log({data})
+      data => {
+         if(data){
+             this.setState(state => {{
+              let arr = state;
+
+              arr.push(data)
+
+              return {
+                  emergencies: arr
+              }
+            }})
+         }
+      }
     );
 
     socket.on("call", 
