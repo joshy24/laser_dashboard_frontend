@@ -13,7 +13,7 @@ module.exports.getLocations = function(req,res){
     var date = req.body.date;
 
     if(!date){
-        date = new Date(); 
+        date = new Date().toISOString(); 
     }
 
     LocationService.getLocations(date)
@@ -61,14 +61,15 @@ module.exports.getEmergencies = function(req,res){
     var date = req.body.date;
 
     if(!date){
-        date = new Date(); 
+        date = new Date().toISOString(); 
     }
 
-    EmergencyService.getEmergencies()
+    EmergencyService.getEmergencies(date)
         .then(emergencies => {
             return res.status(200).send({"emergencies":emergencies});
         })
         .catch(err => {
+            console.log({err});
             return res.status(200).send({"emergencies":[]});
         })
 }

@@ -22,6 +22,8 @@ var router = express.Router();
 global.config = require('./config/config');
 global.jwt = require('jsonwebtoken');
 
+global.moment = require('moment')
+
 global.log = bunyan.createLogger({name: "nifi"});
 
 app.use(bodyParser.json({ type: 'application/json', limit: '50mb' }));

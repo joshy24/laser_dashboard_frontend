@@ -1,6 +1,7 @@
 'use strict'
 
 var Emergency = require('../models/emergency.model')
+var Utils = require('../modules/utils');
 
 module.exports.saveEmergency = function(data){
     return new Promise((resolve,reject) => {
@@ -17,8 +18,12 @@ module.exports.saveEmergency = function(data){
 }
 
 module.exports.getEmergencies = function(date){
+    var start = new Date(Utils.getStart(date));
+
+    var end = new Date(Utils.getEnd(date));
+
     return new Promise((resolve,reject) => {
-        Emergency.find({created:date})
+        Emergency.find({created: {$gte: start, $lt: end}})
                 .exec()
                 .then(data => {
                     resolve(data)

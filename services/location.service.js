@@ -1,6 +1,7 @@
 'use strict'
 
 var Location = require('../models/location.model')
+var Utils = require('../modules/utils');
 
 module.exports.saveLocation = function(data){
     return new Promise((resolve,reject) => {
@@ -17,8 +18,12 @@ module.exports.saveLocation = function(data){
 }
 
 module.exports.getLocations = function(date){
+    var start = new Date(Utils.getStart(date));
+
+    var end = new Date(Utils.getEnd(date));
+
     return new Promise((resolve,reject) => {
-        Location.find({created:date})
+        Location.find({created:{$gte: start, $lte: end}})
                 .exec()
                 .then(data => {
                     resolve(data)

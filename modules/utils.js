@@ -92,3 +92,15 @@ function getReason(reasons){
         return "This person is in danger, you can reach out to the police with the above details.";
     }
 }
+
+module.exports.getStart = function(date){
+    var year = date.split(/T(.+)/)[0];
+
+    return year+"T00:00:00.000Z";
+}
+
+module.exports.getEnd = function(date){
+    var year = date.split(/T(.+)/)[0];
+
+    return year+"T23:59:59.999Z";
+}
