@@ -88,13 +88,13 @@ class App extends Component{
       })
   }
 
-  onDateChange(date){
-     console.log({date});
+  onDateChange(d){
+     console.log({d});
      this.setState({
-        date: date
+        date: d
      })
 
-     instance.post(locations_url,{date:date})
+     instance.post(locations_url,{date:d})
         .then(response => {
           console.log(response);
             if(response&&response.data&&response.data.locations){
