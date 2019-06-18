@@ -356,6 +356,7 @@ class App extends Component{
               arr.push(data)
 
               return {
+                  clicked_marker_id: data.
                   emergencies: arr
               }
             })
