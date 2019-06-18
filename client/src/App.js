@@ -99,6 +99,7 @@ class App extends Component{
         date: d,
         show_red_circle: false,
         show_blue_circle: false,
+        clicked_marker_id: ""
      })
 
      instance.post(locations_url,{date:d})
@@ -356,7 +357,7 @@ class App extends Component{
               arr.push(data)
 
               return {
-                  clicked_marker_id: data.
+                  clicked_marker_id: data._id,
                   emergencies: arr
               }
             })
@@ -373,6 +374,7 @@ class App extends Component{
               arr.push(data)
 
               return {
+                  clicked_marker_id: data._id,
                   locations: arr
               }
           })
