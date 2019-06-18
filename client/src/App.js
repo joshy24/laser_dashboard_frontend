@@ -357,7 +357,11 @@ class App extends Component{
 
               return {
                   clicked_marker_id: data._id,
-                  emergencies: arr
+                  emergencies: arr,
+                  center: {
+                    lat: data.latitude,
+                    lng: data.longitude
+                 }
               }
             })
          }
@@ -374,7 +378,11 @@ class App extends Component{
 
               return {
                   clicked_marker_id: data._id,
-                  locations: arr
+                  locations: arr,
+                  center: {
+                    lat: data.latitude,
+                    lng: data.longitude
+                 }
               }
           })
         }
