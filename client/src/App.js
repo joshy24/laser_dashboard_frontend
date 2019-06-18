@@ -94,17 +94,17 @@ class App extends Component{
   }
 
   onDateChange(d){
-     console.log({d});
      this.setState({
         date: d,
         show_red_circle: false,
         show_blue_circle: false,
-        clicked_marker_id: ""
+        clicked_marker_id: "",
+        selected_call:"Calls (All)", 
+        selected_emergency:"Emergencies (All)"
      })
 
      instance.post(locations_url,{date:d})
         .then(response => {
-          console.log(response);
             if(response&&response.data&&response.data.locations){
               this.setState({
                 locations: response.data.locations,
@@ -124,7 +124,6 @@ class App extends Component{
 
     instance.post(emergencies_url,{date:d})
         .then(response => {
-          console.log(response);
             if(response&&response.data&&response.data.emergencies){
                this.setState({
                   emergencies: response.data.emergencies,
