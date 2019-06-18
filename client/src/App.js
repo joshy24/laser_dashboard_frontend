@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
+import red_circle from './emergency_with_circle.png'
+import blue_circle from './call_with_circle.png'
 import emergency_icon from './emergency.png'
 import call_icon from './call.png'
 import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-react';
@@ -63,6 +65,11 @@ class App extends Component{
       center: {lat: 6.5244,lng: 3.3792}, 
       selected_call:"Calls (All)", 
       selected_emergency:"Emergencies (All)",
+
+      show_red_circle: false,
+      show_blue_circle: false,
+      clicked_marker_id: "",
+
       date: new Date()
      }
      
@@ -77,8 +84,6 @@ class App extends Component{
      year = year+"T00:00:00.000Z";
 
      today = new Date(year);
-
-     console.log({today});
   }
 
   onCalendarOpen(){
@@ -91,7 +96,9 @@ class App extends Component{
   onDateChange(d){
      console.log({d});
      this.setState({
-        date: d
+        date: d,
+        show_red_circle: false,
+        show_blue_circle: false,
      })
 
      instance.post(locations_url,{date:d})
@@ -147,14 +154,16 @@ class App extends Component{
             this.setState(state => ({
               filtered_locations: state.locations,
               side_bar_open: false, 
-              location_side_bar_open: false
+              location_side_bar_open: false,
+              show_blue_circle: false
             }))
           }
           else if(value==="None"){
             this.setState({
               filtered_locations: [],
               side_bar_open: false, 
-              location_side_bar_open: false
+              location_side_bar_open: false,
+              show_blue_circle: false
             })
           }
           else{
@@ -168,7 +177,8 @@ class App extends Component{
               this.setState({
                 filtered_locations: arr,
                 side_bar_open: false, 
-                location_side_bar_open: false
+                location_side_bar_open: false,
+                show_blue_circle: false
               })
             }
             else{
@@ -178,7 +188,8 @@ class App extends Component{
                   filtered_locations:[],
                   selected_call:"Calls (All)",
                   side_bar_open: false, 
-                  location_side_bar_open: false
+                  location_side_bar_open: false,
+                  show_blue_circle: false
               })
             }
           }
@@ -196,14 +207,16 @@ class App extends Component{
             this.setState(state => ({
               filtered_emergencies: state.emergencies,
               side_bar_open: false, 
-              location_side_bar_open: false
+              location_side_bar_open: false,
+              show_red_circle: false
             }))
           }
           else if(value==="None"){
             this.setState({
               filtered_emergencies:[],
               side_bar_open: false, 
-              location_side_bar_open: false
+              location_side_bar_open: false,
+              show_red_circle: false
             })
           }
           else{
@@ -221,7 +234,8 @@ class App extends Component{
               this.setState({
                 filtered_emergencies:arr,
                 side_bar_open: false, 
-                location_side_bar_open: false
+                location_side_bar_open: false,
+                show_red_circle: false
               })
             }
             else{
@@ -231,7 +245,8 @@ class App extends Component{
                   filtered_emergencies: [],
                   selected_emergency:"Emergencies (All)",
                   side_bar_open: false, 
-                  location_side_bar_open: false
+                  location_side_bar_open: false,
+                  show_red_circle: false
               })
             }
           }
@@ -246,7 +261,10 @@ class App extends Component{
       center: {
          lat: location.latitude,
          lng: location.longitude
-      }
+      },
+      show_red_circle: false,
+      show_blue_circle: true,
+      clicked_marker_id: location._id
    })
   }
 
@@ -258,7 +276,10 @@ class App extends Component{
        center: {
           lat: emergency.latitude,
           lng: emergency.longitude
-       }
+       },
+       show_red_circle: true,
+       show_blue_circle: false,
+       clicked_marker_id: emergency._id
     })
  }
 
@@ -272,7 +293,7 @@ class App extends Component{
                   title={loc.full_name}
                   position={{lat: loc.latitude, lng: loc.longitude}}
                   icon={{
-                    url: call_icon
+                    url: (this.state.clicked_marker_id==loc._id) ? blue_circle : call_icon
                   }}/> 
       })
     }
@@ -293,7 +314,7 @@ class App extends Component{
                     title={emer.full_name}
                     position={{lat: emer.latitude, lng: emer.longitude}}
                     icon={{
-                      url: emergency_icon
+                      url: (this.state.clicked_marker_id==emer._id) ? red_circle : emergency_icon
                     }}/>
         })
     }
@@ -360,7 +381,6 @@ class App extends Component{
 
     instance.post(locations_url,{date: today})
         .then(response => {
-            console.log({response})
             if(response&&response.data&&response.data.locations){
               this.setState({
                 locations: response.data.locations,
@@ -380,7 +400,6 @@ class App extends Component{
 
     instance.post(emergencies_url,{date: today})
         .then(response => {
-            console.log({response})
             if(response&&response.data&&response.data.emergencies){
                this.setState({
                   emergencies: response.data.emergencies,
