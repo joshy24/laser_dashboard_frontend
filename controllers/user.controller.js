@@ -271,10 +271,6 @@ module.exports.saveFeedback = function(req,res){
     var action  = req.body.action;
     var user = req.user;
 
-    if(!message){
-       return res.status(400).send({"response":"bad request"});
-    }
-
     var data = {};
     data.full_name = user.firstname +" " + user.lastname;
 
@@ -285,7 +281,15 @@ module.exports.saveFeedback = function(req,res){
         data.phone_number = user.phone_number;
 
     data.user = user._id;
-    data.message = message;
+
+
+    if(message){
+        data.message = message;
+    }
+    else{
+        data.message = "no message";
+    }
+
     data.location = id;
 
     FeedbackService.saveFeedback(data)
