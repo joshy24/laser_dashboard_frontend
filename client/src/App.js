@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import logo from './logo.svg';
-import red_circle from './emergency_with_circle.png'
-import blue_circle from './call_with_circle.png'
-import emergency_icon from './emergency.png'
-import call_icon from './call.png'
+import red_circle from './emergency_with_circle.png';
+import blue_circle from './call_with_circle.png';
+import emergency_icon from './emergency.png';
+import call_icon from './call.png';
 import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-react';
 import socketIOClient from "socket.io-client";
 import Sidebar from './components/Sidebar';
