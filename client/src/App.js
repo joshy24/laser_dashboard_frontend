@@ -4,7 +4,7 @@ import red_circle from './emergency_with_circle.png';
 import blue_circle from './call_with_circle.png';
 import emergency_icon from './emergency.png';
 import call_icon from './call.png';
-import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-react';
+import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 import socketIOClient from "socket.io-client";
 import Sidebar from './components/Sidebar';
 import LocationSidebar from './components/LocationSideBar';
@@ -15,8 +15,6 @@ import DatePicker from 'react-date-picker';
 import './App.css';
 
 import axios from 'axios';
-
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
 
 const mapStyle = {
   height: '100vh', 
@@ -38,11 +36,13 @@ const controls_style = {
 }
 
 const socket_io_url = 'http://18.195.71.164';
+//const socket_io_url = 'http://localhost:3077';
 
 let today = new Date().toISOString();
 
 const instance = axios.create({
   baseURL: 'http://18.195.71.164',
+  //baseURL: 'http://localhost:3077',
   timeout: 15000,
   headers: {'Accept': 'application/json;q=0.9,*/*;q=0.8'}
 });
@@ -297,7 +297,7 @@ class App extends Component{
                   title={loc.full_name}
                   position={{lat: loc.latitude, lng: loc.longitude}}
                   icon={{
-                    url: (this.state.clicked_marker_id==loc._id) ? blue_circle : call_icon
+                    url: (this.state.clicked_marker_id===loc._id) ? blue_circle : call_icon
                   }}/> 
       })
     }
@@ -318,7 +318,7 @@ class App extends Component{
                     title={emer.full_name}
                     position={{lat: emer.latitude, lng: emer.longitude}}
                     icon={{
-                      url: (this.state.clicked_marker_id==emer._id) ? red_circle : emergency_icon
+                      url: (this.state.clicked_marker_id===emer._id) ? red_circle : emergency_icon
                     }}/>
         })
     }

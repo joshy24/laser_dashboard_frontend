@@ -3,7 +3,7 @@ body{
 }
 
 .laser-parent-div{
-  height: 130vh;
+  height: 150vh;
 }
 
 .laser-top-panel{
@@ -83,12 +83,12 @@ body{
   min-height: 400px;
   width: 250px;
   max-width: 250px;
-  margin-left: 0px;
+  margin-left: 11px;
   margin-right: auto;
   padding-left: 24px;
   padding-right: 24px;
   padding-bottom: 16px;
   padding-top: 8px;
-  margin-top: 50px;
+  margin-top: 115px;
   background-color: rgba(0,0,0,0.3);
 }
