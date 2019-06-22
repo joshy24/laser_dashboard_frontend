@@ -5,11 +5,18 @@ import Utils from '../utils/Utils';
 
 const utils = new Utils();
 
+const style = {
+    background: "rgba(0,0,0,0)",
+    border: "0px solid #000000"
+}
+
 export default function Sidebar(props){
     return <div className="laser-side-bar">
                 <h1 className="close_btn" onClick={e => props.closeSidebar(e)}>&#10005;</h1>
                 <br/>
-                <h4 className="text-center laser-red-text"><b>Emergency Location Details</b></h4> 
+                <h4 className="text-center laser-red-text"><b>Emergency Location Details</b></h4>
+                <br/>
+                <h5><b>Trackable</b> - {props.emergency.isTrackable ? <button style={style}>Track this person now</button> : "User does not want to be tracked" }</h5>
                 <br/>
                 <h5><b>Time</b> - {utils.getTime(props.emergency.created)}</h5>
                 <br/>
