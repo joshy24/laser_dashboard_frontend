@@ -105,6 +105,7 @@ class App extends Component{
           show_blue_circle: false,
           clicked_marker_id: item._id
         })
+        break;
       case "call":
           this.setState({
             selected_location: item,
