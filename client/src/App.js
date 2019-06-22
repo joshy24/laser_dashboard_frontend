@@ -9,12 +9,15 @@ import socketIOClient from "socket.io-client";
 import Sidebar from './components/Sidebar';
 import LocationSidebar from './components/LocationSideBar';
 import Latest from './components/Latest';
+import Utils from './utils/Utils';
 
 import DatePicker from 'react-date-picker';
 
 import './App.css';
 
 import axios from 'axios';
+
+const utils = new Utils();
 
 const mapStyle = {
   height: '100vh', 
@@ -440,10 +443,21 @@ class App extends Component{
 
     instance.post(locations_url,{date: today})
         .then(response => {
-            if(response&&response.data&&response.data.locations){
-              this.setState({
-                locations: response.data.locations,
-                filtered_locations: response.data.locations
+            if(response&&response.data&&response.data.locations&&response.data.locations.length>0){
+              this.setState(state => {
+                  var loc = state.latest;
+
+                  for(var i = 0; i<response.data.locations.length; i++){
+                      loc.push(response.data.locations[i]);
+                  }
+
+                  loc = utils.sortDates(loc);
+
+                  return {
+                    latest : loc,
+                    locations: response.data.locations,
+                    filtered_locations: response.data.locations
+                  }
               })
             }
             else{
@@ -459,10 +473,21 @@ class App extends Component{
 
     instance.post(emergencies_url,{date: today})
         .then(response => {
-            if(response&&response.data&&response.data.emergencies){
-               this.setState({
-                  emergencies: response.data.emergencies,
-                  filtered_emergencies: response.data.emergencies
+            if(response&&response.data&&response.data.emergencies&&response.data.emergencies.length>0){
+               this.setState(state => {
+                  var loc = state.latest;
+
+                  for(var i = 0; i<response.data.emergencies.length; i++){
+                      loc.push(response.data.emergencies[i]);
+                  }
+
+                  loc = utils.sortDates(loc);
+
+                  return {
+                      latest : loc,
+                      emergencies: response.data.emergencies,
+                      filtered_emergencies: response.data.emergencies
+                  }
                })
             }
             else{
