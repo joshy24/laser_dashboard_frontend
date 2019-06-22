@@ -4,12 +4,14 @@ import red_circle from './emergency_with_circle.png';
 import blue_circle from './call_with_circle.png';
 import emergency_icon from './emergency.png';
 import call_icon from './call.png';
+import alert from "./sounds/alert.mp3";
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 import socketIOClient from "socket.io-client";
 import Sidebar from './components/Sidebar';
 import LocationSidebar from './components/LocationSideBar';
 import Latest from './components/Latest';
 import Utils from './utils/Utils';
+import Sound from 'react-sound';
 
 import DatePicker from 'react-date-picker';
 
@@ -74,6 +76,7 @@ class App extends Component{
       show_red_circle: false,
       show_blue_circle: false,
       clicked_marker_id: "",
+      play_sound: false,
 
       date: new Date()
      }
@@ -84,7 +87,7 @@ class App extends Component{
      this.onDateChange = this.onDateChange.bind(this);
      this.onCalendarOpen = this.onCalendarOpen.bind(this);
      this.latestClicked = this.latestClicked.bind(this);
-
+  
      var year = today.split(/T(.+)/)[0];
 
      year = year+"T00:00:00.000Z";
@@ -96,6 +99,7 @@ class App extends Component{
     switch(item.laser_type){
       case "emergency":
         this.setState({
+          play_sound: true,
           selected_emergency: item,
           side_bar_open: true,
           location_side_bar_open: false,
@@ -111,6 +115,7 @@ class App extends Component{
         break;
       case "call":
           this.setState({
+            play_sound: true,
             selected_location: item,
             side_bar_open: false,
             location_side_bar_open: true,
@@ -129,6 +134,7 @@ class App extends Component{
 
   onCalendarOpen(){
       this.setState({
+        play_sound: false,
         side_bar_open: false, 
         location_side_bar_open: false
       })
@@ -136,6 +142,7 @@ class App extends Component{
 
   onDateChange(d){
      this.setState({
+        play_sound: false,
         date: d,
         show_red_circle: false,
         show_blue_circle: false,
@@ -193,6 +200,7 @@ class App extends Component{
       if(this.state.locations.length>0){
           if(value==="Calls (All)"){
             this.setState(state => ({
+              play_sound: false,
               filtered_locations: state.locations,
               side_bar_open: false, 
               location_side_bar_open: false,
@@ -201,6 +209,7 @@ class App extends Component{
           }
           else if(value==="None"){
             this.setState({
+              play_sound: false,
               filtered_locations: [],
               side_bar_open: false, 
               location_side_bar_open: false,
@@ -216,6 +225,7 @@ class App extends Component{
             
             if(arr.length>0){
               this.setState({
+                play_sound: false,
                 filtered_locations: arr,
                 side_bar_open: false, 
                 location_side_bar_open: false,
@@ -226,6 +236,7 @@ class App extends Component{
               //show message that there are no locations found for that parameter
       
               this.setState({
+                  play_sound: false,
                   filtered_locations:[],
                   selected_call:"Calls (All)",
                   side_bar_open: false, 
@@ -246,6 +257,7 @@ class App extends Component{
       if(this.state.emergencies.length>0){
           if(value==="Emergencies (All)"){
             this.setState(state => ({
+              play_sound: false,
               filtered_emergencies: state.emergencies,
               side_bar_open: false, 
               location_side_bar_open: false,
@@ -254,6 +266,7 @@ class App extends Component{
           }
           else if(value==="None"){
             this.setState({
+              play_sound: false,
               filtered_emergencies:[],
               side_bar_open: false, 
               location_side_bar_open: false,
@@ -273,6 +286,7 @@ class App extends Component{
       
             if(arr.length>0){
               this.setState({
+                play_sound: false,
                 filtered_emergencies:arr,
                 side_bar_open: false, 
                 location_side_bar_open: false,
@@ -283,6 +297,7 @@ class App extends Component{
               //show message that there are no emregencies found for that parameter
       
               this.setState({
+                  play_sound: false,
                   filtered_emergencies: [],
                   selected_emergency:"Emergencies (All)",
                   side_bar_open: false, 
@@ -296,6 +311,7 @@ class App extends Component{
 
   onLocationClicked(location,e){
     this.setState({
+      play_sound: false,
       selected_location: location,
       side_bar_open: false,
       location_side_bar_open: true,
@@ -312,6 +328,7 @@ class App extends Component{
 
   onEmergencyClicked(emergency,e){
     this.setState({
+       play_sound: false,
        selected_emergency: emergency,
        side_bar_open: true,
        location_side_bar_open: false,
@@ -371,6 +388,7 @@ class App extends Component{
 
   closeSideBar(e){
     this.setState({
+       play_sound: true,
        side_bar_open: false,
        location_side_bar_open: false,
        selected_location: {},
@@ -402,6 +420,7 @@ class App extends Component{
               arr.push(data)
 
               return {
+                  play_sound: true,
                   latest: lat,
                   clicked_marker_id: data._id,
                   zoom: 18,
@@ -427,6 +446,7 @@ class App extends Component{
               arr.push(data)
 
               return {
+                  play_sound: true,
                   latest: lat,
                   clicked_marker_id: data._id,
                   zoom: 18,
@@ -504,6 +524,21 @@ class App extends Component{
 
   render(){
 
+    let sound;
+
+    if(this.state.play_sound){
+       sound = <Sound
+       url={alert}
+       playStatus={Sound.status.PLAYING}
+       playFromPosition={100 /* in milliseconds */}
+       onLoading={this.handleSongLoading}
+       onPlaying={this.handleSongPlaying}
+       onFinishedPlaying={this.handleSongFinishedPlaying}/>;
+    }
+    else{
+      sound = "";
+    }
+
     let show_location_side_bar;
     
     if(this.state.location_side_bar_open){
@@ -563,6 +598,7 @@ class App extends Component{
                 
              </div>
           </div>
+          {sound}
           <Map google={this.props.google} 
               style={mapStyle}
               onReady={this.fetchPlaces}
