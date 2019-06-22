@@ -8,6 +8,7 @@ import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-rea
 import socketIOClient from "socket.io-client";
 import Sidebar from './components/Sidebar';
 import LocationSidebar from './components/LocationSideBar';
+import Latest from './components/Latest';
 
 import DatePicker from 'react-date-picker';
 
@@ -55,6 +56,7 @@ class App extends Component{
      super(props);
 
      this.state = {
+      latest: [],
       locations: [], 
       emergencies: [], 
       filtered_locations: [],
@@ -355,10 +357,13 @@ class App extends Component{
          if(data){
              this.setState(state => {
               let arr = state.emergencies;
-
+              let lat = state.latest;
+              
+              lat.push(data);
               arr.push(data)
 
               return {
+                  latest: lat,
                   clicked_marker_id: data._id,
                   zoom: 18,
                   emergencies: arr,
@@ -377,10 +382,13 @@ class App extends Component{
         if(data){
             this.setState(state => {
               let arr = state.locations;
-
+              let lat = state.latest;
+              
+              lat.push(data);
               arr.push(data)
 
               return {
+                  latest: lat,
                   clicked_marker_id: data._id,
                   zoom: 18,
                   locations: arr,
@@ -455,6 +463,7 @@ class App extends Component{
 
     return (
       <div className="laser-parent-div" style={mapStyle}>
+          <Latest latest={this.state.latest}/>
           {show_location_side_bar}
           {show_side_bar}
           <div className="laser-top-panel">
