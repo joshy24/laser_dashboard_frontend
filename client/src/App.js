@@ -262,7 +262,7 @@ class App extends Component{
          lat: location.latitude,
          lng: location.longitude
       },
-      zoom: 19,
+      zoom: 18,
       show_red_circle: false,
       show_blue_circle: true,
       clicked_marker_id: location._id
@@ -278,7 +278,7 @@ class App extends Component{
           lat: emergency.latitude,
           lng: emergency.longitude
        },
-       zoom: 19,
+       zoom: 18,
        show_red_circle: true,
        show_blue_circle: false,
        clicked_marker_id: emergency._id
@@ -333,7 +333,8 @@ class App extends Component{
        side_bar_open: false,
        location_side_bar_open: false,
        selected_location: {},
-       selected_emergency: {}
+       selected_emergency: {},
+       clicked_marker_id: ""
     })
   }
 
