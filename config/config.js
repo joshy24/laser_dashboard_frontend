@@ -7,11 +7,11 @@ module.exports = {
     port: process.env.PORT,
     base_url: process.env.BASE_URL,
     db: {
-        uri: process.env.DB_URL,
+        uri: process.env.DB_URL/*,
         options: {
             user: process.env.DB_USER,
             pass: process.env.DB_PWD
-        }
+        }*/
     },
     secret: process.env.SECRET_KEY, 
     socket: {
@@ -21,5 +21,10 @@ module.exports = {
         sid: process.env.TWILIO_SID,
         auth_token: process.env.TWILIO_TOKEN,
         phone: process.env.TWILIO_NUMBER
+    },
+    pubnub: {
+        pub_key: process.env.PUB_KEY,
+        sub_key: process.env.SUB_KEY,
+        secret_key: process.env.SECRET_KEY
     }
 }

@@ -32,6 +32,33 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));//accept strings
 
 app.disable('x-powered-by');
 
+var PubNub = require('pubnub')
+
+var pubnub = new PubNub({
+    subscribeKey: config.pubnub.sub_key,
+    publishKey: config.pubnub.pub_key,
+    //secretKey: config.pubnub.secret_key,
+    ssl: false //should be true in release production
+})
+
+pubnub.subscribe({
+    channels: ['mych'] 
+});
+
+pubnub.addListener({
+    status: function(statusEvent) {
+        if (statusEvent.category === "PNConnectedCategory") {
+           console.log("pubnub connected");
+        }
+    },
+    message: function(msg) {
+        console.log({msg});
+    },
+    presence: function(presenceEvent) {
+        // handle presence
+    }
+})
+
 
 
 /* Start of socket-io stuff*/

@@ -262,6 +262,7 @@ class App extends Component{
          lat: location.latitude,
          lng: location.longitude
       },
+      
       show_red_circle: false,
       show_blue_circle: true,
       clicked_marker_id: location._id
