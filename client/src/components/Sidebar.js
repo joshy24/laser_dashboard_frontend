@@ -2,11 +2,15 @@
 
 import React, { Component } from 'react';
 
+import Utils from '../utils/Utils';
+
 export default function Sidebar(props){
     return <div className="laser-side-bar">
                 <h1 className="close_btn" onClick={e => props.closeSidebar(e)}>&#10005;</h1>
                 <br/>
                 <h4 className="text-center laser-red-text"><b>Emergency Location Details</b></h4> 
+                <br/>
+                <h5><b>Time</b> - {Utils.getTime(props.location.created)}</h5>
                 <br/>
                 <h5><b>Persons Name</b> - {props.emergency.full_name}</h5>
                 <br/>

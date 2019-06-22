@@ -34,8 +34,11 @@ var EmergencySchema = new Schema({
         type: String
     }],
     full_address: String,
-    sub_admin_address: String
-
+    sub_admin_address: String,
+    laser_type: {
+        type: String,
+        default: "emergency"
+    }
 });
 
 module.exports = mongoose.model('Emergency', EmergencySchema);
