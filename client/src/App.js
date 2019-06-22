@@ -65,7 +65,7 @@ class App extends Component{
       center: {lat: 6.5244,lng: 3.3792}, 
       selected_call:"Calls (All)", 
       selected_emergency:"Emergencies (All)",
-
+      zoom : 11,
       show_red_circle: false,
       show_blue_circle: false,
       clicked_marker_id: "",
@@ -262,6 +262,7 @@ class App extends Component{
          lat: location.latitude,
          lng: location.longitude
       },
+      zoom: 19,
       show_red_circle: false,
       show_blue_circle: true,
       clicked_marker_id: location._id
@@ -277,6 +278,7 @@ class App extends Component{
           lat: emergency.latitude,
           lng: emergency.longitude
        },
+       zoom: 19,
        show_red_circle: true,
        show_blue_circle: false,
        clicked_marker_id: emergency._id
@@ -449,7 +451,7 @@ class App extends Component{
     }
 
     return (
-      <div style={mapStyle}>
+      <div className="laser-parent-div" style={mapStyle}>
           {show_location_side_bar}
           {show_side_bar}
           <div className="laser-top-panel">
@@ -493,7 +495,7 @@ class App extends Component{
               onReady={this.fetchPlaces}
               initialCenter={this.state.center}
               center={this.state.center}
-              zoom={11}>
+              zoom={this.state.zoom}>
     
             {this.getLocationsMarkers()}
             {this.getEmergenciesMarkers()}

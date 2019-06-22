@@ -2,6 +2,10 @@ body{
   margin:0px;
 }
 
+.laser-parent-div{
+  height: 130vh;
+}
+
 .laser-top-panel{
   padding-top: 15px;
   padding-left: 50px;
