@@ -1,12 +1,17 @@
-'use strict'
 
-import React, { Component } from 'react';
+import React from 'react';
+
+import Utils from '../utils/Utils';
+
+const utils = new Utils();
 
 export default function Sidebar(props){
     return <div className="laser-side-bar">
                 <h1 className="close_btn" onClick={e => props.closeSidebar(e)}>&#10005;</h1>
                 <br/>
                 <h4 className="text-center laser-red-text"><b>Emergency Location Details</b></h4> 
+                <br/>
+                <h5><b>Time</b> - {utils.getTime(props.emergency.created)}</h5>
                 <br/>
                 <h5><b>Persons Name</b> - {props.emergency.full_name}</h5>
                 <br/>
@@ -36,15 +41,11 @@ function getReasons(reasons){
     switch(reasons.length){
         case 0:
           return "";
-        break;
         case 1:
           return reasons[0]+" issue";
-        break;
         case 2:
           return reasons[0] +" issue, " +reasons[1] +" issue";
-        break;
         case 3:
           return reasons[0] +" issue, " +reasons[1] +" issue, " +reasons[2] +" issue";
-        break;
     }
 }

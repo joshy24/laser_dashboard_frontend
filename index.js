@@ -61,6 +61,23 @@ pubnub.addListener({
 
 
 
+
+/* The two block below of app.options and app.use are necessary for allowing CORS in development environment*/
+app.options('*', cors({"origin": "*", //origin value to be changed in production to domain name
+"methods": "GET,POST",
+"preflightContinue": false,
+"optionsSuccessStatus": 204}))
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+/* End of allowing CORS*/
+
+
+
+
 /* Start of socket-io stuff*/
 
 var http = require('http').createServer(app);
@@ -77,20 +94,6 @@ http.listen(config.socket.port, () => console.log(`Socket IO listening on port $
 
 /* End of socket-io stuff*/
 
-
-
-/* The two block below of app.options and app.use are necessary for allowing CORS in development environment*/
-app.options('*', cors({"origin": "*", //origin value to be changed in production to domain name
-"methods": "GET,POST",
-"preflightContinue": false,
-"optionsSuccessStatus": 204}))
-
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-/* End of allowing CORS*/
 
 
 

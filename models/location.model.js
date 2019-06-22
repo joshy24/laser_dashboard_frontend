@@ -28,7 +28,11 @@ var LocationSchema = new Schema({
         required: true
     },
     full_address: String,
-    sub_admin_address: String
+    sub_admin_address: String,
+    laser_type: {
+        type: String,
+        default: "call"
+    }
 });
 
 module.exports = mongoose.model('Location', LocationSchema);

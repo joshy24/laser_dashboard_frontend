@@ -4,10 +4,12 @@ import red_circle from './emergency_with_circle.png';
 import blue_circle from './call_with_circle.png';
 import emergency_icon from './emergency.png';
 import call_icon from './call.png';
-import {Map, InfoWindow, Marker, GoogleApiWrapper, Circle} from 'google-maps-react';
+import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 import socketIOClient from "socket.io-client";
 import Sidebar from './components/Sidebar';
 import LocationSidebar from './components/LocationSideBar';
+import Latest from './components/Latest';
+import Utils from './utils/Utils';
 
 import DatePicker from 'react-date-picker';
 
@@ -15,7 +17,7 @@ import './App.css';
 
 import axios from 'axios';
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+const utils = new Utils();
 
 const mapStyle = {
   height: '100vh', 
@@ -37,11 +39,13 @@ const controls_style = {
 }
 
 const socket_io_url = 'http://18.195.71.164';
+//const socket_io_url = 'http://localhost:3077';
 
 let today = new Date().toISOString();
 
 const instance = axios.create({
   baseURL: 'http://18.195.71.164',
+  //baseURL: 'http://localhost:3077',
   timeout: 15000,
   headers: {'Accept': 'application/json;q=0.9,*/*;q=0.8'}
 });
@@ -55,6 +59,7 @@ class App extends Component{
      super(props);
 
      this.state = {
+      latest: [],
       locations: [], 
       emergencies: [], 
       filtered_locations: [],
@@ -65,7 +70,7 @@ class App extends Component{
       center: {lat: 6.5244,lng: 3.3792}, 
       selected_call:"Calls (All)", 
       selected_emergency:"Emergencies (All)",
-
+      zoom : 11,
       show_red_circle: false,
       show_blue_circle: false,
       clicked_marker_id: "",
@@ -78,12 +83,48 @@ class App extends Component{
      this.onEmergenciesChanged = this.onEmergenciesChanged.bind(this);
      this.onDateChange = this.onDateChange.bind(this);
      this.onCalendarOpen = this.onCalendarOpen.bind(this);
+     this.latestClicked = this.latestClicked.bind(this);
 
      var year = today.split(/T(.+)/)[0];
 
      year = year+"T00:00:00.000Z";
 
      today = new Date(year);
+  }
+
+  latestClicked(item){
+    switch(item.laser_type){
+      case "emergency":
+        this.setState({
+          selected_emergency: item,
+          side_bar_open: true,
+          location_side_bar_open: false,
+          center: {
+            lat: item.latitude,
+            lng: item.longitude
+          },
+          zoom: 19,
+          show_red_circle: true,
+          show_blue_circle: false,
+          clicked_marker_id: item._id
+        })
+        break;
+      case "call":
+          this.setState({
+            selected_location: item,
+            side_bar_open: false,
+            location_side_bar_open: true,
+            center: {
+              lat: item.latitude,
+              lng: item.longitude
+            },
+            zoom: 19,
+            show_red_circle: false,
+            show_blue_circle: true,
+            clicked_marker_id: item._id
+          })
+          break;
+    }
   }
 
   onCalendarOpen(){
@@ -262,11 +303,15 @@ class App extends Component{
          lat: location.latitude,
          lng: location.longitude
       },
+<<<<<<< HEAD
       
+=======
+      zoom: 19,
+>>>>>>> master
       show_red_circle: false,
       show_blue_circle: true,
       clicked_marker_id: location._id
-   })
+    })
   }
 
   onEmergencyClicked(emergency,e){
@@ -278,6 +323,7 @@ class App extends Component{
           lat: emergency.latitude,
           lng: emergency.longitude
        },
+       zoom: 19,
        show_red_circle: true,
        show_blue_circle: false,
        clicked_marker_id: emergency._id
@@ -294,7 +340,7 @@ class App extends Component{
                   title={loc.full_name}
                   position={{lat: loc.latitude, lng: loc.longitude}}
                   icon={{
-                    url: (this.state.clicked_marker_id==loc._id) ? blue_circle : call_icon
+                    url: (this.state.clicked_marker_id===loc._id) ? blue_circle : call_icon
                   }}/> 
       })
     }
@@ -315,7 +361,7 @@ class App extends Component{
                     title={emer.full_name}
                     position={{lat: emer.latitude, lng: emer.longitude}}
                     icon={{
-                      url: (this.state.clicked_marker_id==emer._id) ? red_circle : emergency_icon
+                      url: (this.state.clicked_marker_id===emer._id) ? red_circle : emergency_icon
                     }}/>
         })
     }
@@ -332,7 +378,8 @@ class App extends Component{
        side_bar_open: false,
        location_side_bar_open: false,
        selected_location: {},
-       selected_emergency: {}
+       selected_emergency: {},
+       clicked_marker_id: ""
     })
   }
 
@@ -353,11 +400,15 @@ class App extends Component{
          if(data){
              this.setState(state => {
               let arr = state.emergencies;
-
+              let lat = state.latest;
+              
+              lat.push(data);
               arr.push(data)
 
               return {
+                  latest: lat,
                   clicked_marker_id: data._id,
+                  zoom: 18,
                   emergencies: arr,
                   center: {
                     lat: data.latitude,
@@ -374,11 +425,15 @@ class App extends Component{
         if(data){
             this.setState(state => {
               let arr = state.locations;
-
+              let lat = state.latest;
+              
+              lat.push(data);
               arr.push(data)
 
               return {
+                  latest: lat,
                   clicked_marker_id: data._id,
+                  zoom: 18,
                   locations: arr,
                   center: {
                     lat: data.latitude,
@@ -392,10 +447,21 @@ class App extends Component{
 
     instance.post(locations_url,{date: today})
         .then(response => {
-            if(response&&response.data&&response.data.locations){
-              this.setState({
-                locations: response.data.locations,
-                filtered_locations: response.data.locations
+            if(response&&response.data&&response.data.locations&&response.data.locations.length>0){
+              this.setState(state => {
+                  var loc = state.latest;
+
+                  for(var i = 0; i<response.data.locations.length; i++){
+                      loc.push(response.data.locations[i]);
+                  }
+
+                  loc = utils.sortDates(loc);
+
+                  return {
+                    latest : loc,
+                    locations: response.data.locations,
+                    filtered_locations: response.data.locations
+                  }
               })
             }
             else{
@@ -411,10 +477,21 @@ class App extends Component{
 
     instance.post(emergencies_url,{date: today})
         .then(response => {
-            if(response&&response.data&&response.data.emergencies){
-               this.setState({
-                  emergencies: response.data.emergencies,
-                  filtered_emergencies: response.data.emergencies
+            if(response&&response.data&&response.data.emergencies&&response.data.emergencies.length>0){
+               this.setState(state => {
+                  var loc = state.latest;
+
+                  for(var i = 0; i<response.data.emergencies.length; i++){
+                      loc.push(response.data.emergencies[i]);
+                  }
+
+                  loc = utils.sortDates(loc);
+
+                  return {
+                      latest : loc,
+                      emergencies: response.data.emergencies,
+                      filtered_emergencies: response.data.emergencies
+                  }
                })
             }
             else{
@@ -450,7 +527,8 @@ class App extends Component{
     }
 
     return (
-      <div style={mapStyle}>
+      <div className="laser-parent-div" style={mapStyle}>
+          <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
           {show_location_side_bar}
           {show_side_bar}
           <div className="laser-top-panel">
@@ -494,7 +572,7 @@ class App extends Component{
               onReady={this.fetchPlaces}
               initialCenter={this.state.center}
               center={this.state.center}
-              zoom={11}>
+              zoom={this.state.zoom}>
     
             {this.getLocationsMarkers()}
             {this.getEmergenciesMarkers()}
