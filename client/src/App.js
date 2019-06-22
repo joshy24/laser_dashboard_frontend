@@ -80,12 +80,47 @@ class App extends Component{
      this.onEmergenciesChanged = this.onEmergenciesChanged.bind(this);
      this.onDateChange = this.onDateChange.bind(this);
      this.onCalendarOpen = this.onCalendarOpen.bind(this);
+     this.latestClicked = this.latestClicked.bind(this);
 
      var year = today.split(/T(.+)/)[0];
 
      year = year+"T00:00:00.000Z";
 
      today = new Date(year);
+  }
+
+  latestClicked(item){
+    switch(item.laser_type){
+      case "emergency":
+        this.setState({
+          selected_emergency: item,
+          side_bar_open: true,
+          location_side_bar_open: false,
+          center: {
+            lat: item.latitude,
+            lng: item.longitude
+          },
+          zoom: 19,
+          show_red_circle: true,
+          show_blue_circle: false,
+          clicked_marker_id: item._id
+        })
+      case "call":
+          this.setState({
+            selected_location: item,
+            side_bar_open: false,
+            location_side_bar_open: true,
+            center: {
+              lat: item.latitude,
+              lng: item.longitude
+            },
+            zoom: 19,
+            show_red_circle: false,
+            show_blue_circle: true,
+            clicked_marker_id: item._id
+          })
+          break;
+    }
   }
 
   onCalendarOpen(){
@@ -268,7 +303,7 @@ class App extends Component{
       show_red_circle: false,
       show_blue_circle: true,
       clicked_marker_id: location._id
-   })
+    })
   }
 
   onEmergencyClicked(emergency,e){
@@ -463,7 +498,7 @@ class App extends Component{
 
     return (
       <div className="laser-parent-div" style={mapStyle}>
-          <Latest latest={this.state.latest}/>
+          <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
           {show_location_side_bar}
           {show_side_bar}
           <div className="laser-top-panel">
