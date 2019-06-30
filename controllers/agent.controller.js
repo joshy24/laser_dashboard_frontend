@@ -1,5 +1,3 @@
-'use strict'
-
 var Utils = require('../modules/utils');
 var AgentService = require('../services/agent.service');
 
