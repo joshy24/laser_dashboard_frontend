@@ -5,7 +5,7 @@ module.exports.addAgents = function(req,res){
     var new_agent = {
         firstname: "Simon",
         lastname: "Peter",
-        phone_number: 08033333333,
+        phone_number: '08033333333',
         password: "password24",
         agency: "police"
     }
@@ -15,7 +15,7 @@ module.exports.addAgents = function(req,res){
     var new_agent1 = {
         firstname: "David",
         lastname: "Johnson",
-        phone_number: 08022222222,
+        phone_number: '08022222222',
         password: "password24",
         agency: "fire"
     }
@@ -25,7 +25,7 @@ module.exports.addAgents = function(req,res){
     var new_agent2 = {
         firstname: "Moses",
         lastname: "Kelly",
-        phone_number: 08011111111,
+        phone_number: '08011111111',
         password: "password24",
         agency: "hospital"
     }
