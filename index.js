@@ -112,7 +112,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/api', all_routes);
 
-var agent_routes = require('./routes/agent.routes')
+var agent_routes = require('./routes/agent')
 
 app.use('/agent', agent_routes);
 

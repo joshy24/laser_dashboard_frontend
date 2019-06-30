@@ -3,9 +3,6 @@
 var AgentController = require('../controllers/agent.controller');
 var AgentService = require('../services/agent.service');
 
-var express = require('express');
-var router = express.Router();
-
 module.exports = function(router){
 
     router.post('/add_agents', function(req,res,next){ 
