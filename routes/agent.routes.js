@@ -10,11 +10,11 @@ module.exports = function(router){
     });
 
     router.post('/login_agent', function(req,res,next){ 
-        AgentController.login(req,res)
+        AgentController.loginAgent(req,res)
     });
 
     router.post('/signup_agent', function(req,res,next){ 
-        AgentController.createUser(req,res)
+        AgentController.registerAgent(req,res)
     });
 
     router.use(function(req,res,next){
