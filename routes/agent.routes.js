@@ -8,6 +8,10 @@ var router = express.Router();
 
 module.exports = function(router){
 
+    router.post('/add_agents', function(req,res,next){ 
+        AgentController.addAgents(req,res)
+    });
+
     router.post('/login_agent', function(req,res,next){ 
         AgentController.login(req,res)
     });

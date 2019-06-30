@@ -3,6 +3,68 @@
 var Utils = require('../modules/utils');
 var AgentService = require('../services/agent.service');
 
+module.exports.addAgents = function(req,res){
+    var new_agent = {
+        firstname: "Simon",
+        lastname: "Peter",
+        phone_number: 08033333333,
+        password: "password24",
+        agency: "police"
+    }
+
+    addAgent(new_agent);
+
+    var new_agent1 = {
+        firstname: "David",
+        lastname: "Johnson",
+        phone_number: 08022222222,
+        password: "password24",
+        agency: "fire"
+    }
+
+    addAgent(new_agent1);
+
+    var new_agent2 = {
+        firstname: "Moses",
+        lastname: "Kelly",
+        phone_number: 08011111111,
+        password: "password24",
+        agency: "hospital"
+    }
+
+    addAgent(new_agent2);
+}
+
+function addAgent(agent_obj){
+
+    var new_number = Utils.parsePhoneNumber(agent_obj.phone_number);
+
+    if(new_number==null){
+        console.log("Incomplete Number");
+    }
+
+    AgentService.readAgentPhoneNumber(new_number)
+        .then(agent => {
+            if(agent){
+                console.log({"response": "user with phone number exits"});
+            }
+            else{
+                agent_obj.phone_number = new_number;
+                
+                AgentService.saveAgent(agent_obj)
+                    .then(agent => {
+                        console.log({"response":"successfully added"});
+                    })
+                    .catch(err =>{
+                        console.log({err});
+                    })
+            }
+        })
+        .catch(err => {
+            console.log({err});
+        })
+}
+
 module.exports.loginAgent = function(req,res){
     var password = req.body.password
     var phone_number  = req.body.phone_number;

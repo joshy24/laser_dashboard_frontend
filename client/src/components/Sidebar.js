@@ -8,8 +8,9 @@ const utils = new Utils();
 const style = {
     background: "#A93226",
     border: "0px solid #000000",
-    color: "#000000",
-    borderRadius: "8px;"
+    color: "#FFFFFF",
+    padding: "8px",
+    borderRadius: "4px"
 }
 
 export default function Sidebar(props){
@@ -18,7 +19,7 @@ export default function Sidebar(props){
                 <br/>
                 <h4 className="text-center laser-red-text"><b>Emergency Location Details</b></h4>
                 <br/>
-                <button style={style}>Start Monitoring</button>
+                <button style={style} onClick={e => props.startMonitoring(e, props.emergency)}>Start Monitoring</button>
                 <br/>
                 <h5><b>Trackable</b> - {props.emergency.is_trackable ? "Yes" : "No" }</h5>
                 <br/>

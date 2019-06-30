@@ -94,7 +94,9 @@ class App extends Component{
 
   //Subscribe to the users sub admin area to receive updates and send out a request to all agents on the channel to send their location 
   //just in case some of them are not moving at the momemnt and their location is not updating
-  startMonitoring(item){
+  startMonitoring(e, item){
+      e.preventDefault();
+      
       if(item.sub_admin_address){
         
         this.pubnub.publish(
@@ -482,15 +484,41 @@ class App extends Component{
           console.log({st});
       },
       message: (message) => {
+
+          console.log({message});
+
           this.setState(state => {
-            var agents = state.laser_agents;
-            var channels = state
+              if(message.channel === state.tracked_user_id){
+                  //the message is from the user currently being monitored
 
-            agents.push(message.message);
+                  var arr = state.emergencies.map(emergency => {
+                      if(emergency.user === state.tracked_user_id){
+                          emergency.latitude = message.message.latitude;
+                          emergency.longitude = message.message.longitude;
+                          return emergency;
+                      }
+                      else{
+                          return emergency;
+                      }
+                  })
 
-            return{
-               laser_agents: agents
-            }
+                  //var found_emergency = state.emergencies.find(emergency => emergency.user === state.tracked_user_id);
+
+                  return{
+                    emergencies: arr
+                  }
+              }
+
+              if(message.channel === state.tracked_area ){
+                  var agents = state.laser_agents;
+                  var channels = state
+
+                  agents.push(message.message);
+
+                  return{
+                    laser_agents: agents
+                  }
+              }
           })
       }
     });
