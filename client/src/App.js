@@ -4,16 +4,17 @@ import red_circle from './emergency_with_circle.png';
 import blue_circle from './call_with_circle.png';
 import emergency_icon from './emergency.png';
 import call_icon from './call.png';
+import police_car_icon from './police_car.png';
 import alert from "./sounds/alert.mp3";
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 import socketIOClient from "socket.io-client";
 import Sidebar from './components/Sidebar';
 import LocationSidebar from './components/LocationSideBar';
+import TopPanel from './components/TopPanel';
 import Latest from './components/Latest';
 import Utils from './utils/Utils';
 import Sound from 'react-sound';
-
-import DatePicker from 'react-date-picker';
+import PubNubReact from 'pubnub-react';
 
 import './App.css';
 
@@ -24,20 +25,6 @@ const utils = new Utils();
 const mapStyle = {
   height: '100vh', 
   width: '100%'
-}
-
-const dateStyle = {
-   color: "#111111",
-   border: "1px solid #FFFFFF",
-   zIndex: "6000",
-   marginLeft:"8px",
-   marginRight: "8px",
-   padding: "8px"
-}
-
-const controls_style = {
-  marginLeft:"8px",
-  marginRight: "8px"
 }
 
 const socket_io_url = 'http://18.195.71.164';
@@ -61,32 +48,42 @@ class App extends Component{
      super(props);
 
      this.state = {
-      latest: [],
-      locations: [], 
-      emergencies: [], 
-      filtered_locations: [],
-      filtered_emergencies: [],
-      side_bar_open: false, 
-      location_side_bar_open: false, 
-      selected_emergency: {}, 
-      center: {lat: 6.5244,lng: 3.3792}, 
-      selected_call:"Calls (All)", 
-      selected_emergency:"Emergencies (All)",
-      zoom : 11,
-      show_red_circle: false,
-      show_blue_circle: false,
-      clicked_marker_id: "",
-      play_sound: false,
-
-      date: new Date()
+        latest: [],
+        locations: [], 
+        emergencies: [], 
+        filtered_locations: [],
+        filtered_emergencies: [],
+        side_bar_open: false, 
+        location_side_bar_open: false, 
+        selected_emergency: {}, 
+        center: {lat: 6.5244,lng: 3.3792}, 
+        selected_call:"Calls (All)", 
+        selected_emergency:"Emergencies (All)",
+        zoom : 11,
+        show_red_circle: false,
+        show_blue_circle: false,
+        clicked_marker_id: "",
+        play_sound: false,
+        channels_list: [],
+        laser_agents:[],
+        tracked_user_id: "",
+        tracked_area: "", //the user in which the admin is currently viewing whether the user wants to be tracked or not
+        date: new Date()
      }
      
+     this.pubnub = new PubNubReact({
+      publishKey: 'pub-c-100b3918-0e25-4fac-ade6-c58d013cd019',
+      subscribeKey: 'sub-c-21e1e450-9457-11e9-bf84-1623aee89087'
+     });
+     this.pubnub.init(this);
+
      this.closeSideBar = this.closeSideBar.bind(this);
      this.onCallsChanged = this.onCallsChanged.bind(this);
      this.onEmergenciesChanged = this.onEmergenciesChanged.bind(this);
      this.onDateChange = this.onDateChange.bind(this);
      this.onCalendarOpen = this.onCalendarOpen.bind(this);
      this.latestClicked = this.latestClicked.bind(this);
+     this.startMonitoring = this.startMonitoring.bind(this);
   
      var year = today.split(/T(.+)/)[0];
 
@@ -95,11 +92,62 @@ class App extends Component{
      today = new Date(year);
   }
 
+  //Subscribe to the users sub admin area to receive updates and send out a request to all agents on the channel to send their location 
+  //just in case some of them are not moving at the momemnt and their location is not updating
+  startMonitoring(item){
+      if(item.sub_admin_address){
+        
+        this.pubnub.publish(
+          {
+              message: {
+                  action: "send_location"
+              },
+              channel: item.sub_admin_address,
+              sendByPost: false, // true to send via POST
+              storeInHistory: false //override default storage options
+          },
+          (status, response) => {
+              // handle status, response
+          }
+        );
+
+        //Next we will subscribe to the area to get latest updates
+        this.setState(state => {
+            var list = state.channels_list;
+
+            if(list.indexOf(item.user)==-1){
+
+              //remove old user from list
+              //unsubscribe from old user
+    
+              list.push(item.user)
+            }
+
+            if(list.indexOf(item.sub_admin_address)==-1){
+              list.push(item.sub_admin_address)
+            }
+
+            this.pubnub.subscribe({
+              channels: list
+            })
+
+            return {
+                channels_list: list,
+                tracked_user_id: item.user,
+                tracked_area: item.sub_admin_address,
+                laser_agents: []
+            }
+        })
+      }
+      else{
+        //a requeest is made to find out what area the user is in and then use that to find the agents locations
+      }
+  }
+
   latestClicked(item){
     switch(item.laser_type){
       case "emergency":
         this.setState({
-          play_sound: true,
           selected_emergency: item,
           side_bar_open: true,
           location_side_bar_open: false,
@@ -115,7 +163,6 @@ class App extends Component{
         break;
       case "call":
           this.setState({
-            play_sound: true,
             selected_location: item,
             side_bar_open: false,
             location_side_bar_open: true,
@@ -386,9 +433,30 @@ class App extends Component{
 
   }
 
+  getAgentMarkers(){
+      let agents_ui;
+
+      if(this.state.laser_agents.length>0){
+        agents_ui = this.state.laser_agents.map((agent,i) => {
+          return <Marker key={i} 
+                    name={agent.full_address} 
+                    title={agent.full_address}
+                    position={{lat: agent.latitude, lng: agent.longitude}}
+                    icon={{
+                      url: police_car_icon
+                    }}/>
+        })
+      }
+      else{
+        agents_ui = "";
+      }
+
+      return agents_ui;
+  }
+
   closeSideBar(e){
     this.setState({
-       play_sound: true,
+       play_sound: false,
        side_bar_open: false,
        location_side_bar_open: false,
        selected_location: {},
@@ -401,7 +469,31 @@ class App extends Component{
     
   }
 
+  componentWillUnmount() {
+    this.pubnub.unsubscribe({
+        channels: this.state.channels_list
+    });
+  }
+
   componentDidMount(){
+
+    this.pubnub.addListener({
+      status: (st) => {
+          console.log({st});
+      },
+      message: (message) => {
+          this.setState(state => {
+            var agents = state.laser_agents;
+            var channels = state
+
+            agents.push(message.message);
+
+            return{
+               laser_agents: agents
+            }
+          })
+      }
+    });
 
     const socket = socketIOClient(socket_io_url);
 
@@ -520,6 +612,8 @@ class App extends Component{
         .catch(error => {
           console.log({error})
         })
+
+
   }
 
   render(){
@@ -530,7 +624,7 @@ class App extends Component{
        sound = <Sound
        url={alert}
        playStatus={Sound.status.PLAYING}
-       playFromPosition={100 /* in milliseconds */}
+       playFromPosition={1 /* in milliseconds */}
        onLoading={this.handleSongLoading}
        onPlaying={this.handleSongPlaying}
        onFinishedPlaying={this.handleSongFinishedPlaying}/>;
@@ -551,7 +645,7 @@ class App extends Component{
     let show_side_bar;
     
     if(this.state.side_bar_open){
-      show_side_bar = <Sidebar closeSidebar={this.closeSideBar} emergency={this.state.selected_emergency}/>
+      show_side_bar = <Sidebar closeSidebar={this.closeSideBar} emergency={this.state.selected_emergency} startMonitoring={this.startMonitoring}/>
     }
     else{
       show_side_bar = "";
@@ -562,42 +656,10 @@ class App extends Component{
           <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
           {show_location_side_bar}
           {show_side_bar}
-          <div className="laser-top-panel">
-             <h4 className="laser-inline">Laser Emergency Admin Platform</h4>
-             <div className="laser-controls laser-inline">
-                
-                <div className="laser-inline" style={dateStyle}>
-                  <DatePicker
-                    onCalendarOpen={this.onCalendarOpen}
-                    maxDate={new Date()}
-                    style={dateStyle}
-                    onChange={this.onDateChange}
-                    value={this.state.date}/>
-                </div>  
 
-                <select style={controls_style} className="form-control laser-inline laser-150-width" id="calls" name="calls" value={this.selected_call} onChange={this.onCallsChanged}>
-                    <option>Calls (All)</option>
-                    <option>Emergency Management(LASEMA)</option>
-                    <option>Police</option>
-                    <option>Distress</option>
-                    <option>Environmental and Special Offences Task Force</option>
-                    <option>Fire / Safety Services</option>
-                    <option>Environmental / Noise Pollution</option>
-                    <option>Broken Pipe / Water Leakage</option>
-                    <option>Pothole / Collapsed Road</option>
-                    <option>None</option>
-                </select>
-                
-                <select style={controls_style} className="form-control laser-inline laser-150-width" id="emergencies" name="emergencies" value={this.selected_call} onChange={this.onEmergenciesChanged}>
-                    <option>Emergencies (All)</option>
-                    <option>Police Cases</option>
-                    <option>Hospital Cases</option>
-                    <option>Fire Cases</option>
-                    <option>None</option>
-                </select>
-                
-             </div>
-          </div>
+          <TopPanel onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
+          onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged}/>
+
           {sound}
           <Map google={this.props.google} 
               style={mapStyle}
@@ -608,6 +670,7 @@ class App extends Component{
     
             {this.getLocationsMarkers()}
             {this.getEmergenciesMarkers()}
+            {this.getAgentMarkers()}
 
           </Map>
       </div>

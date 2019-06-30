@@ -32,7 +32,8 @@ var LocationSchema = new Schema({
     laser_type: {
         type: String,
         default: "call"
-    }
+    },
+    is_trackable: false
 });
 
 module.exports = mongoose.model('Location', LocationSchema);

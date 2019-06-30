@@ -12,111 +12,64 @@ var twilio = require('twilio');
 //items in the body of the request need to be checked for the right length and made sure they are properly secured
 module.exports.login = function(req,res){
     var phone = req.body.phone_number;
-    var email = req.body.email;
     var password = req.body.password;
     
     if(!password){
         return res.status(400).send({"response":"bad request"});
     }
 
-    if(!phone&&!email){
+    if(!phone){
         return res.status(400).send({"response":"bad request"});
     }
 
-    if(phone&&!email){
-        var new_number = Utils.parsePhoneNumber(phone);
+    var new_number = Utils.parsePhoneNumber(phone);
 
-        if(new_number==null){
-            return res.status(400).send("Incomplete Number");
-        }
-
-        UserService.readUserPhoneNumber(new_number)
-                    .then(user => {
-                        if(!user){
-                            return res.status(404).send({"response": "not found"});
-                        }
-                        else{
-                            user.comparePassword(password)
-                            .then(confirmation => {
-                                if(confirmation==true){
-                                    var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*500, algorithm: "HS256"});
-                                    user.tokens.push(token);
-                                    UserService.updateUser(user._id, user)
-                                            .then(updated_user => {
-                                                    if(updated_user){
-                                                        user.tokens = null;
-                                                        user.phone_number = null;
-                                                        return res.status(200).send({"user":user, "token":token});
-                                                    }
-                                                    else{
-                                                        console.log("couldnt update");
-                                                        return res.status(500).send("Server Error");
-                                                    }
-                                            })
-                                            .catch(err => {
-                                                console.log(err.message);
-                                                return res.status(400).send("Error");
-                                            })
-                                }
-                                else{
-                                    return res.status(400).send("Wrong Password");
-                                }
-                            })
-                            .catch(err => {
-                                console.log(err.message);
-                                return res.status(400).send("Password Error");
-                            })
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        return res.status(500).send("Server Error");
-                    })
+    if(new_number==null){
+        return res.status(400).send("Incomplete Number");
     }
 
-    if(email&&!phone){
-        UserService.readUserEmail(email)
-                    .then(user => {
-                        if(!user){
-                            return res.status(404).send({"response": "not found"});
-                        }
-                        else{
-                            user.comparePassword(password)
-                            .then(confirmation => {
-                                if(confirmation==true){
-                                    var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*500, algorithm: "HS256"});
-                                    user.tokens.push(token);
-                                    UserService.updateUser(user._id, user)
-                                            .then(updated_user => {
-                                                    if(updated_user){
-                                                        user.tokens = null;
-                                                        user.phone_number = null;
-                                                        return res.status(200).send({"user":user, "token":token});
-                                                    }
-                                                    else{
-                                                        console.log("couldnt update");
-                                                        return res.status(500).send("Server Error");
-                                                    }
-                                            })
-                                            .catch(err => {
-                                                return res.status(400).send("Error");
-                                            })
-                                }
-                                else{
-                                    return res.status(400).send("Wrong Password");
-                                }
-                            })
-                            .catch(err => {
-                                return res.status(400).send("Password Error");
-                            })
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        return res.status(500).send("Server Error");
-                    })
-    }
-    
+    UserService.readUserPhoneNumber(new_number)
+                .then(user => {
+                    if(!user){
+                        return res.status(404).send({"response": "not found"});
+                    }
+                    else{
+                        user.comparePassword(password)
+                        .then(confirmation => {
+                            if(confirmation==true){
+                                var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*500, algorithm: "HS256"});
+                                user.tokens.push(token);
+                                UserService.updateUser(user._id, user)
+                                        .then(updated_user => {
+                                                if(updated_user){
+                                                    user.tokens = null;
+                                                    user.phone_number = null;
+                                                    return res.status(200).send({"user":user, "token":token});
+                                                }
+                                                else{
+                                                    console.log("couldnt update");
+                                                    return res.status(500).send("Server Error");
+                                                }
+                                        })
+                                        .catch(err => {
+                                            console.log(err.message);
+                                            return res.status(400).send("Error");
+                                        })
+                            }
+                            else{
+                                return res.status(400).send("Wrong Password");
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err.message);
+                            return res.status(400).send("Password Error");
+                        })
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    return res.status(500).send("Server Error");
+                })
 }
 
 module.exports.logout = function(req,res){
@@ -153,102 +106,55 @@ module.exports.createUser = function(req,res){
         return res.status(400).send({"response":"bad request"});
     }
 
-    if(phone_number&&!email){
-        var new_number = Utils.parsePhoneNumber(phone_number);
+    var new_number = Utils.parsePhoneNumber(phone_number);
 
-        if(new_number==null){
-            return res.status(400).send("Incomplete Number");
-        }
-        
-        var user_obj = {
-            lastname: lastname,
-            firstname: firstname,
-            phone_number: new_number,
-            password: password
-        }
-
-        UserService.readUserPhoneNumber(new_number)
-               .then(user => {
-                    if(!user||user==null){
-                        UserService.createUser(user_obj)
-                                    .then(user => {
-                                        var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*5, algorithm: "HS256"});
-                                        user.tokens = [];
-                                        user.tokens.push(token);
-                                        UserService.updateUser(user._id, user)
-                                                   .then(updated_user => {
-                                                        user.tokens = null;
-                                                        user.password = null;
-                                                        user.phone_number = null;
-                                                        return res.status(200).send({"user":user, "token":token});
-                                                   })
-                                                   .catch(err => {
-                                                        console.log(err.message);
-                                                        return res.status(500).send("Server Error");
-                                                   })
-
-                                    })
-                                    .catch(err => {
-                                        console.log(err);
-                                        return res.status(500).send("Create Server Error");
-                                    })
-                    }
-                    else{
-                        res.statusMessage = "User Exists";
-                        return res.status(500).send();
-                    }
-               })
-               .catch(err => {
-                    console.log(err.message);
-                    return res.status(500).send("Server Error");
-               })
-
+    if(new_number==null){
+        return res.status(400).send("Incomplete Number");
+    }
+    
+    var user_obj = {
+        lastname: lastname,
+        firstname: firstname,
+        phone_number: new_number,
+        email: email,
+        password: password
     }
 
-    if(email&&!phone_number){
-        var user_obj = {
-            lastname: lastname,
-            firstname: firstname,
-            email:email,
-            password: password
-        }
+    UserService.readUserPhoneNumberEmail(new_number,email)
+            .then(user => {
+                if(!user||user==null){
+                    UserService.createUser(user_obj)
+                                .then(user => {
+                                    var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*5, algorithm: "HS256"});
+                                    user.tokens = [];
+                                    user.tokens.push(token);
+                                    UserService.updateUser(user._id, user)
+                                                .then(updated_user => {
+                                                    user.tokens = null;
+                                                    user.password = null;
+                                                    user.phone_number = null;
+                                                    return res.status(200).send({"user":user, "token":token});
+                                                })
+                                                .catch(err => {
+                                                    console.log(err.message);
+                                                    return res.status(500).send("Server Error");
+                                                })
 
-        UserService.readUserEmail(email)
-               .then(user => {
-                    if(!user||user==null){
-                        UserService.createUser(user_obj)
-                                    .then(user => {
-                                        var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*5, algorithm: "HS256"});
-                                        user.tokens = [];
-                                        user.tokens.push(token);
-                                        UserService.updateUser(user._id, user)
-                                                   .then(updated_user => {
-                                                        user.tokens = null;
-                                                        user.password = null;
-                                                        user.phone_number = null;
-                                                        return res.status(200).send({"user":user, "token":token});
-                                                   })
-                                                   .catch(err => {
-                                                        console.log(err.message);
-                                                        return res.status(500).send("Server Error");
-                                                   })
-
-                                    })
-                                    .catch(err => {
-                                        console.log(err);
-                                        return res.status(500).send("Create Server Error");
-                                    })
-                    }
-                    else{
-                        res.statusMessage = "User Exists";
-                        return res.status(500).send();
-                    }
-               })
-               .catch(err => {
-                    console.log(err.message);
-                    return res.status(500).send("Server Error");
-               })
-    }
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    return res.status(500).send("Create Server Error");
+                                })
+                }
+                else{
+                    res.statusMessage = "User Exists";
+                    return res.status(500).send();
+                }
+            })
+            .catch(err => {
+                console.log(err.message);
+                return res.status(500).send("Server Error");
+            })
 }
 
 module.exports.saveEmergencyNumbers = function(req,res){
@@ -307,6 +213,7 @@ module.exports.saveEmergencyLocation = function(req,res){
     var action  = req.body.action;
     var full_address = req.body.full_address;
     var sub_admin_address = req.body.admin_address;
+    var is_trackable =  req.body.is_trackable;
     var user = req.user;
 
     if(!action){
@@ -326,8 +233,11 @@ module.exports.saveEmergencyLocation = function(req,res){
 
     data.user = user._id;
     data.reason = action;
+    
     data.full_address = full_address;
     data.sub_admin_address = sub_admin_address;
+
+    data.is_trackable = is_trackable;
 
     LocationService.saveLocation(data)
                 .then(saved => {
@@ -347,6 +257,7 @@ module.exports.sendEmergencyMessage = function(req,res){
     var numbers = req.body.numbers;
     var full_address = req.body.full_address;
     var sub_admin_address = req.body.admin_address;
+    var is_trackable =  req.body.is_trackable;
     var user = req.user;
 
     if(!reasons){
@@ -371,6 +282,8 @@ module.exports.sendEmergencyMessage = function(req,res){
 
     data.full_address = full_address;
     data.sub_admin_address = sub_admin_address;
+
+    data.is_trackable = is_trackable;
 
     if(numbers&&numbers.length>0){
         data.emergency_numbers = numbers;

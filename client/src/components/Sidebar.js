@@ -6,8 +6,10 @@ import Utils from '../utils/Utils';
 const utils = new Utils();
 
 const style = {
-    background: "rgba(0,0,0,0)",
-    border: "0px solid #000000"
+    background: "#A93226",
+    border: "0px solid #000000",
+    color: "#000000",
+    borderRadius: "8px;"
 }
 
 export default function Sidebar(props){
@@ -16,7 +18,9 @@ export default function Sidebar(props){
                 <br/>
                 <h4 className="text-center laser-red-text"><b>Emergency Location Details</b></h4>
                 <br/>
-                <h5><b>Trackable</b> - {props.emergency.isTrackable ? <button style={style}>Track this person now</button> : "User does not want to be tracked" }</h5>
+                <button style={style}>Start Monitoring</button>
+                <br/>
+                <h5><b>Trackable</b> - {props.emergency.is_trackable ? "Yes" : "No" }</h5>
                 <br/>
                 <h5><b>Time</b> - {utils.getTime(props.emergency.created)}</h5>
                 <br/>

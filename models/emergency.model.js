@@ -38,7 +38,8 @@ var EmergencySchema = new Schema({
     laser_type: {
         type: String,
         default: "emergency"
-    }
+    },
+    is_trackable: false
 });
 
 module.exports = mongoose.model('Emergency', EmergencySchema);

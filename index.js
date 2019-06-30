@@ -32,14 +32,18 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));//accept strings
 
 app.disable('x-powered-by');
 
-var PubNub = require('pubnub')
+
+
+
+
+var PubNub = require('pubnub');
 
 var pubnub = new PubNub({
     subscribeKey: config.pubnub.sub_key,
     publishKey: config.pubnub.pub_key,
     //secretKey: config.pubnub.secret_key,
     ssl: false //should be true in release production
-})
+});
 
 pubnub.subscribe({
     channels: ['mych'] 
@@ -51,13 +55,13 @@ pubnub.addListener({
            console.log("pubnub connected");
         }
     },
-    message: function(msg) {
-        console.log({msg});
+    message: function(m) {
+        console.log({m});
     },
     presence: function(presenceEvent) {
         // handle presence
     }
-})
+});
 
 
 
@@ -107,6 +111,10 @@ var all_routes = require('./routes/routes');
 app.use(express.static(path.join(__dirname, 'build')));
 
 app.use('/api', all_routes);
+
+var agent_routes = require('./routes/agent.routes')
+
+app.use('/agent', agent_routes);
 
 // Send all other requests to the Angular app
 app.get('*', (req, res) => {
