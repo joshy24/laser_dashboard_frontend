@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var bcrypt = require('bcryptjs');
 
 var AgentSchema = new Schema({
     //We need the 
@@ -39,5 +40,10 @@ var AgentSchema = new Schema({
         type: String   
     }]
 });
+
+
+AgentSchema.methods.comparePassword = function(password){
+    return bcrypt.compare(password, this.password);
+}
 
 module.exports = mongoose.model('Agent', AgentSchema);
