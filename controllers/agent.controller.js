@@ -67,7 +67,7 @@ function addAgent(agent_obj){
 
 module.exports.loginAgent = function(req,res){
     var password = req.body.password
-    var phone_number  = req.body.phone_number;
+    var phone  = req.body.phone_number;
 
     if(!password){
         return res.status(400).send({"response":"bad request"});
