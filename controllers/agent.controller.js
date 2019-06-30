@@ -33,6 +33,8 @@ module.exports.addAgents = function(req,res){
     }
 
     addAgent(new_agent2);
+
+    return res.status(200).send({"response":"successfully added"});
 }
 
 function addAgent(agent_obj){
@@ -50,7 +52,7 @@ function addAgent(agent_obj){
             }
             else{
                 agent_obj.phone_number = new_number;
-                
+
                 AgentService.saveAgent(agent_obj)
                     .then(agent => {
                         console.log({"response":"successfully added"});
