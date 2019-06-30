@@ -2,10 +2,12 @@
 
 var Agent = require('../models/agent.model')
 var Utils = require('../modules/utils');
+var bcrypt = require('bcryptjs');
 
 module.exports.saveAgent = function(data){
     return new Promise((resolve,reject) => {
         var loc = new Agent(data);
+        loc.password = bcrypt.hashSync(loc.password, 10);
         loc.created = Date.now();
         loc.save((err,saved) => {
             if(err){

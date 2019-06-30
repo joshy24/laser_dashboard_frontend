@@ -1,5 +1,6 @@
 var Utils = require('../modules/utils');
 var AgentService = require('../services/agent.service');
+var bcrypt = require('bcryptjs');
 
 module.exports.addAgents = function(req,res){
     var new_agent = {

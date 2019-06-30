@@ -4,6 +4,7 @@ var UserService = require('../services/user.service');
 var LocationService = require('../services/location.service');
 var EmergencyService = require('../services/emergency.service');
 var FeedbackService = require('../services/feedback.service');
+var bcrypt = require('bcryptjs');
 var Utils = require('../modules/utils');
 var asyncForEach = require('../modules/asyncforeach');
 var filter = require('../modules/filter');
