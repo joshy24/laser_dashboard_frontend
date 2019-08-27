@@ -110,11 +110,9 @@ var all_routes = require('./routes/routes');
 app.use('/api', all_routes);
 
 
-
 var agent_routes = require('./routes/agent')
 
 app.use('/agent', agent_routes);
-
 
 
 var admin_routes = require('./routes/admin')
