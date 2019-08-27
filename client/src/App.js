@@ -129,8 +129,8 @@ class App extends Component{
       this.getLocations = this.getLocations.bind(this);
       this.getLocationsDate = this.getLocationsDate.bind(this);
       this.getEmergenciesDate = this.getEmergenciesDate.bind(this);
-      this.getLatestEmergencies = this.getLatestEmergencies.bind();
-      this.getLatestLocations = this.getLatestLocations.bind();
+      this.getLatestEmergencies = this.getLatestEmergencies.bind(this);
+      this.getLatestLocations = this.getLatestLocations.bind(this);
 
       this.resolveCall = this.resolveCall.bind(this);
       this.resolveEmergency = this.resolveEmergency.bind(this);
