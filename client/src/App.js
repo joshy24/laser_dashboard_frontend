@@ -51,7 +51,7 @@ const mapStyle = {
 }
 
 //const socket_io_url = 'http://18.195.71.164';
-const socket_io_url = 'http://localhost:3080';
+const socket_io_url = 'http://52.59.255.174';
 
 let todays_date = new Date().toISOString();
 
