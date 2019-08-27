@@ -1230,6 +1230,7 @@ class App extends Component{
   }
 
   async getLatestLocations(){
+        var self = this;
         const response = await API.getLocations({date: today})
 
         if(response=="error"){
@@ -1237,7 +1238,7 @@ class App extends Component{
         }
 
         if(response&&response.data&&response.data.locations&&response.data.locations.length>0){
-            this.setState(state => {
+            self.setState(state => {
                 var loc = state.latest;
 
                 for(var i = 0; i<response.data.locations.length; i++){
@@ -1255,6 +1256,7 @@ class App extends Component{
   }
 
   async getLatestEmergencies(){
+        var self = this;
         const response = await API.getEmergencies({date: today})
 
         if(response=="error"){
@@ -1262,7 +1264,7 @@ class App extends Component{
         }
 
         if(response&&response.data&&response.data.emergencies&&response.data.emergencies.length>0){
-            this.setState(state => {
+            self.setState(state => {
                 var loc = state.latest;
 
                 for(var i = 0; i<response.data.emergencies.length; i++){
