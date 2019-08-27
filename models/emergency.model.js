@@ -39,7 +39,11 @@ var EmergencySchema = new Schema({
         type: String,
         default: "emergency"
     },
-    is_trackable: false
+    is_trackable: false,
+    status: {
+        type: String,
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Emergency', EmergencySchema);

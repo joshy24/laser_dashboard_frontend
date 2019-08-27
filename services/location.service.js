@@ -23,7 +23,7 @@ module.exports.getLocations = function(date){
     var end = new Date(Utils.getEnd(date));
 
     return new Promise((resolve,reject) => {
-        Location.find({created:{$gte: start, $lte: end}})
+        Location.find({status: "pending", created:{$gte: start, $lte: end}})
                 .exec()
                 .then(data => {
                     resolve(data)
@@ -31,5 +31,38 @@ module.exports.getLocations = function(date){
                 .catch(err => {
                     reject(err)
                 })
+    })
+}
+
+module.exports.readLocation = function(id){
+    return new Promise((resolve,reject) => {
+        Location.findOne({_id:id})
+            .exec()
+            .then(rem => {
+                resolve(rem);
+            })
+            .catch(error => {
+                reject(error.message)
+            })
+    })
+}
+
+module.exports.updateLocation = function(id, new_data){
+    return new Promise((resolve,reject) => {
+        Location.findOne({_id:id}, function (err, location) {
+            if (err){ 
+                reject(err.message)
+            }
+            else{
+                location.set(new_data);
+                location.save(function (err, updatedLocation) {
+                if (err) 
+                    reject(err.message)
+
+                    resolve(updatedLocation);
+                });
+            }
+        
+        });
     })
 }

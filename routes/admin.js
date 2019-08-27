@@ -5,8 +5,7 @@ var express = require('express');
 var router = express.Router();
 
 //modules
-require('./auth.routes')(router);
-require('./user.routes')(router);
+require('./admin.routes')(router);
 
 //export
 module.exports = router;

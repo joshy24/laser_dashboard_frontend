@@ -35,7 +35,6 @@ app.disable('x-powered-by');
 
 
 
-
 var PubNub = require('pubnub');
 
 var pubnub = new PubNub({
@@ -66,7 +65,7 @@ pubnub.addListener({
 
 
 
-/* The two block below of app.options and app.use are necessary for allowing CORS in development environment*/
+/* The two blocks below of app.options and app.use are necessary for allowing CORS in development environment*/
 app.options('*', cors({"origin": "*", //origin value to be changed in production to domain name
 "methods": "GET,POST",
 "preflightContinue": false,
@@ -108,33 +107,32 @@ app.use(helmet({
 
 var all_routes = require('./routes/routes');
 
-app.use(express.static(path.join(__dirname, 'build')));
-
 app.use('/api', all_routes);
+
+
 
 var agent_routes = require('./routes/agent')
 
 app.use('/agent', agent_routes);
 
-// Send all other requests to the Angular app
+
+
+var admin_routes = require('./routes/admin')
+
+app.use('/admin', admin_routes);
+
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Send all other requests to the React app
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build/index.html'));
-});
-
-app.use(function(req, res, next) {
-    // Instead of "*" you should enable only specific origins
-    res.header('Access-Control-Allow-Origin', '*');
-    // Supported HTTP verbs
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    // Other custom headers
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
 });
 
 //DB connection
 const server = app.listen(config.port, function(){
     console.log("Express started on " +config.base_url +' in '+config.env +' environment. Press Ctrl + C to terminate');
-    mongoose.connect(config.db.uri, config.db.options)
+    mongoose.connect(config.db.uri /*, config.db.options*/)
     .then(()=> { log.info(`Succesfully Connected to the Mongodb Database  at URL : `+config.db.uri)})
     .catch((error)=> { log.error(error)})
- });
+});

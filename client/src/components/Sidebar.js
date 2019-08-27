@@ -5,21 +5,16 @@ import Utils from '../utils/Utils';
 
 const utils = new Utils();
 
-const style = {
-    background: "#A93226",
-    border: "0px solid #000000",
-    color: "#FFFFFF",
-    padding: "8px",
-    borderRadius: "4px"
-}
-
 export default function Sidebar(props){
     return <div className="laser-side-bar">
                 <h1 className="close_btn" onClick={e => props.closeSidebar(e)}>&#10005;</h1>
                 <br/>
                 <h4 className="text-center laser-red-text"><b>Emergency Location Details</b></h4>
                 <br/>
-                <button style={style} onClick={e => props.startMonitoring(e, props.emergency)}>Start Monitoring</button>
+                <button className="laser-red-bg laserbtn" onClick={e => props.startMonitoring(e, props.emergency)}>Start Monitoring</button>
+                <br/>
+                <br/>                
+                <button className="laser-blue-bg laserbtn" onClick={e => props.resolve(e)}>Resolve</button>
                 <br/>
                 <h5><b>Trackable</b> - {props.emergency.is_trackable ? "Yes" : "No" }</h5>
                 <br/>
@@ -54,10 +49,10 @@ function getReasons(reasons){
         case 0:
           return "";
         case 1:
-          return reasons[0]+" issue";
+          return reasons[0]+" emergency";
         case 2:
-          return reasons[0] +" issue, " +reasons[1] +" issue";
+          return reasons[0] +" emergency, " +reasons[1] +" emergency";
         case 3:
-          return reasons[0] +" issue, " +reasons[1] +" issue, " +reasons[2] +" issue";
+          return reasons[0] +" emergency, " +reasons[1] +" emergency, " +reasons[2] +" emergency";
     }
 }

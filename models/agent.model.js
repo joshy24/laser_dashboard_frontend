@@ -5,13 +5,6 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcryptjs');
 
 var AgentSchema = new Schema({
-    //We need the 
-    //name
-    //department/agency examples are - police, fire service, medical
-    //phone number
-    //vehicle details
-    //department id
-
     firstname: {
         type: String,
         required: true
@@ -32,7 +25,7 @@ var AgentSchema = new Schema({
         minlength: 8,
         maxlength:100
     },
-    agency: {
+    department: {
         type: String,
         required: true
     },
@@ -40,7 +33,6 @@ var AgentSchema = new Schema({
         type: String   
     }]
 });
-
 
 AgentSchema.methods.comparePassword = function(password){
     return bcrypt.compare(password, this.password);

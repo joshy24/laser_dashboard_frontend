@@ -1,5 +1,6 @@
 body{
   margin:0px;
+  overflow-x: hidden;
 }
 
 .laser-parent-div{
@@ -16,6 +17,31 @@ body{
   background-color: #2E86C1;
 }
 
+.laserbtn{
+    border-radius: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border: 0px solid #FF000000;
+    color: #FFFFFF;
+    -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+}
+
+.laser-grey-bg{
+   background: #b3b6b7;
+}
+
+.laser-blue-bg{
+  background: #2E86C1;
+}
+
+.laser-red-bg{
+  background: #A93226;
+}
+
 .laser-blue-text{
   color: #2E86C1;
 }
@@ -28,11 +54,21 @@ body{
   color: #000000;
 }
 
+.laser-white-text{
+   color: #FFFFFF;
+}
+
+.laser-btn{
+  background-color: #A93226;
+  color: #FFFFFF;
+}
+
 .laser-controls{
   margin-left: auto;
   margin-right: 0px;
   float: right;
   margin-top: -7px;
+  width: 950px;
 }
 
 .laser-inline{
@@ -64,6 +100,23 @@ body{
   margin-top: 50px;
 }
 
+.laser-agent_side-bar{
+  position: absolute;
+  right: 0;
+  z-index: 200;
+  min-height: 100vh;
+  width: 350px;
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: 0px;
+  background-color: #FFFFFF;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-bottom: 16px;
+  padding-top: 8px;
+  margin-top: 50px;
+}
+
 .close_btn{
   text-align: end;
   height: 30px;
@@ -72,6 +125,19 @@ body{
 }
 
 .close_btn:hover{
+  cursor: pointer;
+}
+
+.action_close_btn{
+  margin-top: -16px;
+  text-align: end;
+  height: 20px;
+  width: 20px;
+  font-size: 30px;
+  float: right;
+}
+
+.action_close_btn:hover{
   cursor: pointer;
 }
 
@@ -92,7 +158,119 @@ body{
   margin-left: 11px;
   margin-right: auto;
   padding: 16px;
-  margin-top: 115px;
+  margin-top: 130px;
   overflow-y: auto;
   background-color: rgba(255,255,255,0.4);
+}
+
+.laser-action_div{
+  padding-top: 8px;
+  padding-left: 17px;
+  padding-bottom: 28px;
+  padding-right: 16px;
+  width: 450px;
+  background: #000000;
+  color: #FFFFFF;
+  font-size: 16px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  margin-bottom: 20px;
+  margin-left: 0px;
+}
+
+.LoadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: scroll;
+  margin-top: 50px;
+  z-index: 10000;
+  background-color: rgba(0,0,0,0.2)
+}
+
+.LoadingModal{
+  position: absolute;
+  top: 40vh;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  width: 115px;
+  padding: 16px;
+  height: 115px;
+  margin-right: auto;
+  margin-left: auto;
+  border: 0px solid #000000;
+  background-color: rgba(0,0,0,0);
+  outline: none;
+}
+
+.LoadingModal:focus-within{
+  border: 0px solid #000000;
+  outline: none;
+}
+
+.Modal {
+  position: absolute;
+  top: 100px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  width: 500px;
+  padding: 16px;
+  height: 480px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #FFFFFF;
+}
+
+.ConfirmModal{
+  position: absolute;
+  top: 180px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  width: 400px;
+  padding: 16px;
+  height: 210px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #FFFFFF;
+}
+
+
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: scroll;
+  z-index: 5000;
+  background-color: rgba(0,0,0,0.4)
+}
+
+.laser-login-div{
+    margin-right: auto;
+    margin-left: auto;
+    display: block;
+    width: 400px;
+    min-height: 400px;
+    background: rgba(0,0,0,0.7);
+    padding: 20px;
+}
+
+.laser-login-bg{
+    background: url('./images/bg.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    margin: 0px;
+    padding-top: 160px;
 }

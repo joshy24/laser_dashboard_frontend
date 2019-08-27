@@ -1,27 +1,43 @@
-'use strict'
-
-var Agent = require('../models/agent.model')
-var Utils = require('../modules/utils');
+var Admin = require('../models/admin.model')
 var bcrypt = require('bcryptjs');
 
-module.exports.saveAgent = function(data){
+module.exports.createAdmin = function(data){
     return new Promise((resolve,reject) => {
-        var loc = new Agent(data);
-        loc.password = bcrypt.hashSync(loc.password, 10);
-        loc.created = Date.now();
-        loc.save((err,saved) => {
+        var admin = new Admin(data);
+
+        if(admin.password){
+            admin.password = bcrypt.hashSync(admin.password, 10);
+        }
+
+        admin.created = Date.now();
+        
+        admin.save((err,saved) => {
             if(err){
-                reject(err.message);
+                reject(err.message)
             }
 
             resolve(saved);
         })
-    });
+    })
 }
 
-module.exports.readAgent = function(id){
+module.exports.countAdmins = (req,res) => {
     return new Promise((resolve,reject) => {
-        Agent.findOne({_id:id})
+        Admin
+            .count()
+            .exec()
+            .then(rem => {
+                resolve(rem);
+            })
+            .catch(error => {
+                reject(error.message);
+            })
+    })
+}
+
+module.exports.readAdminUserName = function(username){
+    return new Promise((resolve,reject) => {
+        Admin.findOne({username:username})
             .exec()
             .then(rem => {
                 resolve(rem);
@@ -32,9 +48,9 @@ module.exports.readAgent = function(id){
     })
 }
 
-module.exports.readAllAgents = function(id){
+module.exports.readAdmin = function(id){
     return new Promise((resolve,reject) => {
-        Agent.find({})
+        Admin.findOne({_id:id})
             .exec()
             .then(rem => {
                 resolve(rem);
@@ -45,9 +61,12 @@ module.exports.readAllAgents = function(id){
     })
 }
 
-module.exports.readAllAgentsDepartment = (department) => {
+module.exports.readAllAdmins = function(count){
     return new Promise((resolve,reject) => {
-        Agent.find({department: department})
+        Admin.find({})
+            .sort({created: -1})
+            .skip(count)
+            .limit(100)
             .exec()
             .then(rem => {
                 resolve(rem);
@@ -58,35 +77,19 @@ module.exports.readAllAgentsDepartment = (department) => {
     })
 }
 
-module.exports.readAgentPhoneNumber = function(phone){
+module.exports.updateAdmin = function(id, new_data){
     return new Promise((resolve,reject) => {
-        Agent.findOne({phone_number:phone})
-            .exec()
-            .then(rem => {
-                resolve(rem);
-            })
-            .catch(error => {
-                reject(error.message)
-            })
-    })
-}
-
-module.exports.updateAgent = function(id, new_data){
-    return new Promise((resolve,reject) => {
-        Agent.findOne({_id:id}, function (err, agent) {
+        Admin.findOne({_id:id}, function (err, admin) {
             if (err){ 
                 reject(err.message)
             }
             else{
-                (new_data.password && new_data.password!=null) ? new_data.password = bcrypt.hashSync(new_data.password, 10) : new_data.password = new_data.password;
+                admin.set(new_data);
+                admin.save(function (err, updatedAdmin) {
+                if (err) 
+                    reject(err.message)
 
-                agent.set(new_data);
-
-                agent.save(function (err, updatedAgent) {
-                    if (err) 
-                        reject(err.message)
-
-                    resolve(updatedAgent);
+                    resolve(updatedAdmin);
                 });
             }
         
@@ -94,9 +97,9 @@ module.exports.updateAgent = function(id, new_data){
     })
 }
 
-module.exports.deleteAgent = function(id){
+module.exports.deleteAdmin = function(id){
     return new Promise((resolve,reject) => {
-        Department.remove({_id:id})//delete the asset from DB
+        Admin.remove({_id:id})//delete the asset from DB
             .exec()
             .then(rem => {
                 resolve(rem);

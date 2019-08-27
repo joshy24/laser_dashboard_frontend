@@ -234,6 +234,7 @@ module.exports.saveEmergencyLocation = function(req,res){
 
     data.user = user._id;
     data.reason = action;
+    data.status = "pending";
     
     data.full_address = full_address;
     data.sub_admin_address = sub_admin_address;
@@ -285,6 +286,7 @@ module.exports.sendEmergencyMessage = function(req,res){
     data.sub_admin_address = sub_admin_address;
 
     data.is_trackable = is_trackable;
+    data.status = "pending";
 
     if(numbers&&numbers.length>0){
         data.emergency_numbers = numbers;
@@ -306,7 +308,7 @@ module.exports.sendEmergencyMessage = function(req,res){
     var client = new twilio(sid, token);
 
     var location = lat +", " +lng;
-     
+    
     /*if(numbers.length>0){
         numbers.map(phone_number => {
             var edited_number = Utils.parsePhoneNumber(phone_number);

@@ -100,7 +100,7 @@ module.exports.loginAgent = function(req,res){
                                 .then(updated_agent => {
                                         if(updated_agent){
                                             agent.tokens = null;
-                                            agent.phone_number = null;
+                                            agent.password = null;
                                             return res.status(200).send({"agent":agent, "token":token});
                                         }
                                         else{
@@ -129,7 +129,12 @@ module.exports.loginAgent = function(req,res){
         })
 }
 
-module.exports.registerAgent = function(req,res){
+
+
+
+//Agent Functions
+
+module.exports.createAgent = function(req,res){
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
     var phone_number  = req.body.phone_number;
@@ -167,21 +172,7 @@ module.exports.registerAgent = function(req,res){
             if(!agent||agent==null){
                 AgentService.saveAgent(agent_obj)
                     .then(agent => {
-                        var token = jwt.sign({id:agent._id, firstname: agent.firstname, lastname: agent.lastname}, config.secret, {issuer: "Laser", audience: "Agents", expiresIn: 60*60*24*5, algorithm: "HS256"});
-                        agent.tokens = [];
-                        agent.tokens.push(token);
-
-                        AgentService.updateAgent(agent._id, agent)
-                                .then(updated_agent => {
-                                        agent.tokens = null;
-                                        agent.password = null;
-                                        agent.phone_number = null;
-                                        return res.status(200).send({"agent":agent, "token":token});
-                                })
-                                .catch(err => {
-                                        console.log(err.message);
-                                        return res.status(500).send("Server Error");
-                                })
+                        return res.status(200).send({"agent":agent});
                     })
                     .catch(err =>{
 
@@ -196,5 +187,97 @@ module.exports.registerAgent = function(req,res){
                 console.log(err.message);
                 return res.status(500).send("Server Error");
         })
+}
 
+module.exports.editAgent = (req,res) => {
+    var firstname = req.body.firstname;
+    var lastname = req.body.lastname;
+    var phone_number  = req.body.phone_number;
+    var agency = req.body.agency;
+    var password = req.body.password
+
+    const id = req.body.id;
+
+    if(!firstname||!lastname||!agency){ 
+        return res.status(400).send({"response":"bad request"});
+    }
+
+    if(!phone_number){
+        return res.status(400).send({"response":"bad request"});
+    }
+
+    var new_number = Utils.parsePhoneNumber(phone_number);
+
+    if(new_number==null){
+        return res.status(400).send("Incomplete Number");
+    }
+
+    var agent_obj = {
+        lastname: lastname,
+        firstname: firstname,
+        phone_number: new_number,
+        password: password,
+        agency: agency
+    }
+
+    AgentService.readAgent(id)
+                .then(agent => {
+                    if(agent){
+                        AgentService.updateAgent(id, agent_obj)
+                                .then(updated_agent => {
+                                    return res.status(200).send(updated_agent);
+                                })
+                                .catch(err => {
+                                    return res.status(500).send("error");
+                                })
+                    }
+                    else{
+                        return res.status(404).send("not found");
+                    }
+                })
+                .catch(err => {
+                    return res.status(500).send("error");
+                })
+}
+
+module.exports.getAgents = (req,res) => {
+    AgentService.readAllAgents()
+                    .then(agents => {
+                        return res.status(200).send(agents);
+                    })
+                    .catch(err => {
+                        return res.status(500).send("error");
+                    })
+}
+
+module.exports.getAgentsDepartment = (req,res) => {
+    const department = req.body.department;
+
+    if(!department){
+        return res.status(400).send("bad request");
+    }
+
+    AgentService.readAllAgentsDepartment(department)
+                    .then(agents => {
+                        return res.status(200).send(agents);
+                    })
+                    .catch(err => {
+                        return res.status(500).send("error");
+                    })
+}
+
+module.exports.deleteAgent = (req,res) => {
+    const id = req.body.id;
+
+    if(!id){
+        return res.status(400).send("bad request");
+    }
+
+    AgentService.deleteAgent(id)
+                    .then(done => {
+                        return res.status(200).send();
+                    })
+                    .catch(err => {
+                        return res.status(500).send("error");
+                    })
 }
