@@ -309,7 +309,7 @@ module.exports.sendEmergencyMessage = function(req,res){
 
     var location = lat +", " +lng;
     
-    /*if(numbers.length>0){
+    if(numbers.length>0){
         numbers.map(phone_number => {
             var edited_number = Utils.parsePhoneNumber(phone_number);
 
@@ -325,5 +325,5 @@ module.exports.sendEmergencyMessage = function(req,res){
                 .catch(err => console.log({err}));
             }
         })
-    }*/
+    }
 }
