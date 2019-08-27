@@ -7,7 +7,7 @@ module.exports = {
     port: process.env.PORT,
     base_url: process.env.BASE_URL,
     db: {
-        uri: process.env.DB_URL,
+        uri: process.env.PROD_DB_URL,
         options: {
             user: process.env.DB_USER,
             pass: process.env.DB_PWD
