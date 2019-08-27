@@ -8,7 +8,7 @@ module.exports.addAgents = function(req,res){
         lastname: "Peter",
         phone_number: '08033333333',
         password: "password24",
-        agency: "police"
+        department: "police"
     }
 
     addAgent(new_agent);
@@ -18,7 +18,7 @@ module.exports.addAgents = function(req,res){
         lastname: "Johnson",
         phone_number: '08022222222',
         password: "password24",
-        agency: "fire"
+        department: "fire"
     }
 
     addAgent(new_agent1);
@@ -28,7 +28,7 @@ module.exports.addAgents = function(req,res){
         lastname: "Kelly",
         phone_number: '08011111111',
         password: "password24",
-        agency: "hospital"
+        department: "hospital"
     }
 
     addAgent(new_agent2);

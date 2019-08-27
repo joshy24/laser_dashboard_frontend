@@ -10,6 +10,10 @@ module.exports = function(router){
         AdminController.login(req,res);
     })
 
+    router.post('/create_agents', (req,res) => {
+        AgentController.addAgents(req,res);
+    })
+
     router.use(function(req,res,next){
         var token = "";
         
@@ -129,5 +133,4 @@ module.exports = function(router){
     router.post('/get_agents_department', (req,res) => {
         AgentController.getAgentsDepartment(req,res);
     })
-
 }
