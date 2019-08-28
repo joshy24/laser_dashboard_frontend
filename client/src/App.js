@@ -827,26 +827,26 @@ class App extends Component{
       switch(agent.agent.agency){
           case "police":
               if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? car_test : car_test;
+                  return (agent.is_on_route) ? police_car_left_enroute : police_car_left;
               }
               else{
-                  return (agent.is_on_route) ? car_test : car_test;
+                  return (agent.is_on_route) ? police_car_right_enroute : police_car_right;
               }
           break;
           case "fire":
               if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? car_test : car_test;
+                  return (agent.is_on_route) ? fire_car_left_enroute : fire_car_left;
               }
               else{
-                  return (agent.is_on_route) ? car_test : car_test;
+                  return (agent.is_on_route) ? fire_car_right_enroute : fire_car_right;
               }
           break;
           case "hospital":
               if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? car_test: car_test;
+                  return (agent.is_on_route) ? ambulance_car_left_enroute: ambulance_car_left;
               }
               else{
-                  return (agent.is_on_route) ? car_test : car_test;
+                  return (agent.is_on_route) ? ambulance_car_right_enroute : ambulance_car_right;
               }
           break;
       }
