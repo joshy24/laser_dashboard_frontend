@@ -38,4 +38,6 @@ AgentSchema.methods.comparePassword = function(password){
     return bcrypt.compare(password, this.password);
 }
 
+AgentSchema.index({phone_number:1}, {unique:true});
+
 module.exports = mongoose.model('Agent', AgentSchema);
