@@ -50,17 +50,12 @@ const mapStyle = {
     width: '100%'
 }
 
-//const socket_io_url = 'http://18.195.71.164';
 const socket_io_url = 'http://52.59.255.174';
+//const socket_io_url = 'http://localhost:3077';
 
 let todays_date = new Date().toISOString();
 
 let today = null;
-
-const locations_url = "/admin/getLocations";
-const emergencies_url = "/admin/getEmergencies";
-const resolve_emergenciy_url = "/admin/resolveEmergency";
-const resolve_location_url = "/admin/resolveCall";
 
 class App extends Component{
   constructor(props){
@@ -458,7 +453,7 @@ class App extends Component{
   //just in case some of them are not moving at the momemnt and their location is not updating
   startMonitoring(e, item){
       e.preventDefault();
-      
+     
       this.pubnub.publish(
           {
               message: {
@@ -956,9 +951,12 @@ class App extends Component{
 
           
           if(message.channel === this.state.tracked_user_id){
+              console.log("tracked user - "+this.state.tracked_user_id)
+              console.log("channel - "+this.state.message.channel)
               //the message is from the user currently being monitored
               if(message.userMetadata && message.userMetadata === "user_location_update"){
                   var arr = this.state.emergencies.map(emergency => {
+                      console.log({emergency})
                       if(emergency.user === this.state.tracked_user_id){
                           emergency.latitude = message.message.latitude;
                           emergency.longitude = message.message.longitude;
