@@ -817,7 +817,7 @@ class App extends Component{
   }
 
   getAgentIcon(agent){
-      switch(agent.agent.agency){
+      switch(agent.agent.department){
           case "police":
               if(agent.bearing>90||agent.bearing<=270){
                   return (agent.is_on_route) ? police_car_left_enroute : police_car_left;
