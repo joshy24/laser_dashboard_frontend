@@ -303,8 +303,6 @@ class App extends Component{
 
           var new_laser_agents = laser_agents.splice(laser_agents.indexOf(found_agent), 1, new_found_agent);
 
-          console.log({new_laser_agents});
-
           //subscribe to the agents id to receive a response to the route request
           this.pubnub.unsubscribe({
              channels: [agent.agent._id]
@@ -954,7 +952,6 @@ class App extends Component{
               //the message is from the user currently being monitored
               if(message.userMetadata && message.userMetadata.action === "user_location_update"){
                   var arr = this.state.emergencies.map(emergency => {
-                    console.log("meta - "+message.userMetadata)
                       if(emergency.user === this.state.tracked_user_id){
                           emergency.latitude = message.message.latitude;
                           emergency.longitude = message.message.longitude;
