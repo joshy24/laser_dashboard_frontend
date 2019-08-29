@@ -951,12 +951,10 @@ class App extends Component{
 
           
           if(message.channel === this.state.tracked_user_id){
-              console.log("tracked user - "+this.state.tracked_user_id)
-              console.log("channel - "+this.state.message.channel)
               //the message is from the user currently being monitored
-              if(message.userMetadata && message.userMetadata === "user_location_update"){
+              if(message.userMetadata && message.userMetadata.action === "user_location_update"){
                   var arr = this.state.emergencies.map(emergency => {
-                      console.log({emergency})
+                    console.log("meta - "+message.userMetadata)
                       if(emergency.user === this.state.tracked_user_id){
                           emergency.latitude = message.message.latitude;
                           emergency.longitude = message.message.longitude;
