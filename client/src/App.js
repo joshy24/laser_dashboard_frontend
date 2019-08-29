@@ -1329,7 +1329,7 @@ class App extends Component{
 
   async getLocations(){
 
-        const response = await API.getEmergencies({date: today})
+        const response = await API.getLocations({date: today})
 
         if(response=="error"){
             //show error message
