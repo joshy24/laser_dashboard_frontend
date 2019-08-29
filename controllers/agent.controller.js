@@ -91,7 +91,6 @@ module.exports.loginAgent = function(req,res){
                 return res.status(404).send({"response": "not found"});
             }
             else{
-                console.log({password})
                 agent.comparePassword(password)
                 .then(confirmation => {
                     if(confirmation==true){

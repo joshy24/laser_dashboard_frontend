@@ -78,8 +78,6 @@ module.exports.updateAgent = function(id, new_data){
                 reject(err.message)
             }
             else{
-                (new_data.password && new_data.password!=null) ? new_data.password = bcrypt.hashSync(new_data.password, 10) : new_data.password = new_data.password;
-
                 agent.set(new_data);
 
                 agent.save(function (err, updatedAgent) {
