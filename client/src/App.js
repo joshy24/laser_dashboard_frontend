@@ -1414,39 +1414,39 @@ render(){
     }
 
     return (
-      <div className="laser-parent-div" style={mapStyle}>
-          <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
-          {show_location_side_bar}
-          {show_side_bar}
-          {this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" }
+        <div className="laser-parent-div" style={mapStyle}>
+            <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
+            {show_location_side_bar}
+            {show_side_bar}
+            {this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" }
 
-          <TopPanel logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
-          onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAllAgentsLocation={this.getAllAgentsLocation}/>
+            <TopPanel logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
+            onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAllAgentsLocation={this.getAllAgentsLocation}/>
 
-          {sound}
-          <Map google={this.props.google} 
-              style={mapStyle}
-              onReady={this.fetchPlaces}
-              initialCenter={this.state.center}
-              center={this.state.center}
-              zoom={this.state.zoom}>
-    
-            {this.getLocationsMarkers()}
-            {this.getEmergenciesMarkers()}
-            {this.getAgentMarkers()}
+            {sound}
+            <Map google={this.props.google} 
+                style={mapStyle}
+                onReady={this.fetchPlaces}
+                initialCenter={this.state.center}
+                center={this.state.center}
+                zoom={this.state.zoom}>
+        
+                {this.getLocationsMarkers()}
+                {this.getEmergenciesMarkers()}
+                {this.getAgentMarkers()}
 
-          </Map>
+            </Map>
 
-          <Action action={this.state.action} closeAction={this.closeAction} message={this.state.action_message}/>
+            <Action action={this.state.action} closeAction={this.closeAction} message={this.state.action_message}/>
 
-          {
-             this.state.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={this.state.route_responses_from_agents[this.state.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={this.removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={this.closeRouteResponse} /> : ""
-          }
+            {
+                this.state.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={this.state.route_responses_from_agents[this.state.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={this.removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={this.closeRouteResponse} /> : ""
+            }
 
-          {
-             this.state.showConfirm.status===true ? <ConfirmAction  yesClicked={this.state.showConfirm.action==="emergency" ? this.resolveEmergency : this.resolveCall} noClicked={this.hideConfirm} message={this.state.message} /> : ""
-          }
-      </div>
+            {
+                this.state.showConfirm.status===true ? <ConfirmAction  yesClicked={this.state.showConfirm.action==="emergency" ? this.resolveEmergency : this.resolveCall} noClicked={this.hideConfirm} message={this.state.message} /> : ""
+            }
+        </div>
     );
   }
 
