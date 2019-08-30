@@ -18,20 +18,25 @@ body{
 }
 
 .laserbtn{
-    border-radius: 8px;
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    border: 0px solid #FF000000;
-    color: #FFFFFF;
-    -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border: 0px solid #FF000000;
+  color: #FFFFFF;
+  -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
 }
 
 .laser-grey-bg{
    background: #b3b6b7;
+}
+
+.laser-white_border-blue-bg{
+  background: #2E86C1;
+  border: 1px solid #FFFFFF;
 }
 
 .laser-blue-bg{
