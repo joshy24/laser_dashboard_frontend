@@ -4,7 +4,8 @@ var Schema = mongoose.Schema;
 var DepartmentSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     created: {
         type: Date,

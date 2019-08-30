@@ -235,7 +235,7 @@ module.exports.createDepartment = (req,res) => {
         return res.status(400).send("bad request");
     }
 
-    DepartmentService.createDepartment({name: name})
+    DepartmentService.createDepartment({name})
                     .then(department => {
                         return res.status(200).send(department);
                     })
