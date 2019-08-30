@@ -50,8 +50,8 @@ const mapStyle = {
     width: '100%'
 }
 
-const socket_io_url = 'http://52.59.255.174';
-//const socket_io_url = 'http://localhost:3077';
+//const socket_io_url = 'http://52.59.255.174';
+const socket_io_url = 'http://localhost:3077';
 
 let todays_date = new Date().toISOString();
 
