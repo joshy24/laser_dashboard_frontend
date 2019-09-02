@@ -321,14 +321,14 @@ body{
 
 @media screen and (max-width: 1320px) {
     .laser-latest-div{
-      margin-top: 190px;
+      margin-top: 180px;
     }
 
     .laser-side-bar{
-        margin-top: 110px;
+        margin-top: 115px;
     }
 
     .laser-agent_side-bar{
-        margin-top: 110px;
+        margin-top: 115px;
     }
 }
