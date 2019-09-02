@@ -292,7 +292,7 @@ module.exports.deleteDepartment = (req,res) => {
     
     DepartmentService.deleteDepartment(id)
                     .then(done => {
-                        return res.status(200).send();
+                        return res.status(200).send("success");
                     })
                     .catch(err => {
                         return res.status(500).send("error");

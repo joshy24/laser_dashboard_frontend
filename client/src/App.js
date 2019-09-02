@@ -50,8 +50,8 @@ const mapStyle = {
     width: '100%'
 }
 
-//const socket_io_url = 'http://52.59.255.174';
-const socket_io_url = 'http://localhost:3077';
+const socket_io_url = 'http://52.59.255.174';
+//const socket_io_url = 'http://localhost:3077';
 
 let todays_date = new Date().toISOString();
 
@@ -1090,6 +1090,7 @@ class App extends Component{
     socket.on("connect", 
       () => console.log("connected to socket io")
     );
+
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
     socket.on("emergency", 
       data => {

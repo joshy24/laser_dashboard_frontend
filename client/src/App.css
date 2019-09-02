@@ -27,9 +27,9 @@ body{
 
 .laser-top-panel{
   padding-top: 15px;
+  padding-bottom: 15px;
   padding-left: 50px;
   padding-right: 50px;
-  height: 50px;
   width: 100%;
   color: #FFFFFF;
   background-color: #2E86C1;
@@ -91,7 +91,29 @@ body{
   margin-right: 0px;
   float: right;
   margin-top: -7px;
-  width: 950px;
+  width: 770px;
+}
+
+.laser-header-text{
+  text-align: left;
+  display: inline;
+}
+
+@media screen and (max-width: 1320px) {
+    .laser-controls{
+      margin-left: auto;
+      margin-right: auto;
+      float: none;
+      margin-top: 24px;
+    }
+
+    .laser-header-text{
+      text-align: center;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+      float: none;
+    }
 }
 
 .laser-inline{
@@ -246,7 +268,7 @@ body{
   bottom: 40px;
   width: 500px;
   padding: 16px;
-  height: 480px;
+  height: 500px;
   margin-right: auto;
   margin-left: auto;
   background-color: #FFFFFF;
@@ -265,7 +287,6 @@ body{
   margin-left: auto;
   background-color: #FFFFFF;
 }
-
 
 .Overlay {
   position: fixed;

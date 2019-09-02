@@ -110,8 +110,8 @@ module.exports = function(router){
         AdminController.getDepartments(req,res);
     })
 
-    router.post('/delete_departments', (req,res) => {
-        AdminController.deleteDepartments(req,res);
+    router.post('/delete_department', (req,res) => {
+        AdminController.deleteDepartment(req,res);
     })
     
     router.post('/create_agent', (req,res) => {
