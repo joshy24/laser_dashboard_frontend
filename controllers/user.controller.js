@@ -44,7 +44,6 @@ module.exports.login = function(req,res){
                                         .then(updated_user => {
                                                 if(updated_user){
                                                     user.tokens = null;
-                                                    user.phone_number = null;
                                                     return res.status(200).send({"user":user, "token":token});
                                                 }
                                                 else{
@@ -133,7 +132,6 @@ module.exports.createUser = function(req,res){
                                                 .then(updated_user => {
                                                     user.tokens = null;
                                                     user.password = null;
-                                                    user.phone_number = null;
                                                     return res.status(200).send({"user":user, "token":token});
                                                 })
                                                 .catch(err => {
@@ -158,18 +156,70 @@ module.exports.createUser = function(req,res){
             })
 }
 
-module.exports.saveEmergencyNumbers = function(req,res){
-    if(req.body.numbers){
-        if(req.body.numbers.length > 0 && req.body.numbers.length<6){
-            
-        }
-        else{
+module.exports.editUser = function(req,res){
+    var _id = req.body._id;
+    var lastname = req.body.lastname;
+    var firstname = req.body.firstname;
+    var phone_number = req.body.phone_number;
+    var email = req.body.email;
 
-        }
+    if(!firstname||!lastname){ 
+        return res.status(400).send({"response":"bad request"});
     }
-    else{
 
+    if(!phone_number){
+        return res.status(400).send({"response":"bad request"});
     }
+
+    var new_number = Utils.parsePhoneNumber(phone_number);
+
+    if(new_number==null){
+        return res.status(400).send("Incomplete Number");
+    }
+    
+    var user_obj = {
+        lastname: lastname,
+        firstname: firstname,
+        phone_number: new_number,
+        email: email
+    }
+
+    UserService.readUser(_id)
+            .then(user => {
+                if(!user||user==null){
+                    UserService.updateUser(_id, user_obj)
+                                .then(user => {
+                                    var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*5, algorithm: "HS256"});
+                                    user.tokens = [];
+                                    user.tokens.push(token);
+
+                                    UserService.updateUser(user._id, user)
+                                                .then(updated_user => {
+                                                    user.tokens = null;
+                                                    user.password = null;
+
+                                                    return res.status(200).send({"user":user, "token":token});
+                                                })
+                                                .catch(err => {
+                                                    console.log(err.message);
+                                                    return res.status(500).send("Server Error");
+                                                })
+
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    return res.status(500).send("Create Server Error");
+                                })
+                }
+                else{
+                    res.statusMessage = "User Exists";
+                    return res.status(500).send();
+                }
+            })
+            .catch(err => {
+                console.log(err.message);
+                return res.status(500).send("Server Error");
+            })
 }
 
 module.exports.saveFeedback = function(req,res){

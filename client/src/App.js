@@ -84,11 +84,11 @@ class App extends Component{
           show_blue_circle: false,
           clicked_marker_id: "",
           play_sound: false,
-          channels_list: ["lllaser"],
+          channels_list: ["lllaser", "agent_tracked", "agent_untracked", "users_monitored", "issue_resolved", "request_tracked", "response_tracked"],
           laser_agents:[], //all agents
           selected_agents: [], //selected agents to resolve issues
           route_responses_from_agents: [],
-          tracked_user_id: "",
+          tracked_users: [],
           action: "loading",
           action_message: "",
           tracked_area: "lllaser", //the user in which the admin is currently viewing whether the user wants to be tracked or not
@@ -114,7 +114,7 @@ class App extends Component{
       this.closeAgentSideBar = this.closeAgentSideBar.bind(this);
       this.addAgentToMonitoring = this.addAgentToMonitoring.bind(this);
       this.getAgentIcon = this.getAgentIcon.bind(this);
-      this.getAllAgentsLocation = this.getAllAgentsLocation.bind(this);
+      this.subscribeAndGetAllAgentsLocation = this.subscribeAndGetAllAgentsLocation.bind(this);
       this.handleSongFinishedPlaying = this.handleSongFinishedPlaying.bind(this);
       this.removeAgentFromRoute = this.removeAgentFromRoute.bind(this);
       this.closeRouteResponse = this.closeRouteResponse.bind(this);
@@ -168,16 +168,37 @@ class App extends Component{
       }
       
       if(response){
-          this.setState({
-            action: "close",
-            side_bar_open: false
+          this.pubnub.publish(
+                {
+                    message: {
+                        
+                    },
+                    channel: "issue_resolved",
+                    sendByPost: false, // true to send via POST
+                    storeInHistory: false //override default storage options
+                },
+                (status, response) => {
+                    // handle status, response
+                }
+          );
+
+          this.setState(state => {
+                var tracked_users = state.tracked_users;
+                
+                tracked_users.splice(tracked_users.indexOf(this.state.clicked_user._id), 1);
+
+                return {
+                    action: "close",
+                    side_bar_open: false,
+                    tracked_users: tracked_users
+                }
           })
 
           this.getLocationsDate(this.state.date);
           this.getEmergenciesDate(this.state.date);
 
           this.setState({
-            latest: []
+              latest: []
           })
 
           this.getLatestLocations();
@@ -206,6 +227,20 @@ class App extends Component{
       }
         
       if(response){
+          this.pubnub.publish(
+                {
+                    message: {
+
+                    },
+                    channel: "issue_resolved",
+                    sendByPost: false, // true to send via POST
+                    storeInHistory: false //override default storage options
+                },
+                (status, response) => {
+                    // handle status, response
+                }
+          );
+
           this.setState({
             action: "close",
             location_side_bar_open: false
@@ -277,6 +312,21 @@ class App extends Component{
           }
       );
 
+      //tell other browsers about the agent being montiored
+      this.pubnub.publish(
+        {
+            message: {
+                agent
+            },
+            channel: "agent_untracked",
+            sendByPost: false, // true to send via POST
+            storeInHistory: false //override default storage options
+        },
+        (status, response) => {
+            // handle status, response
+        }
+      );
+
       this.setState(state => {
           var agents = state.selected_agents;
           var list = state.channels_list;
@@ -284,7 +334,7 @@ class App extends Component{
           
           var new_selected_agents = [];
 
-          if(new_selected_agents.length > 1){
+          if(agents.length > 1){
               new_selected_agents = agents.map(age => {
                   if(age.agent._id!==agent.agent._id){
                       return age;
@@ -343,6 +393,21 @@ class App extends Component{
           }
       );
 
+      //tell other browsers about the agent being montiored
+      this.pubnub.publish(
+                {
+                    message: {
+                        agent
+                    },
+                    channel: "agent_untracked",
+                    sendByPost: false, // true to send via POST
+                    storeInHistory: false //override default storage options
+                },
+                (status, response) => {
+                    // handle status, response
+                }
+      );
+
       this.setState(state => {
           var agents = state.selected_agents;
           var list = state.channels_list;
@@ -352,7 +417,7 @@ class App extends Component{
           
           var new_selected_agents = [];
 
-          if(new_selected_agents.length > 1){
+          if(agents.length > 1){
               new_selected_agents = agents.map(age => {
                   if(age.agent._id!==agent.agent._id){
                       return age;
@@ -402,6 +467,22 @@ class App extends Component{
           (status, response) => {
               // handle status, response
           }
+      );
+
+
+      //tell other browsers about the agent being montiored
+      this.pubnub.publish(
+            {
+                message: {
+                    agent
+                },
+                channel: "agent_tracked",
+                sendByPost: false, // true to send via POST
+                storeInHistory: false //override default storage options
+            },
+            (status, response) => {
+                // handle status, response
+            }
       );
 
       this.setState(state => {
@@ -455,13 +536,13 @@ class App extends Component{
       this.pubnub.publish(
           {
               message: {
-                pn_gcm: {
-                    data: {
-                        notification_body: "Tap to open the laser App",
-                        data: {},
-                        action: "send_location"
+                    pn_gcm: {
+                        data: {
+                            notification_body: "Tap to open the laser App",
+                            data: {},
+                            action: "send_location"
+                        }
                     }
-                }
               },
               channel: this.state.tracked_area,
               sendByPost: false, // true to send via POST
@@ -471,30 +552,35 @@ class App extends Component{
               // handle status, response
           }
       );
-
-      //Next we will subscribe to the area to get latest updates
+      
       this.setState(state => {
-          var list = state.channels_list;
+            var list = state.channels_list;
+            var tracked_users = state.tracked_users;
 
-          if(list.indexOf(item.user)===-1){
+            if(list.indexOf(item.user)===-1){
+                    //remove old user from list
+                    //unsubscribe from old user
+        
+                    list.push(item.user)
+            }
 
-            //remove old user from list
-            //unsubscribe from old user
-  
-            list.push(item.user)
-          }
+            var found_user = tracked_users.find(id => id === item.user);
+            
+            if(!found_user){
+                tracked_users.push(item.user);
+            }
 
-          this.pubnub.subscribe({
-            channels: list
-          })
+            this.pubnub.subscribe({
+                channels: list
+            })
 
-          return {
-              action: "message",
-              action_message: "You are now monitoring "+item.full_name,
-              channels_list: list,
-              laser_agents: [],
-              tracked_user_id: item.user
-          }
+            return {
+                action: "message",
+                action_message: "You are now monitoring "+item.full_name,
+                channels_list: list,
+                laser_agents: [],
+                tracked_users: tracked_users
+            }
       })
   }
 
@@ -754,24 +840,24 @@ class App extends Component{
   }
 
   getLocationsMarkers(){
-      let locations_ui;
+        let locations_ui;
 
-      if(this.state.filtered_locations.length>0){
-        locations_ui = this.state.filtered_locations.map(loc => {
-          return  <Marker key={loc._id} onClick={e => this.onLocationClicked(loc,e)}
-                    name={loc.reason} 
-                    title={loc.full_name}
-                    position={{lat: loc.latitude, lng: loc.longitude}}
-                    icon={{
-                      url: (this.state.clicked_marker_id===loc._id) ? blue_circle : call_icon
-                    }}/> 
-        })
-      }
-      else{
-        locations_ui = "";
-      }
-      
-      return locations_ui;
+        if(this.state.filtered_locations.length>0){
+            locations_ui = this.state.filtered_locations.map(loc => {
+                return  <Marker key={loc._id} onClick={e => this.onLocationClicked(loc,e)}
+                            name={loc.reason} 
+                            title={loc.full_name}
+                            position={{lat: loc.latitude, lng: loc.longitude}}
+                            icon={{
+                            url: (this.state.clicked_marker_id===loc._id) ? blue_circle : call_icon
+                            }}/> 
+            })
+        }
+        else{
+            locations_ui = "";
+        }
+        
+        return locations_ui;
   }
 
   getEmergenciesMarkers(){
@@ -887,7 +973,7 @@ class App extends Component{
 
   }
 
-  getAllAgentsLocation(){
+  subscribeAndGetAllAgentsLocation(){
       this.pubnub.subscribe({
         channels: this.state.channels_list
       })
@@ -936,40 +1022,130 @@ class App extends Component{
 
     //subscribe to the parent channel to receive location updates from agents
     this.pubnub.subscribe({
-      channels: this.state.channels_list
+        channels: this.state.channels_list
     })
 
-    this.getAllAgentsLocation();
+    this.subscribeAndGetAllAgentsLocation();
 
     this.pubnub.addListener({
       status: (st) => {
           
       },
       message: (message) => {
-
           
-          if(message.channel === this.state.tracked_user_id){
-              //the message is from the user currently being monitored
-              if(message.userMetadata && message.userMetadata.action === "user_location_update"){
-                  var arr = this.state.emergencies.map(emergency => {
-                      if(emergency.user === this.state.tracked_user_id){
-                          emergency.latitude = message.message.latitude;
-                          emergency.longitude = message.message.longitude;
-                          return emergency;
-                      }
-                      else{
-                          return emergency;
-                      }
-                  })
+          if(message.channel === "users_monitored"){
+                var tracked_user_id = this.state.tracked_users.find(id => id === message.message.user_id);
 
-                  //var found_emergency = state.emergencies.find(emergency => emergency.user === state.tracked_user_id);
+                if(!tracked_user_id){
+                    this.setState(state => {
+                        var tracked_users = state.tracked_users;
 
-                  this.setState(state => {
-                      return{
-                        emergencies: arr
-                      }
-                  })
-              }
+                        tracked_users.push(message.message.user_id);
+
+                        return {
+                            tracked_users: tracked_users
+                        }
+                    })
+                }
+          }
+
+          if(message.channel === "agent_tracked"){
+                this.setState(state => {
+                    var agents = state.selected_agents;
+                  
+                    if(agents.length > 1){
+                        var found_selected_agent = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
+
+                        if(!found_selected_agent){
+                            agents.push(message.message);
+
+                            persistence.saveSelectedAgents(agents);
+                        }
+                    }
+        
+                    return {  
+                        selected_agents: agents
+                    }
+                })
+          }
+
+          if(message.channel === "agent_untracked"){
+                this.setState(state => {
+                    var agents = state.selected_agents;
+                
+                    if(agents.length > 1){
+                        var found_selected_agent = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
+
+                        if(found_selected_agent){
+                            agents.splice(agents.indexOf(message.message),1);
+
+                            persistence.saveSelectedAgents(agents);
+                        }
+                    }
+        
+                    return {  
+                        selected_agents: agents
+                    }
+                })
+          }
+
+          if(message.channel === "issue_resolved"){
+                this.getLocationsDate(this.state.date);
+                this.getEmergenciesDate(this.state.date);
+    
+                this.setState({
+                    latest: []
+                })
+    
+                this.getLatestLocations();
+                this.getLatestEmergencies();
+          }
+
+          //We need a way to send the agents and users tracked to the other browsers
+          if(message.channel === "request_tracked"){
+                this.pubnub.publish(
+                    {
+                        message: {
+                            
+                        },
+                        channel: "response_tracked",
+                        sendByPost: false, // true to send via POST
+                        storeInHistory: false //override default storage options
+                    },
+                    (status, response) => {
+                        // handle status, response
+                    }
+                );
+          }
+
+          if(message.channel === "response_tracked"){
+              
+          }
+          
+          var tracked_user_id = this.state.tracked_users.find(id => id === message.channel);
+
+          if(tracked_user_id){
+                //the message is from the user currently being monitored
+                if(message.userMetadata && message.userMetadata.action === "user_location_update"){
+                    var arr = this.state.emergencies.map(emergency => {
+                        if(emergency.user === tracked_user_id){
+                            emergency.latitude = message.message.latitude;
+                            emergency.longitude = message.message.longitude;
+                            return emergency;
+                        }
+                        else{
+                            return emergency;
+                        }
+                    })
+
+                    //var found_emergency = state.emergencies.find(emergency => emergency.user === state.tracked_user_id);
+
+                    this.setState(state => {
+                        return{
+                            emergencies: arr
+                        }
+                    })
+                }
           }
           
           if(message.channel === this.state.tracked_area ){
@@ -1012,8 +1188,8 @@ class App extends Component{
                   }
                   
                   this.setState(state => {
-                      return{
-                        laser_agents: agents
+                      return {
+                            laser_agents: agents
                       }
                   })
                   
@@ -1090,6 +1266,25 @@ class App extends Component{
     socket.on("connect", 
       () => console.log("connected to socket io")
     );
+
+    socket.on("reconnect", attempt => {
+        console.log("Socket IO Reconnected")
+        //successfully reconnected
+        //get the lastest data
+        this.pubnub.publish(
+            {
+                message: {
+                    
+                },
+                channel: "request_tracked",
+                sendByPost: false, // true to send via POST
+                storeInHistory: false //override default storage options
+            },
+            (status, response) => {
+                // handle status, response
+            }
+        );
+    })
 
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
     socket.on("emergency", 

@@ -63,6 +63,10 @@ module.exports = function(router){
             UserController.saveFeedback(req,res);
         });
 
+        router.post('/editProfile', function(req,res){
+            UserController.editUser(req,res);
+        });
+
         router.post('/sendMessage', function(req,res){
             UserController.sendEmergencyMessage(req,res);
         });
