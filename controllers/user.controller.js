@@ -186,7 +186,7 @@ module.exports.editUser = function(req,res){
 
     UserService.readUser(_id)
             .then(user => {
-                if(!user||user==null){
+                if(user){
                     UserService.updateUser(_id, user_obj)
                                 .then(user => {
                                     var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*5, algorithm: "HS256"});
@@ -212,7 +212,7 @@ module.exports.editUser = function(req,res){
                                 })
                 }
                 else{
-                    res.statusMessage = "User Exists";
+                    res.statusMessage = "User Not Found";
                     return res.status(500).send();
                 }
             })

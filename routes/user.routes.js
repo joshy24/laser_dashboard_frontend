@@ -63,7 +63,7 @@ module.exports = function(router){
             UserController.saveFeedback(req,res);
         });
 
-        router.post('/editProfile', function(req,res){
+        router.post('/editUser', function(req,res){
             UserController.editUser(req,res);
         });
 
