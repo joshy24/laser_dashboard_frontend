@@ -127,6 +127,9 @@ class App extends Component{
       this.getLatestEmergencies = this.getLatestEmergencies.bind(this);
       this.getLatestLocations = this.getLatestLocations.bind(this);
 
+      this.getSelectedAgentsIds = this.getSelectedAgentsIds.bind(this);
+      this.setSelectedAgentsFromIds = this.setSelectedAgentsFromIds.bind(this);
+
       this.resolveCall = this.resolveCall.bind(this);
       this.resolveEmergency = this.resolveEmergency.bind(this);
       this.hideConfirm = this.hideConfirm.bind(this);
@@ -1003,6 +1006,37 @@ class App extends Component{
       );
   }
 
+  getSelectedAgentsIds(){
+      var ids = [];
+
+      this.state.selected_agents.map(agent => {
+          ids.push(agent.agent._id);
+      });
+
+      return ids;
+  }
+
+  setSelectedAgentsFromIds(ids){
+      this.setState(state => {
+          var laser_agents = state.laser_agents;
+
+          var selected_agents = state.selected_agents;
+
+          laser_agents.map(agent => {
+              var found_agent = ids.find(id =>  id === agent.agent._id);
+
+              if(found_agent){
+                  selected_agents.push(agent);
+              }
+          })
+
+          return {
+              selected_agents: selected_agents
+          }
+
+      });
+  }
+
   componentWillUnmount() {
       this.pubnub.unsubscribe({
           channels: this.state.channels_list
@@ -1029,11 +1063,47 @@ class App extends Component{
 
     this.pubnub.addListener({
       status: (st) => {
-          
+            if (st.category === "PNReconnectedCategory") {
+                this.pubnub.publish(
+                    {
+                        message: {
+                            
+                        },
+                        channel: "request_tracked",
+                        sendByPost: false, // true to send via POST
+                        storeInHistory: false //override default storage options
+                    },
+                    (status, response) => {
+                        // handle status, response
+                    }
+                );
+            }
+
+            if (st.category === "PNNetworkIssuesCategory") {
+                this.setState({
+                    action: "message",
+                    action_message: "It appears there is a network issue. You may have to reload the page"
+                })
+            }
+
+            if (st.category === "PNNetworkDownCategory") {
+                this.setState({
+                    action: "message",
+                    action_message: "It appears the network is down. You may have to reload the page"
+                })
+            }
+
+            if (st.category === "PNTimeoutCategory") {
+                this.setState({
+                    action: "message",
+                    action_message: "Could not connect to the internet. You may have to reload the page"
+                })
+            }
       },
       message: (message) => {
           
           if(message.channel === "users_monitored"){
+                console.log("user - "+message.message);
                 var tracked_user_id = this.state.tracked_users.find(id => id === message.message.user_id);
 
                 if(!tracked_user_id){
@@ -1104,10 +1174,27 @@ class App extends Component{
 
           //We need a way to send the agents and users tracked to the other browsers
           if(message.channel === "request_tracked"){
+
+                //splitting the publish into two so that the message wont be too heavy
+
                 this.pubnub.publish(
                     {
                         message: {
-                            
+                            agents: this.getSelectedAgentsIds()
+                        },
+                        channel: "response_tracked",
+                        sendByPost: false, // true to send via POST
+                        storeInHistory: false //override default storage options
+                    },
+                    (status, response) => {
+                        // handle status, response
+                    }
+                );
+
+                this.pubnub.publish(
+                    {
+                        message: {
+                            users: this.state.tracked_users
                         },
                         channel: "response_tracked",
                         sendByPost: false, // true to send via POST
@@ -1120,7 +1207,27 @@ class App extends Component{
           }
 
           if(message.channel === "response_tracked"){
-              
+              if(message.message.agents){
+                  if(message.message.agents.length > 0){
+                    this.setSelectedAgentsFromIds(message.message.agents);
+                  }
+              }
+
+              if(message.message.users){
+                  if(message.message.users.length > 0){
+                        this.setState(state => {
+                            var tracked_users = state.tracked_users;
+    
+                            message.message.users.map(user_id => {
+                                tracked_users.push(user_id)
+                            })
+    
+                            return{
+                                tracked_users: tracked_users
+                            }
+                        })
+                  }
+              }
           }
           
           var tracked_user_id = this.state.tracked_users.find(id => id === message.channel);
@@ -1272,19 +1379,6 @@ class App extends Component{
         console.log("Socket IO Reconnected")
         //successfully reconnected
         //get the lastest data
-        this.pubnub.publish(
-            {
-                message: {
-                    
-                },
-                channel: "request_tracked",
-                sendByPost: false, // true to send via POST
-                storeInHistory: false //override default storage options
-            },
-            (status, response) => {
-                // handle status, response
-            }
-        );
     })
 
     //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
