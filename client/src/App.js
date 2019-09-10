@@ -1092,7 +1092,7 @@ class App extends Component{
 
                 this.setState({
                     action: "message",
-                    action_message: "You are back online."
+                    action_message: "You are online."
                 })
             }
 
