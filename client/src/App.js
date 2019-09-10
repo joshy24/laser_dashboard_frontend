@@ -195,13 +195,16 @@ class App extends Component{
                 return {
                     action: "close",
                     side_bar_open: false,
-                    tracked_users: tracked_users,
-                    latest: []
+                    tracked_users: tracked_users
                 }
           })
 
           this.getLocationsDate(this.state.date);
           this.getEmergenciesDate(this.state.date);
+
+          this.setState({
+              latest: []
+          })
 
           this.getLatestLocations();
           this.getLatestEmergencies();
@@ -244,13 +247,16 @@ class App extends Component{
           );
 
           this.setState({
-            action: "close",
-            location_side_bar_open: false,
-            latest: []
+                action: "close",
+                location_side_bar_open: false
           })
 
           this.getLocationsDate(this.state.date);
           this.getEmergenciesDate(this.state.date);
+
+          this.setState({
+                latest: []
+          })
 
           this.getLatestLocations();
           this.getLatestEmergencies();
