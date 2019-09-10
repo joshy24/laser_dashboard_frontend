@@ -1228,7 +1228,7 @@ class App extends Component{
           }
 
           if(message.channel === "issue_resolved"){
-                this.getLocationsDate(this.state.date);
+                /*this.getLocationsDate(this.state.date);
                 this.getEmergenciesDate(this.state.date);
     
                 this.setState({
@@ -1236,7 +1236,7 @@ class App extends Component{
                 })
     
                 this.getLatestLocations();
-                this.getLatestEmergencies();
+                this.getLatestEmergencies();*/
           }
 
           //We need a way to send the agents and users tracked to the other browsers
