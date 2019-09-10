@@ -190,19 +190,18 @@ class App extends Component{
                 
                 tracked_users.splice(tracked_users.indexOf(this.state.clicked_user._id), 1);
 
+                persistence.saveTrackedUsers(tracked_users);
+
                 return {
                     action: "close",
                     side_bar_open: false,
-                    tracked_users: tracked_users
+                    tracked_users: tracked_users,
+                    latest: []
                 }
           })
 
           this.getLocationsDate(this.state.date);
           this.getEmergenciesDate(this.state.date);
-
-          this.setState({
-              latest: []
-          })
 
           this.getLatestLocations();
           this.getLatestEmergencies();
@@ -246,15 +245,12 @@ class App extends Component{
 
           this.setState({
             action: "close",
-            location_side_bar_open: false
+            location_side_bar_open: false,
+            latest: []
           })
 
           this.getLocationsDate(this.state.date);
           this.getEmergenciesDate(this.state.date);
-
-          this.setState({
-            latest: []
-          })
 
           this.getLatestLocations();
           this.getLatestEmergencies();
@@ -572,6 +568,8 @@ class App extends Component{
             if(!found_user){
                 tracked_users.push(item.user);
             }
+
+            persistence.saveTrackedUsers(tracked_users);
 
             this.pubnub.subscribe({
                 channels: list
@@ -1023,12 +1021,18 @@ class App extends Component{
           var selected_agents = state.selected_agents;
 
           laser_agents.map(agent => {
-              var found_agent = ids.find(id =>  id === agent.agent._id);
+              var found_agent_id = ids.find(id =>  id === agent.agent._id);
 
-              if(found_agent){
-                  selected_agents.push(agent);
+              if(found_agent_id){
+                  var found = selected_agents.find(sel => sel.agent._id === found_agent_id)
+
+                  if(!found){
+                      selected_agents.push(agent);
+                  }
               }
-          })
+          });
+
+          persistence.saveSelectedAgents(selected_agents);
 
           return {
               selected_agents: selected_agents
@@ -1046,11 +1050,19 @@ class App extends Component{
   componentDidMount(){
 
     //get selected agents from persistence(storage)
-    var persist = persistence.getSelectedAgents();
+    var persisted_agents = persistence.getSelectedAgents();
     
-    if(persist!==null && persist.length > 0){
+    if(persisted_agents!==null && persisted_agents.length > 0){
         this.setState({
-            selected_agents: persist
+            selected_agents: persisted_agents
+        })
+    }
+
+    var persisted_tracked_users = persistence.getTrackedUsers();
+    
+    if(persisted_tracked_users!==null && persisted_tracked_users.length > 0){
+        this.setState({
+            tracked_users: persisted_tracked_users
         })
     }
 
@@ -1063,6 +1075,27 @@ class App extends Component{
 
     this.pubnub.addListener({
       status: (st) => {
+            if(st.category === "PNReconnectedCategory"){
+                this.pubnub.publish(
+                    {
+                        message: {
+                            
+                        },
+                        channel: "request_tracked",
+                        sendByPost: false, // true to send via POST
+                        storeInHistory: false //override default storage options
+                    },
+                    (status, response) => {
+                        // handle status, response
+                    }
+                );
+
+                this.setState({
+                    action: "close",
+                    action_message: ""
+                })
+            }
+
             if (st.category === "PNReconnectedCategory") {
                 this.pubnub.publish(
                     {
@@ -1077,26 +1110,31 @@ class App extends Component{
                         // handle status, response
                     }
                 );
+
+                this.setState({
+                    action: "close",
+                    action_message: ""
+                })
             }
 
             if (st.category === "PNNetworkIssuesCategory") {
                 this.setState({
                     action: "message",
-                    action_message: "It appears there is a network issue. You may have to reload the page"
+                    action_message: "It appears there is a network issue."
                 })
             }
 
             if (st.category === "PNNetworkDownCategory") {
                 this.setState({
                     action: "message",
-                    action_message: "It appears the network is down. You may have to reload the page"
+                    action_message: "It appears the network is down."
                 })
             }
 
             if (st.category === "PNTimeoutCategory") {
                 this.setState({
                     action: "message",
-                    action_message: "Could not connect to the internet. You may have to reload the page"
+                    action_message: "Could not connect to the internet."
                 })
             }
       },
@@ -1111,6 +1149,8 @@ class App extends Component{
                         var tracked_users = state.tracked_users;
 
                         tracked_users.push(message.message.user_id);
+
+                        persistence.saveTrackedUsers(tracked_users);
 
                         return {
                             tracked_users: tracked_users
@@ -1219,8 +1259,14 @@ class App extends Component{
                             var tracked_users = state.tracked_users;
     
                             message.message.users.map(user_id => {
-                                tracked_users.push(user_id)
+                                var found = tracked_users.find(id => id === user_id)
+
+                                if(!found){
+                                    tracked_users.push(user_id)
+                                }
                             })
+
+                            persistence.saveTrackedUsers(tracked_users);
     
                             return{
                                 tracked_users: tracked_users
@@ -1233,7 +1279,7 @@ class App extends Component{
           var tracked_user_id = this.state.tracked_users.find(id => id === message.channel);
 
           if(tracked_user_id){
-                //the message is from the user currently being monitored
+                //the message is from a user currently being monitored
                 if(message.userMetadata && message.userMetadata.action === "user_location_update"){
                     var arr = this.state.emergencies.map(emergency => {
                         if(emergency.user === tracked_user_id){
