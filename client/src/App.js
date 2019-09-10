@@ -1075,7 +1075,7 @@ class App extends Component{
 
     this.pubnub.addListener({
       status: (st) => {
-            if(st.category === "PNReconnectedCategory"){
+            if(st.category === "PNConnectedCategory"){
                 this.pubnub.publish(
                     {
                         message: {
