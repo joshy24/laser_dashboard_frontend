@@ -1756,7 +1756,7 @@ render(){
     let show_location_side_bar;
     
     if(this.state.location_side_bar_open){
-      show_location_side_bar = <LocationSidebar closeSidebar={this.closeSideBar} location={this.state.clicked_user} resolve={this.showConfirmResolveEmergency} />
+      show_location_side_bar = <LocationSidebar closeSidebar={this.closeSideBar} location={this.state.clicked_user} resolve={this.showConfirmResolveLocation} />
     }
     else{
       show_location_side_bar = "";
@@ -1779,7 +1779,7 @@ render(){
             {this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" }
 
             <TopPanel logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
-            onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAllAgentsLocation={this.getAllAgentsLocation}/>
+            onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAllAgentsLocation={this.subscribeAndGetAllAgentsLocation}/>
 
             {sound}
             <Map google={this.props.google} 
