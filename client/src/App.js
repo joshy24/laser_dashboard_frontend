@@ -1050,6 +1050,7 @@ class App extends Component{
           }
 
           if(message.channel === "agent_tracked"){
+                console.log("agent - "+message.message);
                 this.setState(state => {
                     var agents = state.selected_agents;
                   
