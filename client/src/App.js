@@ -1075,6 +1075,27 @@ class App extends Component{
 
     this.pubnub.addListener({
       status: (st) => {
+            if(st.category === "PNNetworkUpCategory"){
+                this.pubnub.publish(
+                    {
+                        message: {
+                            
+                        },
+                        channel: "request_tracked",
+                        sendByPost: false, // true to send via POST
+                        storeInHistory: false //override default storage options
+                    },
+                    (status, response) => {
+                        // handle status, response
+                    }
+                );
+
+                this.setState({
+                    action: "message",
+                    action_message: "You are back online."
+                })
+            }
+
             if(st.category === "PNConnectedCategory"){
                 this.pubnub.publish(
                     {
@@ -1091,8 +1112,8 @@ class App extends Component{
                 );
 
                 this.setState({
-                    action: "close",
-                    action_message: ""
+                    action: "message",
+                    action_message: "You are back online."
                 })
             }
 
@@ -1112,8 +1133,8 @@ class App extends Component{
                 );
 
                 this.setState({
-                    action: "close",
-                    action_message: ""
+                    action: "message",
+                    action_message: "You are back online."
                 })
             }
 
