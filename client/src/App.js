@@ -246,9 +246,16 @@ class App extends Component{
                 }
           );
 
-          this.setState({
+          this.setState(state =>{
+              var locations = state.locations;
+
+              locations.splice(locations.indexOf(state.clicked_user))
+
+              return {
+                locations: locations,
                 action: "close",
                 location_side_bar_open: false
+              }
           })
 
           this.getLocationsDate(this.state.date);
