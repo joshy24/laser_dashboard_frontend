@@ -208,7 +208,7 @@ module.exports.resolveCall = (req,res) => {
                         if(location){
                             location.status = "resolved";
 
-                            LocationService.updateEmergency(location._id, location)
+                            LocationService.updateLocation(location._id, location)
                                             .then(updated => {
                                                 return res.status(200).send("success");
                                             })
