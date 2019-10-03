@@ -42,6 +42,8 @@ import './App.css';
 
 import * as API from './api/Api';
 
+import AuthHelperMethods from './auth/AuthHelperMethods';
+
 const utils = new Utils();
 const persistence = new Persistence();
 

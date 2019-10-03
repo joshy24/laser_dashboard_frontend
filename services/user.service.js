@@ -6,7 +6,6 @@ var bcrypt = require('bcryptjs');
 module.exports.createUser = function(data){
     return new Promise((resolve,reject) => {
         var user = new User(data);
-        user.password = bcrypt.hashSync(user.password, 10);
         user.created = Date.now();
         user.save((err,saved) => {
             if(err){

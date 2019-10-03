@@ -10,6 +10,16 @@ var AdminSchema = new Schema({
         required: true,
         maxlength: 100
     },
+    firstname: {
+        type: String,
+        required: true,
+        maxlength: 100
+    },
+    lastname: {
+        type: String,
+        required: true,
+        maxlength: 100
+    },
     created: {
         type: Date,
         dafault: Date.now(),

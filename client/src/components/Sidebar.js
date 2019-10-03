@@ -3,7 +3,11 @@ import React from 'react';
 
 import Utils from '../utils/Utils';
 
+import AuthHelperMethods from '../auth/AuthHelperMethods';
+
 const utils = new Utils();
+
+const Auth = new AuthHelperMethods();
 
 export default function Sidebar(props){
     return <div className="laser-side-bar">
@@ -11,10 +15,15 @@ export default function Sidebar(props){
                 <br/>
                 <h4 className="text-center laser-red-text"><b>Emergency Location Details</b></h4>
                 <br/>
-                <button className="laser-red-bg laserbtn" onClick={e => props.startMonitoring(e, props.emergency)}>Start Monitoring</button>
-                <br/>
-                <br/>                
-                <button className="laser-blue-bg laserbtn" onClick={e => props.resolve(e)}>Resolve</button>
+                {
+                    (Auth.getPriviledge() === "full_control") ? 
+                    <div>
+                        <button className="laser-red-bg laserbtn" onClick={e => props.startMonitoring(e, props.emergency)}>Start Monitoring</button>
+                        <br/>
+                        <br/>                
+                        <button className="laser-blue-bg laserbtn" onClick={e => props.resolve(e)}>Resolve</button>
+                    </div> : ""
+                }
                 <br/>
                 <h5><b>Trackable</b> - {props.emergency.is_trackable ? "Yes" : "No" }</h5>
                 <br/>

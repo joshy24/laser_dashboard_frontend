@@ -9,7 +9,7 @@ module.exports = function(router){
     router.post('/login', (req,res) => {
         AdminController.login(req,res);
     })
-
+    
     router.post('/create_agents', (req,res) => {
         AgentController.addAgents(req,res);
     })
@@ -78,15 +78,6 @@ module.exports = function(router){
         AdminController.getEmergencies(req,res);
     });
 
-    router.post('/resolveEmergency', (req,res) => {
-        AdminController.resolveEmergency(req,res);
-    })
-
-    router.post('/resolveCall', (req,res) => {
-        AdminController.resolveCall(req,res);
-    })
-
-
     //unauthorized access check
     router.use((req,res,next) => {
         if(req.admin.priviledge==="full_control"){
@@ -97,6 +88,13 @@ module.exports = function(router){
         }
     })
 
+    router.post('/resolveEmergency', (req,res) => {
+        AdminController.resolveEmergency(req,res);
+    })
+
+    router.post('/resolveCall', (req,res) => {
+        AdminController.resolveCall(req,res);
+    })
 
     router.post('/create_department', (req,res) => {
         AdminController.createDepartment(req,res);

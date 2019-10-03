@@ -38,14 +38,14 @@ module.exports.login = (req,res) => {
                                             .then(updated_admin => {
                                                     if(updated_admin){
                                                         admin.tokens = null;
-                                                        return res.status(200).send({token});
+                                                        return res.status(200).send({"token": token, "priviledge": admin.priviledge});
                                                     }
                                                     else{
                                                         return res.status(500).send("Server Error");
                                                     }
                                             })
                                             .catch(err => {
-                                                console.log(err.message);
+                                                console.log(err);
                                                 return res.status(400).send("Error");
                                             })
                                 }
@@ -65,7 +65,6 @@ module.exports.login = (req,res) => {
                 .catch(err => {
                     return res.status(500).send("Server Error");
                 })
-    
 }
 
 module.exports.createAdmin = (req,res) => {
