@@ -29,7 +29,7 @@ module.exports.login = function(req,res){
         return res.status(400).send("Incomplete Number");
     }
 
-    UserService.readUserPhoneNumberFirstname(new_number)
+    UserService.readUserPhoneNumber(new_number)
                 .then(user => {
                     if(!user){
                         return res.status(404).send({"response": "not found"});
