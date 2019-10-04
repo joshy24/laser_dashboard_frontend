@@ -11,14 +11,14 @@ var filter = require('../modules/filter');
 var twilio = require('twilio');
 
 module.exports.login = (req,res) => {
-    const username = req.body.username;
+    const firstname = req.body.firstname;
     const password = req.body.password;
 
-    if(!username || !password){
+    if(!firstname || !password){
         return res.status(400).send("Bad Request");
     }
 
-    if(username.length<0 || username.length>=100){
+    if(firstname.length<0 || firstname.length>=100){
         return res.status(400).send("Bad Request");
     }
 
@@ -26,7 +26,7 @@ module.exports.login = (req,res) => {
         return res.status(400).send("Bad Request");
     }
 
-    AdminService.readAdminUserName(username,password)
+    AdminService.readAdminUserName(firstname)
                 .then(admin => {
                     if(admin){
                         admin.comparePassword(password)
@@ -68,16 +68,13 @@ module.exports.login = (req,res) => {
 }
 
 module.exports.createAdmin = (req,res) => {
-    const username = req.body.username;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
     const password = req.body.password;
     const priviledge = req.body.priviledge;
 
-    if(!username || !password || !priviledge){
-        return res.status(400).send("Bad Request");
-    }
-
-    if(username.length<0 || username.length>=100){
-        return res.status(400).send("Bad Request");
+    if(!firstname || !lastname || !password || !priviledge){
+        return res.status(400).send("Bad Request Name");
     }
 
     if(password.length<0 || password.length>=100){
@@ -88,7 +85,7 @@ module.exports.createAdmin = (req,res) => {
         return res.status(400).send("Bad Request");
     }
 
-    AdminService.createAdmin({password: password, username: username, priviledge: priviledge})
+    AdminService.createAdmin({password: password, lastname: lastname, firstname: firstname, priviledge: priviledge})
                 .then(created_admin => {
                     return res.status(200).send("created");
                 })

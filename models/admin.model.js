@@ -5,11 +5,6 @@ var Schema = mongoose.Schema;
 var bcrypt = require('bcryptjs');
 
 var AdminSchema = new Schema({
-    username: {
-        type: String,
-        required: true,
-        maxlength: 100
-    },
     firstname: {
         type: String,
         required: true,

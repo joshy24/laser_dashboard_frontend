@@ -138,10 +138,10 @@ module.exports.createAgent = function(req,res){
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
     var phone_number  = req.body.phone_number;
-    var agency = req.body.agency;
+    var department = req.body.department;
     var password = req.body.password
 
-    if(!firstname||!lastname||!agency){ 
+    if(!firstname||!lastname||!department){ 
         return res.status(400).send({"response":"bad request"});
     }
 
@@ -164,7 +164,7 @@ module.exports.createAgent = function(req,res){
         firstname: firstname,
         phone_number: new_number,
         password: password,
-        agency: agency
+        department: department
     }
 
     AgentService.readAgentPhoneNumber(new_number)

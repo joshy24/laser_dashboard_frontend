@@ -35,9 +35,10 @@ module.exports.countAdmins = (req,res) => {
     })
 }
 
-module.exports.readAdminUserName = function(username){
+module.exports.readAdminUserName = function(name){
     return new Promise((resolve,reject) => {
-        Admin.findOne({username:username})
+        var string_name = "/" +name +"/i";
+        Admin.findOne({firstname: name })
             .exec()
             .then(rem => {
                 resolve(rem);

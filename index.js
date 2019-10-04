@@ -32,9 +32,6 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));//accept strings
 
 app.disable('x-powered-by');
 
-
-
-
 var PubNub = require('pubnub');
 
 var pubnub = new PubNub({
