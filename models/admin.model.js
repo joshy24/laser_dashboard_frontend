@@ -15,6 +15,11 @@ var AdminSchema = new Schema({
         required: true,
         maxlength: 100
     },
+    username: {
+        type: String,
+        required: true,
+        maxlength: 100
+    },
     created: {
         type: Date,
         dafault: Date.now(),
@@ -41,5 +46,7 @@ var AdminSchema = new Schema({
 AdminSchema.methods.comparePassword = function(password){
     return bcrypt.compare(password, this.password);
 }
+
+AdminSchema.index({username:1}, {unique:true});
 
 module.exports = mongoose.model('Admin', AdminSchema);

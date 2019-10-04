@@ -69,10 +69,15 @@ module.exports.login = (req,res) => {
 }
 
 module.exports.createAdmin = (req,res) => {
+    const username = req.body.username;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
     const password = req.body.password;
     const priviledge = req.body.priviledge;
+
+    if(!username){
+        return res.status(400).send("Bad Request Name");
+    }
 
     if(!firstname || !lastname || !password || !priviledge){
         return res.status(400).send("Bad Request Name");
@@ -85,8 +90,8 @@ module.exports.createAdmin = (req,res) => {
     if(priviledge.length < 0 || priviledge >= 100){
         return res.status(400).send("Bad Request");
     }
-
-    AdminService.createAdmin({password: password, lastname: lastname, firstname: firstname, priviledge: priviledge})
+    
+    AdminService.createAdmin({username: username, password: password, lastname: lastname, firstname: firstname, priviledge: priviledge})
                 .then(created_admin => {
                     return res.status(200).send("created");
                 })
