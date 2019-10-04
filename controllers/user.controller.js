@@ -194,7 +194,7 @@ module.exports.editUser = function(req,res){
                 }
                 else{
                     res.statusMessage = "User Not Found";
-                    return res.status(500).send();
+                    return res.status(404).send();
                 }
             })
             .catch(err => {

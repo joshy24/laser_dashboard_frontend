@@ -32,7 +32,7 @@ module.exports.login = (req,res) => {
                         admin.comparePassword(password)
                             .then(confirmation => {
                                 if(confirmation==true){
-                                    var token = jwt.sign({id:admin._id, username: admin.username, priviledge: admin.priviledge}, config.secret, {issuer: "Nifi", audience: "Admin", expiresIn: 60*60*24*5, algorithm: "HS256"});
+                                    var token = jwt.sign({id:admin._id, username: admin.username, priviledge: admin.priviledge}, config.secret, {issuer: "Laser", audience: "Admin", expiresIn: 60*60*24*5, algorithm: "HS256"});
                                     admin.tokens.push(token);
                                     AdminService.updateAdmin(admin._id, admin)
                                             .then(updated_admin => {
@@ -59,6 +59,7 @@ module.exports.login = (req,res) => {
                             })
                     }
                     else{
+                        console.log("Login Error")
                         return res.status(404).send({});
                     }
                 })
@@ -90,6 +91,7 @@ module.exports.createAdmin = (req,res) => {
                     return res.status(200).send("created");
                 })
                 .catch(err =>{
+                    console.log({err})
                     return res.status(500).send(err.message);
                 })
 }
