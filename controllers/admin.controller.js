@@ -11,14 +11,14 @@ var filter = require('../modules/filter');
 var twilio = require('twilio');
 
 module.exports.login = (req,res) => {
-    const firstname = req.body.firstname;
+    const username = req.body.username;
     const password = req.body.password;
 
-    if(!firstname || !password){
+    if(!username || !password){
         return res.status(400).send("Bad Request");
     }
 
-    if(firstname.length<0 || firstname.length>=100){
+    if(username.length<0 || username.length>=100){
         return res.status(400).send("Bad Request");
     }
 
@@ -26,7 +26,7 @@ module.exports.login = (req,res) => {
         return res.status(400).send("Bad Request");
     }
 
-    AdminService.readAdminUserName(firstname)
+    AdminService.readAdminUserName(username)
                 .then(admin => {
                     if(admin){
                         admin.comparePassword(password)

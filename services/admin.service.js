@@ -37,8 +37,7 @@ module.exports.countAdmins = (req,res) => {
 
 module.exports.readAdminUserName = function(name){
     return new Promise((resolve,reject) => {
-        var string_name = "/" +name +"/i";
-        Admin.findOne({firstname: name })
+        Admin.findOne({username: name })
             .exec()
             .then(rem => {
                 resolve(rem);
