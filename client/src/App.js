@@ -6,6 +6,7 @@ import emergency_icon from './icons/emergency.gif';
 import call_icon from './icons/call.gif';
 import car_test from './icons/car_test.png';
 
+import police_car from './icons/police_car.png'
 import police_car_right from './icons/police_car_right.png'
 import fire_car_right from './icons/fire_truck_right.png'
 import ambulance_car_right from './icons/ambulance_right.png'
@@ -922,10 +923,10 @@ class App extends Component{
       switch(agent.agent.department){
           case "police":
               if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? police_car_left_enroute : police_car_left;
+                  return (agent.is_on_route) ? police_car_left_enroute : police_car;
               }
               else{
-                  return (agent.is_on_route) ? police_car_right_enroute : police_car_right;
+                  return (agent.is_on_route) ? police_car_right_enroute : police_car;
               }
           break;
           case "fire":
