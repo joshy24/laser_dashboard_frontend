@@ -7,6 +7,14 @@ import call_icon from './icons/call.gif';
 import car_test from './icons/car_test.png';
 
 import police_car from './icons/police_car.png'
+import police_car_enroute from './icons/police_car_yellow.png'
+
+import fire_car from './icons/fire_truck.png'
+import fire_car_enroute from './icons/fire_truck_yellow.png'
+
+import ambulance from './icons/ambulance.png'
+import ambulance_enroute from './icons/ambulance_yellow.png'
+
 import police_car_right from './icons/police_car_right.png'
 import fire_car_right from './icons/fire_truck_right.png'
 import ambulance_car_right from './icons/ambulance_right.png'
@@ -923,26 +931,26 @@ class App extends Component{
       switch(agent.agent.department){
           case "police":
               if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? police_car_left_enroute : police_car;
+                  return (agent.is_on_route) ? police_car_enroute : police_car;
               }
               else{
-                  return (agent.is_on_route) ? police_car_right_enroute : police_car;
+                  return (agent.is_on_route) ? police_car_enroute : police_car;
               }
           break;
           case "fire":
               if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? fire_car_left_enroute : fire_car_left;
+                  return (agent.is_on_route) ? fire_car_enroute : fire_car;
               }
               else{
-                  return (agent.is_on_route) ? fire_car_right_enroute : fire_car_right;
+                  return (agent.is_on_route) ? fire_car_enroute : fire_car;
               }
           break;
           case "hospital":
               if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? ambulance_car_left_enroute: ambulance_car_left;
+                  return (agent.is_on_route) ? ambulance_enroute: ambulance;
               }
               else{
-                  return (agent.is_on_route) ? ambulance_car_right_enroute : ambulance_car_right;
+                  return (agent.is_on_route) ? ambulance_enroute : ambulance;
               }
           break;
       }
