@@ -6,8 +6,12 @@ import emergency_icon from './icons/emergency.gif';
 import call_icon from './icons/call.gif';
 import car_test from './icons/car_test.png';
 
-import police_car from './icons/police_car.png'
-import police_car_enroute from './icons/police_car_yellow.png'
+
+import police_car from './icons/vector/police_car.svg'
+import police_car_enroute from './icons/vector/police_car_yellow.svg'
+
+//import police_car from './icons/police_car.png'
+//import police_car_enroute from './icons/police_car_yellow.png'
 
 import fire_car from './icons/fire_truck.png'
 import fire_car_enroute from './icons/fire_truck_yellow.png'
@@ -915,8 +919,11 @@ class App extends Component{
                     name={agent.full_address} 
                     title={agent.full_address}
                     position={{lat: agent.latitude, lng: agent.longitude}}
+                    //bearing={}
                     icon={{
-                      url: this.getAgentIcon(agent) 
+                      url: this.getAgentIcon(agent),
+                      anchor: new this.props.google.maps.Point(32,32),
+                      scaledSize: new this.props.google.maps.Size(64,64)
                     }}/>
         })
       }

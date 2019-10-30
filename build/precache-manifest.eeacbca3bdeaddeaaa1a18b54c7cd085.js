@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b283756e3b212f5ef9436308452f5fcd",
+    "revision": "580739c8dc2e051b762c993dc149d9bc",
     "url": "/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/css/2.2507d4ca.chunk.css"
   },
   {
-    "revision": "f75e44ebd24a35412885",
+    "revision": "81d69ae8f5d246103899",
     "url": "/static/css/main.d553468a.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/js/2.cda2f020.chunk.js"
   },
   {
-    "revision": "f75e44ebd24a35412885",
-    "url": "/static/js/main.8762bf74.chunk.js"
+    "revision": "81d69ae8f5d246103899",
+    "url": "/static/js/main.ce8b0a54.chunk.js"
   },
   {
     "revision": "42ac5946195a7306e2a5",
@@ -104,8 +104,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/logo.5d5d9eef.svg"
   },
   {
-    "revision": "d5d82e204eb143fe019d0143f4a65651",
-    "url": "/static/media/police_car.d5d82e20.png"
+    "revision": "c388a4c8164b5fdbe825e6d27b9eb0dd",
+    "url": "/static/media/police_car.c388a4c8.svg"
   },
   {
     "revision": "8d1f2526a72a851d21fb531ceac914ec",
@@ -124,7 +124,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/police_car_right_enroute.5563c3ab.png"
   },
   {
-    "revision": "303f78975daae26f5a411536a4f2b2d6",
-    "url": "/static/media/police_car_yellow.303f7897.png"
+    "revision": "72f641638e78ea954d9468ac21d9e332",
+    "url": "/static/media/police_car_yellow.72f64163.svg"
   }
 ]);
