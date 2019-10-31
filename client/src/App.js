@@ -919,11 +919,12 @@ class App extends Component{
                     name={agent.full_address} 
                     title={agent.full_address}
                     position={{lat: agent.latitude, lng: agent.longitude}}
-                    //bearing={}
+                    //
                     icon={{
                       url: this.getAgentIcon(agent),
+                      bearing: 45,
                       anchor: new this.props.google.maps.Point(32,32),
-                      scaledSize: new this.props.google.maps.Size(64,64)
+                      scaledSize: new this.props.google.maps.Size(45,45)
                     }}/>
         })
       }
