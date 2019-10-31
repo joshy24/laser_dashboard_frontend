@@ -1036,13 +1036,18 @@ class App extends Component{
   }
 
   getSelectedAgentsIds(){
-      var ids = [];
+      if(this.state.selected_agents.length>0){
+            var ids = [];
 
-      this.state.selected_agents.map(agent => {
-          ids.push(agent.agent._id);
-      });
+            this.state.selected_agents.map(agent => {
+                ids.push(agent.agent._id);
+            });
 
-      return ids;
+            return ids;
+      }
+      else{
+          return [];
+      }
   }
 
   setSelectedAgentsFromIds(ids){
