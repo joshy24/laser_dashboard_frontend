@@ -1374,38 +1374,44 @@ class App extends Component{
 
                   var found_agent = this.state.laser_agents.find(agent => agent.agent._id === message.message.agent._id);
 
-                  if(this.state.laser_agents.length<=0||!found_agent){
-                      agents.push(message.message);
-                  }
-                  else{
-                      agents = this.state.laser_agents.map(agent => {
-                          if(agent.agent._id === message.message.agent._id){
+                  this.state.laser_agents.map(agent => {
+                      if(agent.agent._id === message.message.agent._id){
+                            found_agent = agent;
 
-                              var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
+                            if(this.state.laser_agents.length<=0||!found_agent){
+                                agents.push(message.message);
+                            }
+                            else{
+                                agents = this.state.laser_agents.map(agent => {
+                                    if(agent.agent._id === message.message.agent._id){
 
-                              if(found_agent_on_route_possibly){
-                                  message.message.is_on_route = found_agent_on_route_possibly.is_on_route;
-                              }
-                              else{
-                                message.message.is_on_route = false;
-                              }
+                                        var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
 
-                              return message.message;
-                          }
-                          else{
-                              var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === agent.agent._id);
-                              
-                              if(found_agent_on_route_possibly){
-                                 agent.is_on_route = found_agent_on_route_possibly.is_on_route;
-                              }
-                              else{
-                                  agent.is_on_route = false;
-                              }
+                                        if(found_agent_on_route_possibly){
+                                            message.message.is_on_route = found_agent_on_route_possibly.is_on_route;
+                                        }
+                                        else{
+                                            message.message.is_on_route = false;
+                                        }
 
-                              return agent;
-                          }
-                      });
-                  }
+                                        return message.message;
+                                    }
+                                    else{
+                                        var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === agent.agent._id);
+                                        
+                                        if(found_agent_on_route_possibly){
+                                            agent.is_on_route = found_agent_on_route_possibly.is_on_route;
+                                        }
+                                        else{
+                                            agent.is_on_route = false;
+                                        }
+
+                                        return agent;
+                                    }
+                                });
+                            }
+                      }
+                  })
                   
                   this.setState(state => {
                       return {
