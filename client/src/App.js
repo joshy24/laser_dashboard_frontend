@@ -521,10 +521,12 @@ class App extends Component{
           if(agents.length > 0){
               new_selected_agents = agents.map(a => {
                 
-                if(a.agent._id === agent.agent._id){
+                if(!a || (a.agent._id === agent.agent._id)){
                   return agent;
                 }
-                else{return a}
+                else{
+                    return a;
+                }
               })
 
               var found_agent = new_selected_agents.find(a => a.agent._id === agent.agent._id)
