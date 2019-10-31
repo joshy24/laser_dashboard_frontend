@@ -1410,7 +1410,9 @@ class App extends Component{
           
           //Check if its an agent that is replying to a request, could also be used in future to check for other messages from the selected agents
           if(this.state.selected_agents.length > 0){
-
+              
+              console.log(this.state.selected_agents);
+              
               this.state.selected_agents.forEach((agent,index) => {
                   
                   if(agent.agent._id === message.channel){
