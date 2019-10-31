@@ -922,7 +922,7 @@ class App extends Component{
                     //
                     icon={{
                       url: this.getAgentIcon(agent),
-                      bearing: 45,
+                      bearing: new this.props.google.maps.Bearing(108),
                       anchor: new this.props.google.maps.Point(32,32),
                       scaledSize: new this.props.google.maps.Size(45,45)
                     }}/>
