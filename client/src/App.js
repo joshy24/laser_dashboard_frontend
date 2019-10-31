@@ -1222,18 +1222,20 @@ class App extends Component{
           }
 
           if(message.channel === "agent_tracked"){
-                console.log("agent - "+message.message);
+                
                 this.setState(state => {
                     var agents = state.selected_agents;
                   
                     if(agents.length > 1){
-                        var found_selected_agent = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
+                        this.state.selected_agents.map(age => 
+                            {
+                                if(age!=null && (age.agent._id === message.message.agent._id)){
+                                    agents.push(message.message);
 
-                        if(!found_selected_agent){
-                            agents.push(message.message);
-
-                            persistence.saveSelectedAgents(agents);
-                        }
+                                    persistence.saveSelectedAgents(agents);
+                                }
+                            }
+                        );
                     }
         
                     return {  
@@ -1247,13 +1249,15 @@ class App extends Component{
                     var agents = state.selected_agents;
                 
                     if(agents.length > 1){
-                        var found_selected_agent = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
+                        this.state.selected_agents.map(age => 
+                            {
+                                if(age!=null && (age.agent._id === message.message.agent._id)){
+                                    agents.splice(agents.indexOf(message.message),1);
 
-                        if(found_selected_agent){
-                            agents.splice(agents.indexOf(message.message),1);
-
-                            persistence.saveSelectedAgents(agents);
-                        }
+                                    persistence.saveSelectedAgents(agents);
+                                }
+                            }
+                        );
                     }
         
                     return {  
