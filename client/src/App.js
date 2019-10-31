@@ -923,9 +923,7 @@ class App extends Component{
                     position={{lat: agent.latitude, lng: agent.longitude}}
                     //
                     icon={{
-                      url: this.getAgentIcon(agent),
-                      anchor: new this.props.google.maps.Point(32,32),
-                      scaledSize: new this.props.google.maps.Size(45,45)
+                      url: this.getAgentIcon(agent)
                     }}/>
         })
       }
