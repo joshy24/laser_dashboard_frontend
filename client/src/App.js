@@ -1040,7 +1040,7 @@ class App extends Component{
             var ids = [];
 
             this.state.selected_agents.map(agent => {
-                ids.push(agent.agent._id);
+                ids.push(agent._id);
             });
 
             return ids;
@@ -1412,7 +1412,7 @@ class App extends Component{
 
               this.state.selected_agents.forEach((agent,index) => {
                   
-                  if(agent.agent._id === message.channel){
+                  if(agent._id === message.channel){
                       
                       if(message.userMetadata && message.userMetadata.action === "route_request_response"){
                           if(message.message.response===true){
