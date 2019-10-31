@@ -7,11 +7,11 @@ import call_icon from './icons/call.gif';
 import car_test from './icons/car_test.png';
 
 
-import police_car from './icons/vector/police_car.svg'
-import police_car_enroute from './icons/vector/police_car_yellow.svg'
+//import police_car from './icons/vector/police_car.svg'
+//import police_car_enroute from './icons/vector/police_car_yellow.svg'
 
-//import police_car from './icons/police_car.png'
-//import police_car_enroute from './icons/police_car_yellow.png'
+import police_car from './icons/police_car.png'
+import police_car_enroute from './icons/police_car_yellow.png'
 
 import fire_car from './icons/fire_truck.png'
 import fire_car_enroute from './icons/fire_truck_yellow.png'
