@@ -1369,20 +1369,20 @@ class App extends Component{
           if(message.channel === this.state.tracked_area ){
               if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
                   var agents = this.state.laser_agents;
+                
+                  var found_agent;
 
-                   var found_agent;
-                  
-                  this.state.selected_agents.forEach((agent,index) => {
-                      if(agent && (agent.agent._id === message.message.agent._id)){
+                  this.state.laser_agents.map(agent => {    
+                      if(agent.agent._id === message.message.agent._id){
                           found_agent = agent;
                       }
                   })
-                    console.log({found_agent})
+
                   if(found_agent){
-                      this.state.laser_agents.map(agent => {
+                        this.state.laser_agents.map(agent => {
                             if(agent.agent._id === message.message.agent._id){
                                     found_agent = agent;
-                                   
+
                                     if(this.state.laser_agents.length<=0||!found_agent){
                                         agents.push(message.message);
                                     }
@@ -1416,7 +1416,7 @@ class App extends Component{
                                         });
                                     }
                             }
-                      })
+                        })
                   }
                   else{
                       agents.push(message.message);
@@ -1436,7 +1436,7 @@ class App extends Component{
               
               this.state.selected_agents.forEach((agent,index) => {
                   
-                  if(agent && (agent.agent._id === message.channel)){
+                  if(agent!==null && (agent.agent._id === message.channel)){
                       
                       if(message.userMetadata && message.userMetadata.action === "route_request_response"){
                           if(message.message.response===true){
