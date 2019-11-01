@@ -1369,13 +1369,13 @@ class App extends Component{
           if(message.channel === this.state.tracked_area ){
               if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
                   var agents = this.state.laser_agents;
-                  console.log({message});
+                  
                   var found_agent = this.state.laser_agents.find(agent => agent.agent._id === message.message.agent._id);
-
+                    console.log({found_agent});
                   this.state.laser_agents.map(agent => {
                       if(agent.agent._id === message.message.agent._id){
                             found_agent = agent;
-
+                            console.log({agent});
                             if(this.state.laser_agents.length<=0||!found_agent){
                                 agents.push(message.message);
                             }
