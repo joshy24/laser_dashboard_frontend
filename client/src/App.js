@@ -1373,11 +1373,11 @@ class App extends Component{
                    var found_agent;
                   
                   this.state.selected_agents.forEach((agent,index) => {
-                      if(agent!==null && (agent.agent._id === message.message.agent._id)){
+                      if(agent && (agent.agent._id === message.message.agent._id)){
                           found_agent = agent;
                       }
                   })
-
+                    console.log({found_agent})
                   if(found_agent){
                       this.state.laser_agents.map(agent => {
                             if(agent.agent._id === message.message.agent._id){
@@ -1436,7 +1436,7 @@ class App extends Component{
               
               this.state.selected_agents.forEach((agent,index) => {
                   
-                  if(agent!==null && (agent.agent._id === message.channel)){
+                  if(agent && (agent.agent._id === message.channel)){
                       
                       if(message.userMetadata && message.userMetadata.action === "route_request_response"){
                           if(message.message.response===true){
