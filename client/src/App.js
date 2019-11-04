@@ -1399,10 +1399,15 @@ class App extends Component{
                                         agents = this.state.laser_agents.map(agent => {
                                             if(agent.agent._id === message.message.agent._id){
 
-                                                var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
-
-                                                if(found_agent_on_route_possibly){
-                                                    message.message.is_on_route = found_agent_on_route_possibly.is_on_route;
+                                                if(this.state.selected_agents.length>0){
+                                                    var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
+                                                
+                                                    if(found_agent_on_route_possibly){
+                                                        message.message.is_on_route = found_agent_on_route_possibly.is_on_route;
+                                                    }
+                                                    else{
+                                                        message.message.is_on_route = false;
+                                                    }
                                                 }
                                                 else{
                                                     message.message.is_on_route = false;
@@ -1411,10 +1416,15 @@ class App extends Component{
                                                 return message.message;
                                             }
                                             else{
-                                                var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === agent.agent._id);
+                                                if(this.state.selected_agents.length>0){
+                                                    var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === agent.agent._id);
                                                 
-                                                if(found_agent_on_route_possibly){
-                                                    agent.is_on_route = found_agent_on_route_possibly.is_on_route;
+                                                    if(found_agent_on_route_possibly){
+                                                        agent.is_on_route = found_agent_on_route_possibly.is_on_route;
+                                                    }
+                                                    else{
+                                                        agent.is_on_route = false;
+                                                    }
                                                 }
                                                 else{
                                                     agent.is_on_route = false;
