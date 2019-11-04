@@ -1223,10 +1223,17 @@ class App extends Component{
                 
                 this.setState(state => {
                     var agents = state.selected_agents;
+                    var laser_agents = state.laser_agents;
                   
                     if(agents.length > 1){
                         this.state.selected_agents.map(age => 
                             {
+                                var laser_agent = laser_agents.find(age => age.agent._id === message.channel);
+
+                                if(laser_agent){
+                                    laser_agents.splice(laser_agent,1,message.message);
+                                }
+
                                 if(age!=null && (age.agent._id === message.message.agent._id)){
                                     agents.push(message.message);
 
@@ -1237,7 +1244,8 @@ class App extends Component{
                     }
         
                     return {  
-                        selected_agents: agents
+                        selected_agents: agents,
+                        laser_agents: laser_agents
                     }
                 })
           }
@@ -1245,6 +1253,7 @@ class App extends Component{
           if(message.channel === "agent_untracked"){
                 this.setState(state => {
                     var agents = state.selected_agents;
+                    var laser_agents = state.laser_agents;
                 
                     if(agents.length > 1){
                         this.state.selected_agents.map(age => 
