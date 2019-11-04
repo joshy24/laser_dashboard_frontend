@@ -1400,7 +1400,7 @@ class App extends Component{
                                             if(agent.agent._id === message.message.agent._id){
 
                                                 if(this.state.selected_agents.length>0){
-                                                    var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === message.message.agent._id);
+                                                    var found_agent_on_route_possibly = this.state.selected_agents.find(age => age._id === message.message.agent._id);
                                                 
                                                     if(found_agent_on_route_possibly){
                                                         message.message.is_on_route = found_agent_on_route_possibly.is_on_route;
@@ -1417,7 +1417,7 @@ class App extends Component{
                                             }
                                             else{
                                                 if(this.state.selected_agents.length>0){
-                                                    var found_agent_on_route_possibly = this.state.selected_agents.find(age => age.agent._id === agent.agent._id);
+                                                    var found_agent_on_route_possibly = this.state.selected_agents.find(age => age._id === agent.agent._id);
                                                 
                                                     if(found_agent_on_route_possibly){
                                                         agent.is_on_route = found_agent_on_route_possibly.is_on_route;
