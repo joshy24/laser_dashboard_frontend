@@ -938,11 +938,13 @@ class App extends Component{
 
   getAgentIcon(agent){
       if(agent){
-            this.state.selected_agents.forEach(agentx => {
-                if(agent.agent._id === agentx.agent._id){
-                    agent.is_on_route = true;
-                }
-            })
+            if(this.state.selected_agents.length > 0){
+                this.state.selected_agents.forEach(agentx => {
+                    if(agent.agent._id === agentx.agent._id){
+                        agent.is_on_route = true;
+                    }
+                })
+            }
     
             switch(agent.agent.department){
                 case "police":
