@@ -939,8 +939,9 @@ class App extends Component{
   getAgentIcon(agent){
       if(agent){
             if(this.state.selected_agents.length > 0){
-                this.state.selected_agents.forEach(agentx => {
-                    if(agent.agent._id === agentx.agent._id){
+                this.state.selected_agents.map(age => {
+                    console.log({age})
+                    if(agent.agent._id === age._id){
                         agent.is_on_route = true;
                     }
                 })
