@@ -916,27 +916,34 @@ class App extends Component{
       let agents_ui;
 
       if(this.state.laser_agents.length>0){
-        agents_ui = this.state.laser_agents.map((agent,i) => {
-          return <Marker key={i}  onClick={e => this.onAgentClicked(agent,e)}
-                    name={agent.full_address} 
-                    title={agent.full_address}
-                    position={{lat: agent.latitude, lng: agent.longitude}}
-                    //
-                    icon={{
-                      url: this.getAgentIcon(agent),
-                      anchor: new this.props.google.maps.Point(40,40),
-                      scaledSize: new this.props.google.maps.Size(40,40)
-                    }}/>
-        })
+            agents_ui = this.state.laser_agents.map((agent,i) => {
+                return <Marker key={i}  onClick={e => this.onAgentClicked(agent,e)}
+                            name={agent.full_address} 
+                            title={agent.full_address}
+                            position={{lat: agent.latitude, lng: agent.longitude}}
+                            //
+                            icon={{
+                                url: this.getAgentIcon(agent),
+                                anchor: new this.props.google.maps.Point(40,40),
+                                scaledSize: new this.props.google.maps.Size(40,40)
+                            }}/>
+            })
       }
       else{
-        agents_ui = "";
+            agents_ui = "";
       }
 
       return agents_ui;
   }
 
   getAgentIcon(agent){
+
+      this.state.selected_agents.forEach(agentx => {
+          if(agent.agent._id === agentx.agent._id){
+              agent.is_on_route = true;
+          }
+      })
+
       switch(agent.agent.department){
           case "police":
               if(agent.bearing>90||agent.bearing<=270){
@@ -1397,8 +1404,9 @@ class App extends Component{
                                     }
                                     else{
                                         agents = this.state.laser_agents.map(agent => {
+                                            
                                             if(agent.agent._id === message.message.agent._id){
-
+                                                
                                                 if(this.state.selected_agents.length>0){
                                                     var found_agent_on_route_possibly = this.state.selected_agents.find(age => age._id === message.message.agent._id);
                                                 
