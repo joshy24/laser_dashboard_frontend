@@ -937,38 +937,39 @@ class App extends Component{
   }
 
   getAgentIcon(agent){
-
-      this.state.selected_agents.forEach(agentx => {
-          if(agent.agent._id === agentx.agent._id){
-              agent.is_on_route = true;
-          }
-      })
-
-      switch(agent.agent.department){
-          case "police":
-              if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? police_car_enroute : police_car;
-              }
-              else{
-                  return (agent.is_on_route) ? police_car_enroute : police_car;
-              }
-          break;
-          case "fire":
-              if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? fire_car_enroute : fire_car;
-              }
-              else{
-                  return (agent.is_on_route) ? fire_car_enroute : fire_car;
-              }
-          break;
-          case "hospital":
-              if(agent.bearing>90||agent.bearing<=270){
-                  return (agent.is_on_route) ? ambulance_enroute: ambulance;
-              }
-              else{
-                  return (agent.is_on_route) ? ambulance_enroute : ambulance;
-              }
-          break;
+      if(agent){
+            this.state.selected_agents.forEach(agentx => {
+                if(agent.agent._id === agentx.agent._id){
+                    agent.is_on_route = true;
+                }
+            })
+    
+            switch(agent.agent.department){
+                case "police":
+                    if(agent.bearing>90||agent.bearing<=270){
+                        return (agent.is_on_route) ? police_car_enroute : police_car;
+                    }
+                    else{
+                        return (agent.is_on_route) ? police_car_enroute : police_car;
+                    }
+                break;
+                case "fire":
+                    if(agent.bearing>90||agent.bearing<=270){
+                        return (agent.is_on_route) ? fire_car_enroute : fire_car;
+                    }
+                    else{
+                        return (agent.is_on_route) ? fire_car_enroute : fire_car;
+                    }
+                break;
+                case "hospital":
+                    if(agent.bearing>90||agent.bearing<=270){
+                        return (agent.is_on_route) ? ambulance_enroute: ambulance;
+                    }
+                    else{
+                        return (agent.is_on_route) ? ambulance_enroute : ambulance;
+                    }
+                break;
+            }
       }
   }
 
