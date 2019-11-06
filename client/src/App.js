@@ -443,10 +443,10 @@ class App extends Component{
           array.splice(array.indexOf(route_response),1);
           
           var new_selected_agents = [];
-
+          console.log({agents});
           if(agents.length > 1){
               new_selected_agents = agents.map(age => {
-                  console.log({agent});
+                  
                   if(age.agent._id!==agent.agent._id){
                       return age;
                   }
