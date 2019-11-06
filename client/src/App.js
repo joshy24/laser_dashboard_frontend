@@ -10,16 +10,16 @@ import car_test from './icons/car_test.png';
 //import police_car from './icons/vector/police_car.svg'
 //import police_car_enroute from './icons/vector/police_car_yellow.svg'
 
-import police_car from './icons/police_car.png'
-import police_car_enroute from './icons/police_car_yellow.png'
+import police_car from './icons/vector/police_car.svg'
+import police_car_enroute from './icons/vector/police_car_enroute.svg'
 
-import fire_car from './icons/fire_truck.png'
-import fire_car_enroute from './icons/fire_truck_yellow.png'
+import fire_car from './icons/vector/fire_truck.svg'
+import fire_car_enroute from './icons/vector/fire_truck_enroute.svg'
 
-import ambulance from './icons/ambulance.png'
-import ambulance_enroute from './icons/ambulance_yellow.png'
+import ambulance from './icons/vector/ambulance.svg'
+import ambulance_enroute from './icons/vector/ambulance_enroute.svg'
 
-import police_car_right from './icons/police_car_right.png'
+/*import police_car_right from './icons/police_car_right.png'
 import fire_car_right from './icons/fire_truck_right.png'
 import ambulance_car_right from './icons/ambulance_right.png'
 
@@ -33,7 +33,7 @@ import ambulance_car_right_enroute from './icons/ambulance_right_enroute.png'
 
 import police_car_left_enroute from './icons/police_car_left_enroute.png'
 import fire_car_left_enroute from './icons/fire_truck_left_enroute.png'
-import ambulance_car_left_enroute from './icons/ambulance_left_enroute.png'
+import ambulance_car_left_enroute from './icons/ambulance_left_enroute.png'*/
 
 import alert from "./sounds/alert.mp3";
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
@@ -880,7 +880,7 @@ class App extends Component{
                             title={loc.full_name}
                             position={{lat: loc.latitude, lng: loc.longitude}}
                             icon={{
-                            url: (this.state.clicked_marker_id===loc._id) ? blue_circle : call_icon
+                                url: (this.state.clicked_marker_id===loc._id) ? blue_circle : call_icon
                             }}/> 
             })
         }
@@ -923,7 +923,8 @@ class App extends Component{
                     position={{lat: agent.latitude, lng: agent.longitude}}
                     //
                     icon={{
-                      url: this.getAgentIcon(agent)
+                      url: this.getAgentIcon(agent),
+                      scaledSize: new this.props.google.maps.Size(40,40)
                     }}/>
         })
       }
@@ -1201,7 +1202,6 @@ class App extends Component{
       message: (message) => {
           
           if(message.channel === "users_monitored"){
-                console.log("user - "+message.message);
                 var tracked_user_id = this.state.tracked_users.find(id => id === message.message.user_id);
 
                 if(!tracked_user_id){
@@ -1220,7 +1220,6 @@ class App extends Component{
           }
 
           if(message.channel === "agent_tracked"){
-                
                 this.setState(state => {
                     var agents = state.selected_agents;
                     var laser_agents = state.laser_agents;
@@ -1249,7 +1248,7 @@ class App extends Component{
                     }
                 })
           }
-
+          
           if(message.channel === "agent_untracked"){
                 this.setState(state => {
                     var agents = state.selected_agents;

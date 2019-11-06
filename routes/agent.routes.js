@@ -68,4 +68,9 @@ module.exports = function(router){
             });
         }
     });
+
+    router.post('/give_feedback', function(req,res,next){ 
+        AgentController.saveFeedback(req,res)
+    });
+
 }

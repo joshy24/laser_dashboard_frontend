@@ -1,5 +1,7 @@
 var Utils = require('../modules/utils');
 var AgentService = require('../services/agent.service');
+var EmergencyService = require('../services/emergency.service');
+var LocationService = require('../services/location.service');
 var bcrypt = require('bcryptjs');
 
 module.exports.addAgents = function(req,res){
@@ -278,6 +280,61 @@ module.exports.deleteAgent = (req,res) => {
                         return res.status(200).send();
                     })
                     .catch(err => {
-                        return res.status(500).send("error");
+                        return res.status(500).send("server error");
                     })
+}
+
+module.exports.saveFeedback = (req,res) => {
+    const id = req.body.id;
+    const type = req.body.type;
+    const message = req.body.message;
+
+    if(!id || id.length > 100){
+        return res.status(400).send("bad request");
+    }
+
+    if(!type || type.length > 10){
+        return res.status(400).send("bad request");
+    }
+
+    if(!message || message.length > 250){
+        return res.status(400).send("bad request");
+    }
+
+    switch(type){
+        case "call":
+            LocationService.readEmergency(id)
+                .then(location => { 
+                    location.agent_feedback = message;
+
+                    LocationService.updateLocation(id, location)
+                            .then(updated_location => {
+                                return res.status(200).send();
+                            })
+                            .catch(err => {
+                                return res.status(500).send("server error");
+                            })
+                })
+                .catch(err => {
+                    return res.status(500).send("server error");
+                })
+        break;
+        case "emergency":
+            EmergencyService.readEmergency(id)
+                .then(emergency => {
+                    emergency.agent_feedback = message;
+
+                    EmergencyService.updateEmergency(id, emergency)
+                            .then(updated_emergency => {
+                                return res.status(200).send();
+                            })
+                            .catch(err => {
+                                return res.status(500).send("server error");
+                            })
+                })
+                .catch(err => {
+                    return res.status(500).send("server error");
+                })
+        break;
+    }
 }

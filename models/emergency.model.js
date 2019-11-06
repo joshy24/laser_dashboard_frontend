@@ -43,6 +43,9 @@ var EmergencySchema = new Schema({
     status: {
         type: String,
         required: true
+    },
+    agent_feedback:{
+        type: String
     }
 });
 
