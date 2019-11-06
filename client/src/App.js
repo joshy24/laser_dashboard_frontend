@@ -924,6 +924,7 @@ class App extends Component{
                     //
                     icon={{
                       url: this.getAgentIcon(agent),
+                      anchor: new this.props.google.maps.Point(40,40),
                       scaledSize: new this.props.google.maps.Size(40,40)
                     }}/>
         })
@@ -1462,8 +1463,12 @@ class App extends Component{
                               this.setState(state => {
                                   var agents = state.selected_agents;
 
+                                  console.log({agents});
+
                                   agents[index].is_on_route = true;
                                   
+                                  console.log({agents});
+
                                   persistence.saveSelectedAgents(agents);
 
                                   return {
