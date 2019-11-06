@@ -363,7 +363,7 @@ class App extends Component{
 
           if(agents.length > 1){
               new_selected_agents = agents.map(age => {
-                  if(age.agent._id!==agent.agent._id){
+                  if(age && (age._id !== agent.agent._id)){
                       return age;
                   }
               })
@@ -446,6 +446,7 @@ class App extends Component{
 
           if(agents.length > 1){
               new_selected_agents = agents.map(age => {
+                  console.log({agent});
                   if(age.agent._id!==agent.agent._id){
                       return age;
                   }
@@ -1413,7 +1414,13 @@ class App extends Component{
                                             if(agent.agent._id === message.message.agent._id){
                                                 
                                                 if(this.state.selected_agents.length>0){
-                                                    var found_agent_on_route_possibly = this.state.selected_agents.find(age => age._id === message.message.agent._id);
+                                                    var found_agent_on_route_possibly;
+
+                                                    this.state.selected_agents.forEach((age,index) => {
+                                                        if(age.agent._id === message.message.agent._id){
+                                                            found_agent_on_route_possibly = age;
+                                                        }
+                                                    });
                                                 
                                                     if(found_agent_on_route_possibly){
                                                         message.message.is_on_route = found_agent_on_route_possibly.is_on_route;
@@ -1430,7 +1437,13 @@ class App extends Component{
                                             }
                                             else{
                                                 if(this.state.selected_agents.length>0){
-                                                    var found_agent_on_route_possibly = this.state.selected_agents.find(age => age._id === agent.agent._id);
+                                                    var found_agent_on_route_possibly;
+
+                                                    this.state.selected_agents.forEach((age,index) => {
+                                                        if(age.agent._id === message.message.agent._id){
+                                                            found_agent_on_route_possibly = age;
+                                                        }
+                                                    });
                                                 
                                                     if(found_agent_on_route_possibly){
                                                         agent.is_on_route = found_agent_on_route_possibly.is_on_route;
