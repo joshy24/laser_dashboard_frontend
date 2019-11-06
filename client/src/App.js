@@ -1417,8 +1417,10 @@ class App extends Component{
                                                     var found_agent_on_route_possibly;
 
                                                     this.state.selected_agents.forEach((age,index) => {
-                                                        if(age.agent._id === message.message.agent._id){
-                                                            found_agent_on_route_possibly = age;
+                                                        if(age){
+                                                            if(age.agent._id === message.message.agent._id){
+                                                                found_agent_on_route_possibly = age;
+                                                            }
                                                         }
                                                     });
                                                 
@@ -1440,8 +1442,10 @@ class App extends Component{
                                                     var found_agent_on_route_possibly;
 
                                                     this.state.selected_agents.forEach((age,index) => {
-                                                        if(age.agent._id === message.message.agent._id){
-                                                            found_agent_on_route_possibly = age;
+                                                        if(age){
+                                                            if(age.agent._id === message.message.agent._id){
+                                                                found_agent_on_route_possibly = age;
+                                                            }
                                                         }
                                                     });
                                                 
