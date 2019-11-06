@@ -940,9 +940,10 @@ class App extends Component{
       if(agent){
             if(this.state.selected_agents.length > 0){
                 this.state.selected_agents.map(age => {
-                    console.log({age})
-                    if(agent.agent._id === age._id){
-                        agent.is_on_route = true;
+                    if(age){
+                        if(agent.agent._id === age._id){
+                            agent.is_on_route = true;
+                        }
                     }
                 })
             }
