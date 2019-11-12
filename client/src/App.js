@@ -317,6 +317,8 @@ class App extends Component{
   }
 
   removeAgentFromRoute(e, agent){
+      console.log({agent});
+      
       e.preventDefault();
 
       this.pubnub.publish(
@@ -366,11 +368,13 @@ class App extends Component{
                   if(age && (age._id !== agent.agent._id)){
                       return age;
                   }
+                  else{
+                      console.log({age});
+                  }
               })
           }
 
           var new_list = list.splice(list.indexOf(agent.agent._id), 1);
-
 
           var found_agent = laser_agents.find(age => age.agent._id === agent.agent._id);
 
@@ -380,7 +384,7 @@ class App extends Component{
 
           var new_laser_agents = laser_agents.splice(laser_agents.indexOf(found_agent), 1, new_found_agent);
 
-          //subscribe to the agents id to receive a response to the route request
+          //unsubscribe to the agents id to receive a response to the route request
           this.pubnub.unsubscribe({
              channels: [agent.agent._id]
           })
@@ -443,7 +447,7 @@ class App extends Component{
           array.splice(array.indexOf(route_response),1);
           
           var new_selected_agents = [];
-          console.log({agents});
+          
           if(agents.length > 1){
               new_selected_agents = agents.map(age => {
                   
