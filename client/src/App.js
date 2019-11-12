@@ -317,8 +317,6 @@ class App extends Component{
   }
 
   removeAgentFromRoute(e, agent){
-      console.log({agent});
-      
       e.preventDefault();
 
       this.pubnub.publish(
@@ -367,9 +365,6 @@ class App extends Component{
               new_selected_agents = agents.map(age => {
                   if(age && (age._id !== agent.agent._id)){
                       return age;
-                  }
-                  else{
-                      console.log({age});
                   }
               })
           }
