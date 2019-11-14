@@ -32,9 +32,9 @@ module.exports.readAgent = function(id){
     })
 }
 
-module.exports.readAllAgents = function(){
+module.exports.readAllAgents = function(id){
     return new Promise((resolve,reject) => {
-        Agent.find({tokens:-1, password:-1})
+        Agent.find({})
             .exec()
             .then(rem => {
                 resolve(rem);
