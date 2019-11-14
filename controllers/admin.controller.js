@@ -70,6 +70,7 @@ module.exports.login = (req,res) => {
 
 module.exports.createAdmin = (req,res) => {
     const username = req.body.username;
+    const phone_number = req.body.phone_number;
     const firstname = req.body.firstname;
     const lastname = req.body.lastname;
     const password = req.body.password;
@@ -90,8 +91,18 @@ module.exports.createAdmin = (req,res) => {
     if(priviledge.length < 0 || priviledge >= 100){
         return res.status(400).send("Bad Request");
     }
+
+    if(phone_number.length < 0 || phone_number >= 20){
+        return res.status(400).send("Bad Request");
+    }
     
-    AdminService.createAdmin({username: username, password: password, lastname: lastname, firstname: firstname, priviledge: priviledge})
+    var new_number = Utils.parsePhoneNumber(phone_number);
+
+    if(new_number==null){
+        return res.status(400).send("Incomplete Number");
+    }
+
+    AdminService.createAdmin({username: username, password: password, lastname: lastname, phone_number:new_number, firstname: firstname, priviledge: priviledge})
                 .then(created_admin => {
                     return res.status(200).send("created");
                 })
@@ -101,8 +112,80 @@ module.exports.createAdmin = (req,res) => {
                 })
 }
 
+module.exports.editAdmin = (req,res) => {
+    const id = req.body.id
+    const username = req.body.username;
+    const phone_number = req.body.phone_number;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const password = req.body.password;
+    const priviledge = req.body.priviledge;
+
+    if(!username || !id){
+        return res.status(400).send("Bad Request Name");
+    }
+
+    if(!firstname || !lastname || !password || !priviledge){
+        return res.status(400).send("Bad Request Name");
+    }
+
+    if(password.length<0 || password.length>=100){
+        return res.status(400).send("Bad Request");
+    }
+
+    if(priviledge.length < 0 || priviledge >= 100){
+        return res.status(400).send("Bad Request");
+    }
+
+    if(phone_number.length < 0 || phone_number >= 20){
+        return res.status(400).send("Bad Request");
+    }
+
+    var new_number = Utils.parsePhoneNumber(phone_number);
+
+    if(new_number==null){
+        return res.status(400).send("Incomplete Number");
+    }
+
+    AdminService.readAdmin(id)
+        .then(admin => {
+            if(admin){
+                AdminService.updateAdmin(admin._id, {username: username, password: password, lastname: lastname, phone_number:new_number, firstname: firstname, priviledge: priviledge})
+                        .then(updated_admin => {
+                            return res.status(200).send("updated");
+                        })
+                        .catch(err => {
+                            console.log({err})
+                            return res.status(500).send(err.message);
+                        })
+            }
+            else{
+                return res.status(404).send("Not Found");
+            }
+        })
+        .catch(err => {
+            console.log({err})
+            return res.status(500).send(err.message);
+        })
+}
+
+module.exports.deleteAdmin = (req,res) => {
+
+}
+
+module.exports.getAdmins = (req,res) => {
+    const count = parseInt(req.body.count);
+
+    AdminService.readAllAdmins(count)
+                .then(admins => {
+                    return res.status(200).send(admins);
+                })
+                .catch(err => {
+                    return res.status(500).send(err);
+                })
+}
+
 module.exports.getLocations = function(req,res){
-    
     var date = req.body.date;
     
     if(!date){

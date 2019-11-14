@@ -14,10 +14,6 @@ module.exports = function(router){
         AgentController.addAgents(req,res);
     })
 
-    router.post('/create_admin', (req,res) => {
-        AdminController.createAdmin(req,res);
-    })
-
     router.use(function(req,res,next){
         var token = "";
         
@@ -86,6 +82,22 @@ module.exports = function(router){
         else{
             return res.status(503).send("You are not Authorized");
         }
+    })
+
+    router.post('/create_admin', (req,res) => {
+        AdminController.createAdmin(req,res);
+    })
+
+    router.get('/get_admins', (req,res) => {
+        AdminController.getAdmins(req,res);
+    })
+
+    router.post('/edit_admin', (req,res) => {
+        AdminController.editAdmin(req,res);
+    })
+
+    router.post('/delete_admin', (req,res) => {
+        AdminController.deleteAdmin(req,res);
     })
 
     router.post('/resolveEmergency', (req,res) => {

@@ -20,6 +20,10 @@ var AdminSchema = new Schema({
         required: true,
         maxlength: 100
     },
+    phone_number: {
+        type: String,
+        required: true
+    },
     created: {
         type: Date,
         dafault: Date.now(),
