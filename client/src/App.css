@@ -274,6 +274,20 @@ body{
   background-color: #FFFFFF;
 }
 
+.AdminModal{
+  position: absolute;
+  top: 80px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  width: 500px;
+  padding: 16px;
+  height: 580px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #FFFFFF;
+}
+
 .ConfirmModal{
   position: absolute;
   top: 180px;
