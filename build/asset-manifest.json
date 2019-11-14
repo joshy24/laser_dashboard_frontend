@@ -1,0 +1,32 @@
+{
+  "files": {
+    "main.css": "/static/css/main.874eaba5.chunk.css",
+    "main.js": "/static/js/main.e13dc322.chunk.js",
+    "main.js.map": "/static/js/main.e13dc322.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/css/2.2507d4ca.chunk.css": "/static/css/2.2507d4ca.chunk.css",
+    "static/js/2.6ea0eb03.chunk.js": "/static/js/2.6ea0eb03.chunk.js",
+    "static/js/2.6ea0eb03.chunk.js.map": "/static/js/2.6ea0eb03.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.fb724d5974718c5abb3398607fda1ad8.js": "/precache-manifest.fb724d5974718c5abb3398607fda1ad8.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.2507d4ca.chunk.css.map": "/static/css/2.2507d4ca.chunk.css.map",
+    "static/css/main.874eaba5.chunk.css.map": "/static/css/main.874eaba5.chunk.css.map",
+    "static/media/alert.mp3": "/static/media/alert.77e4ae16.mp3",
+    "static/media/ambulance.svg": "/static/media/ambulance.0a3c991c.svg",
+    "static/media/ambulance_enroute.svg": "/static/media/ambulance_enroute.133779a8.svg",
+    "static/media/App.css": "/static/media/bg.bb9cbc9b.jpg",
+    "static/media/burger_menu.png": "/static/media/burger_menu.f128647b.png",
+    "static/media/call.gif": "/static/media/call.37865c67.gif",
+    "static/media/call_with_circle.gif": "/static/media/call_with_circle.34c87478.gif",
+    "static/media/car_test.png": "/static/media/car_test.4b63a07a.png",
+    "static/media/emergency.gif": "/static/media/emergency.445ccffb.gif",
+    "static/media/emergency_with_circle.gif": "/static/media/emergency_with_circle.0153b7ea.gif",
+    "static/media/fire_truck.svg": "/static/media/fire_truck.52c00ef9.svg",
+    "static/media/fire_truck_enroute.svg": "/static/media/fire_truck_enroute.ab5818de.svg",
+    "static/media/logo.svg": "/static/media/logo.5d5d9eef.svg",
+    "static/media/police_car.svg": "/static/media/police_car.50f1bfa3.svg",
+    "static/media/police_car_enroute.svg": "/static/media/police_car_enroute.b28e98ef.svg"
+  }
+}
