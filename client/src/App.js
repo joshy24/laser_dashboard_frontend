@@ -10,14 +10,14 @@ import car_test from './icons/car_test.png';
 //import police_car from './icons/vector/police_car.svg'
 //import police_car_enroute from './icons/vector/police_car_yellow.svg'
 
-import police_car from './icons/vector/police_car.svg'
-import police_car_enroute from './icons/vector/police_car_enroute.svg'
+import police_car from './icons/police_car.png'
+import police_car_enroute from './icons/police_car_yellow.png'
 
-import fire_car from './icons/vector/fire_truck.svg'
-import fire_car_enroute from './icons/vector/fire_truck_enroute.svg'
+import fire_car from './icons/fire_truck.png'
+import fire_car_enroute from './icons/fire_truck_yellow.png'
 
-import ambulance from './icons/vector/ambulance.svg'
-import ambulance_enroute from './icons/vector/ambulance_enroute.svg'
+import ambulance from './icons/ambulance.png'
+import ambulance_enroute from './icons/ambulance_yellow.png'
 
 /*import police_car_right from './icons/police_car_right.png'
 import fire_car_right from './icons/fire_truck_right.png'

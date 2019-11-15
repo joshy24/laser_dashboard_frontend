@@ -15,6 +15,9 @@ var UserSchema = new Schema({
         required: true,
         maxlength: 100
     },
+    gender: {
+        type: String
+    },
     lastname: {
         type: String,
         required: true,

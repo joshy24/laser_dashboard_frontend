@@ -29,7 +29,7 @@ module.exports.login = function(req,res){
         return res.status(400).send("Incomplete Number");
     }
 
-    UserService.readUserPhoneNumber(new_number)
+    UserService.readUserPhoneNumberFirstname(new_number, firstname)
                 .then(user => {
                     if(!user){
                         return res.status(404).send({"response": "not found"});
@@ -78,6 +78,7 @@ module.exports.createUser = function(req,res){
     var lastname = req.body.lastname;
     var firstname = req.body.firstname;
     var phone_number = req.body.phone_number;
+    var gender = req.body.gender;
     var email = req.body.email;
 
     if(!firstname||!lastname){ 
@@ -85,6 +86,10 @@ module.exports.createUser = function(req,res){
     }
     
     if(!phone_number&&!email){
+        return res.status(400).send({"response":"bad request"});
+    }
+
+    if(!gender || gender.length > 10){
         return res.status(400).send({"response":"bad request"});
     }
 
@@ -98,6 +103,7 @@ module.exports.createUser = function(req,res){
         lastname: lastname,
         firstname: firstname,
         phone_number: new_number,
+        gender: gender,
         email: email
     }
 
