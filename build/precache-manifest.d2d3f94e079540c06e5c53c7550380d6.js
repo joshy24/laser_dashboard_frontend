@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4d1330e0c9287a561030b04800365bab",
+    "revision": "0b335371a992a3700ecf161de0ef2578",
     "url": "/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/css/2.2507d4ca.chunk.css"
   },
   {
-    "revision": "fa245e1fbe7bd049ba59",
+    "revision": "4f69192ee12604d820f7",
     "url": "/static/css/main.874eaba5.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/js/2.d31608da.chunk.js"
   },
   {
-    "revision": "fa245e1fbe7bd049ba59",
-    "url": "/static/js/main.e85ce771.chunk.js"
+    "revision": "4f69192ee12604d820f7",
+    "url": "/static/js/main.38f03352.chunk.js"
   },
   {
     "revision": "42ac5946195a7306e2a5",
@@ -28,12 +28,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/alert.77e4ae16.mp3"
   },
   {
-    "revision": "0a3c991c80eb7646fb026a54eaf15a83",
-    "url": "/static/media/ambulance.0a3c991c.svg"
+    "revision": "3ff333a4002b262173fd64b9d5889118",
+    "url": "/static/media/ambulance.3ff333a4.png"
   },
   {
-    "revision": "133779a8df68af606b392918b8bcb8d6",
-    "url": "/static/media/ambulance_enroute.133779a8.svg"
+    "revision": "8b74e8df00c57ca7eed80bf2afa06597",
+    "url": "/static/media/ambulance_yellow.8b74e8df.png"
   },
   {
     "revision": "bb9cbc9b392a2444cbb3fa91a91b5542",
@@ -64,23 +64,23 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/emergency_with_circle.0153b7ea.gif"
   },
   {
-    "revision": "52c00ef93f96875068affac73c56cee3",
-    "url": "/static/media/fire_truck.52c00ef9.svg"
+    "revision": "e837de8bce6594a7e891570608698077",
+    "url": "/static/media/fire_truck.e837de8b.png"
   },
   {
-    "revision": "ab5818de2a16a7bb4c3df8eacacd0882",
-    "url": "/static/media/fire_truck_enroute.ab5818de.svg"
+    "revision": "a665c769d2a68bdadbdd8c2a5e956d2b",
+    "url": "/static/media/fire_truck_yellow.a665c769.png"
   },
   {
     "revision": "5d5d9eefa31e5e13a6610d9fa7a283bb",
     "url": "/static/media/logo.5d5d9eef.svg"
   },
   {
-    "revision": "50f1bfa3ae21acec934b4968841c833d",
-    "url": "/static/media/police_car.50f1bfa3.svg"
+    "revision": "d5d82e204eb143fe019d0143f4a65651",
+    "url": "/static/media/police_car.d5d82e20.png"
   },
   {
-    "revision": "b28e98eff16a2ef5bff073146d05353b",
-    "url": "/static/media/police_car_enroute.b28e98ef.svg"
+    "revision": "303f78975daae26f5a411536a4f2b2d6",
+    "url": "/static/media/police_car_yellow.303f7897.png"
   }
 ]);
