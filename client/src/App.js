@@ -1239,20 +1239,23 @@ class App extends Component{
                 this.setState(state => {
                     var agents = state.selected_agents;
                     var laser_agents = state.laser_agents;
-                    
-                    console.log({agents});
-                    console.log({laser_agents});
 
                     if(agents.length > 1){
                         this.state.selected_agents.map(age => 
                             {
                                 var laser_agent = laser_agents.find(age => age.agent._id === message.channel);
-                                
-                                if(laser_agent){
-                                    message.message.agent.is_on_route = true;
+                            
+                                laser_agents.map(agen => {
+                                    if(agen.agent._id === message.channel){
+                                        var laser_agent = agen;
 
-                                    laser_agents.splice(agents.indexOf(laser_agent), 1, message.message.agent);
-                                }
+                                        if(laser_agent){
+                                            message.message.agent.is_on_route = true;
+        
+                                            laser_agents.splice(agents.indexOf(laser_agent), 1, message.message.agent);
+                                        }
+                                    }
+                                })
 
                                 if(age!=null && (age.agent._id === message.message.agent._id)){
                                     agents.push(message.message.agent);
@@ -1265,13 +1268,17 @@ class App extends Component{
                     else{
                         agents.push(message.message.agent);
 
-                        var laser_agent = laser_agents.find(age => age.agent._id === message.channel);
-                        console.log({laser_agent});
-                        message.message.agent.is_on_route = true;
+                        laser_agents.map(age => {
+                            if(age.agent._id === message.channel){
+                                var laser_agent = age;
 
-                        laser_agents.splice(agents.indexOf(laser_agent), 1, message.message.agent);
+                                message.message.agent.is_on_route = true;
 
-                        persistence.saveSelectedAgents(agents);
+                                laser_agents.splice(agents.indexOf(laser_agent), 1, message.message.agent);
+
+                                persistence.saveSelectedAgents(agents);
+                            }
+                        });
                     }
                     
                     return {  
@@ -1289,7 +1296,7 @@ class App extends Component{
                     if(agents.length > 1){
                         this.state.selected_agents.map(age => 
                             {
-                                if(age!=null && (age.agent._id === message.message.agent._id)){
+                                if(age!=null && (age.agent._id === message.channel)){
                                     agents.splice(agents.indexOf(message.message.agent),1);
 
                                     persistence.saveSelectedAgents(agents);
