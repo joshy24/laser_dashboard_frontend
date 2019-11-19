@@ -1243,7 +1243,7 @@ class App extends Component{
                                 var laser_agent = laser_agents.find(age => age.agent._id === message.channel);
 
                                 if(laser_agent){
-                                    laser_agents.splice(laser_agent,1,message.message);
+                                    laser_agents.splice(agents.indexOf(laser_agent), 1, message.message);
                                 }
 
                                 if(age!=null && (age.agent._id === message.message.agent._id)){
