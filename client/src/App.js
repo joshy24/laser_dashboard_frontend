@@ -363,7 +363,7 @@ class App extends Component{
 
           if(agents.length > 1){
               new_selected_agents = agents.map(age => {
-                  if(age && (age._id !== agent.agent._id)){
+                  if(age && (age.agent._id !== agent.agent._id)){
                       return age;
                   }
               })
@@ -1256,7 +1256,7 @@ class App extends Component{
                 else{
                     //do nothing
                 }
-
+                console.log({la})
                 return {
                     laser_agents: la
                 }
@@ -1334,7 +1334,7 @@ class App extends Component{
                     else{
                         //do nothing
                     }
-
+                    console.log({la})
                     return {
                         laser_agents: la
                     }
