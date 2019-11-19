@@ -22,7 +22,7 @@ var AdminSchema = new Schema({
     },
     phone_number: {
         type: String,
-        required: true
+        required: false
     },
     created: {
         type: Date,
