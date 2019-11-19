@@ -1233,9 +1233,9 @@ class App extends Component{
                     })
                 }
           }
-          console.log(message.channel)
+         
           if(message.channel === "agent_tracked"){
-            console.log(message.channel)
+            
                 this.setState(state => {
                     var agents = state.selected_agents;
                     var laser_agents = state.laser_agents;
@@ -1244,21 +1244,23 @@ class App extends Component{
                         this.state.selected_agents.map(age => 
                             {
                                 var laser_agent = laser_agents.find(age => age.agent._id === message.channel);
-                                console.log({laser_agent})
+                                
                                 if(laser_agent){
                                     laser_agents.splice(agents.indexOf(laser_agent), 1, message.message);
-                                    console.log({laser_agent})
                                 }
 
                                 if(age!=null && (age.agent._id === message.message.agent._id)){
                                     agents.push(message.message);
 
-                                    console.log(message.message);
-
                                     persistence.saveSelectedAgents(agents);
                                 }
                             }
                         );
+                    }
+                    else{
+                        agents.push(message.message);
+
+                        persistence.saveSelectedAgents(agents);
                     }
         
                     return {  
