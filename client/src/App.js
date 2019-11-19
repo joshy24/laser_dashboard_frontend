@@ -1233,8 +1233,9 @@ class App extends Component{
                     })
                 }
           }
-
+          console.log(message.channel)
           if(message.channel === "agent_tracked"){
+            console.log(message.channel)
                 this.setState(state => {
                     var agents = state.selected_agents;
                     var laser_agents = state.laser_agents;
