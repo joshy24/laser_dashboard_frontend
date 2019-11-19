@@ -470,7 +470,7 @@ class App extends Component{
           }
       })
   }
-
+  
   addAgentToMonitoring(e, agent){
       e.preventDefault();
       //send a request to the agent via pubnub
@@ -1236,8 +1236,35 @@ class App extends Component{
          
           if(message.channel === "agent_tracked"){
                 
-                this.setState(state => {
-                    var agents = state.selected_agents;
+            this.setState(state => {
+
+                var laser_agents = state.laser_agents;
+                var la = [];
+                
+                if(laser_agents.length > 0){
+                    la = laser_agents.map(agen => {
+                        if(agen.agent._id === message.message.agent.agent._id){
+                            agen.is_on_route = true;
+                            return agen;
+                        }
+                        else{
+                            return agen;
+                        }
+                    });
+                    
+                }
+                else{
+                    //do nothing
+                }
+
+                return {
+                    laser_agents: la
+                }
+            })
+
+                
+                    
+                    /*var agents = state.selected_agents;
                     var laser_agents = state.laser_agents;
 
                     if(agents.length > 1){
@@ -1284,14 +1311,35 @@ class App extends Component{
                     return {  
                         selected_agents: agents,
                         laser_agents: laser_agents
-                    }
-                })
+                    }*/
           }
           
           if(message.channel === "agent_untracked"){
                 this.setState(state => {
-                    var agents = state.selected_agents;
+                    
                     var laser_agents = state.laser_agents;
+                    var la = [];
+                    
+                    if(laser_agents.length > 0){
+                        la = laser_agents.map(agen => {
+                            if(agen.agent._id === message.message.agent.agent._id){
+                                agen.is_on_route = false;
+                                return agen;
+                            }
+                            else{
+                                return agen;
+                            }
+                        });
+                    }
+                    else{
+                        //do nothing
+                    }
+
+                    return {
+                        laser_agents: la
+                    }
+                    
+                    /*var laser_agents = state.laser_agents;
                     
                     if(agents.length > 1){
                         this.state.selected_agents.map(age => 
@@ -1307,7 +1355,7 @@ class App extends Component{
         
                     return {  
                         selected_agents: agents
-                    }
+                    }*/
                 })
           }
 
