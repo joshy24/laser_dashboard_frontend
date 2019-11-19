@@ -1260,9 +1260,15 @@ class App extends Component{
                     else{
                         agents.push(message.message);
 
+                        var laser_agent = laser_agents.find(age => age.agent._id === message.channel);
+
+                        laser_agents.splice(agents.indexOf(laser_agent), 1, message.message);
+
+                        console.log({laser_agents});
+
                         persistence.saveSelectedAgents(agents);
                     }
-        
+                    
                     return {  
                         selected_agents: agents,
                         laser_agents: laser_agents
