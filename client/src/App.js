@@ -1235,7 +1235,6 @@ class App extends Component{
           }
          
           if(message.channel === "agent_tracked"){
-            
                 this.setState(state => {
                     var agents = state.selected_agents;
                     var laser_agents = state.laser_agents;
@@ -1246,11 +1245,13 @@ class App extends Component{
                                 var laser_agent = laser_agents.find(age => age.agent._id === message.channel);
                                 
                                 if(laser_agent){
-                                    laser_agents.splice(agents.indexOf(laser_agent), 1, message.message);
+                                    message.message.agent.is_on_route = true;
+
+                                    laser_agents.splice(agents.indexOf(laser_agent), 1, message.message.agent);
                                 }
 
                                 if(age!=null && (age.agent._id === message.message.agent._id)){
-                                    agents.push(message.message);
+                                    agents.push(message.message.agent);
 
                                     persistence.saveSelectedAgents(agents);
                                 }
@@ -1258,13 +1259,13 @@ class App extends Component{
                         );
                     }
                     else{
-                        agents.push(message.message);
-
-                        console.log(message.message);
+                        agents.push(message.message.agent);
 
                         var laser_agent = laser_agents.find(age => age.agent._id === message.channel);
+                        
+                        message.message.agent.is_on_route = true;
 
-                        laser_agents.splice(agents.indexOf(laser_agent), 1, message.message);
+                        laser_agents.splice(agents.indexOf(laser_agent), 1, message.message.agent);
 
                         persistence.saveSelectedAgents(agents);
                     }
@@ -1280,12 +1281,12 @@ class App extends Component{
                 this.setState(state => {
                     var agents = state.selected_agents;
                     var laser_agents = state.laser_agents;
-                
+                    
                     if(agents.length > 1){
                         this.state.selected_agents.map(age => 
                             {
                                 if(age!=null && (age.agent._id === message.message.agent._id)){
-                                    agents.splice(agents.indexOf(message.message),1);
+                                    agents.splice(agents.indexOf(message.message.agent),1);
 
                                     persistence.saveSelectedAgents(agents);
                                 }
