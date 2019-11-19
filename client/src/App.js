@@ -509,6 +509,8 @@ class App extends Component{
             },
             (status, response) => {
                 // handle status, response
+                console.log({status})
+                console.log({response})
             }
       );
 
