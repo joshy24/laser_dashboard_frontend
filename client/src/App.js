@@ -1965,15 +1965,21 @@ class App extends Component{
     });
   }
 
-  onManualCallChanged(call){
+  onManualCallChanged(event){
+    const target = event.target;
+    const value = target.value;
+
     this.setState({
-        selected_manual_call: call.toLowerCase()
+        selected_manual_call: value
     })
   }
 
-  onManualGenderChanged(gender){
+  onManualGenderChanged(event){
+    const target = event.target;
+    const value = target.value;
+
     this.setState({
-        selected_manual_gender: gender
+        selected_manual_gender: value
     })
   }
 
