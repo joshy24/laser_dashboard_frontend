@@ -1243,7 +1243,7 @@ class App extends Component{
                     
                     if(laser_agents.length > 0){
                         la = laser_agents.map(agen => {
-                            if(agen.agent._id === message.message.agent.agent._id){
+                            if(agen.agent._id === message.message.agent._id){
                                 agen.is_on_route = true;
                                 return agen;
                             }
@@ -1256,7 +1256,7 @@ class App extends Component{
                     else{
                         //do nothing
                     }
-                    console.log({la})
+                    
                     return {
                         laser_agents: la
                     }
@@ -1322,7 +1322,7 @@ class App extends Component{
                     
                     if(laser_agents.length > 0){
                         la = laser_agents.map(agen => {
-                            if(agen.agent._id === message.message.agent.agent._id){
+                            if(agen.agent._id === message.message.agent._id){
                                 agen.is_on_route = false;
                                 return agen;
                             }
@@ -1462,7 +1462,6 @@ class App extends Component{
           }
           
           if(message.channel === this.state.tracked_area ){
-              console.log(message.message);
               if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
                   var agents = this.state.laser_agents;
                 

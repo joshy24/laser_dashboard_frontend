@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "b9567fc8762bfb66f71f14e6dde9bbd4",
+    "revision": "0f801d291f3cb770cb0a4904a7a4a86d",
     "url": "/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/css/2.2507d4ca.chunk.css"
   },
   {
-    "revision": "37dce651f4f6ff1eb0c4",
+    "revision": "6297def4875f8f5596ab",
     "url": "/static/css/main.874eaba5.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/js/2.d31608da.chunk.js"
   },
   {
-    "revision": "37dce651f4f6ff1eb0c4",
-    "url": "/static/js/main.142ca1e3.chunk.js"
+    "revision": "6297def4875f8f5596ab",
+    "url": "/static/js/main.07a1f2f0.chunk.js"
   },
   {
     "revision": "42ac5946195a7306e2a5",
@@ -64,12 +64,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/emergency_with_circle.0153b7ea.gif"
   },
   {
-    "revision": "e837de8bce6594a7e891570608698077",
-    "url": "/static/media/fire_truck.e837de8b.png"
+    "revision": "651626d2eba1ecd9e6c9a2a2dd2f1099",
+    "url": "/static/media/fire_truck.651626d2.png"
   },
   {
-    "revision": "a665c769d2a68bdadbdd8c2a5e956d2b",
-    "url": "/static/media/fire_truck_yellow.a665c769.png"
+    "revision": "4a7d405136199c9f39294fbe9871ef63",
+    "url": "/static/media/fire_truck_yellow.4a7d4051.png"
   },
   {
     "revision": "5d5d9eefa31e5e13a6610d9fa7a283bb",
