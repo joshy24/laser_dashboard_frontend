@@ -6,7 +6,6 @@ import emergency_icon from './icons/emergency.gif';
 import call_icon from './icons/call.gif';
 import car_test from './icons/car_test.png';
 
-
 //import police_car from './icons/vector/police_car.svg'
 //import police_car_enroute from './icons/vector/police_car_yellow.svg'
 
@@ -42,6 +41,7 @@ import Sidebar from './components/Sidebar';
 import Action from './components/Action';
 import AgentDetails from './components/AgentDetails';
 import LocationSidebar from './components/LocationSideBar';
+import AddCallManually from './components/AddCallManually';
 import TopPanel from './components/TopPanel';
 import Latest from './components/Latest';
 import RouteStatus from './components/RouteStatus';
@@ -50,6 +50,7 @@ import Utils from './utils/Utils';
 import Persistence from './utils/Persistence';
 import Sound from 'react-sound';
 import PubNubReact from 'pubnub-react';
+import Geocode from "react-geocode";
 
 import './App.css';
 
@@ -89,6 +90,7 @@ class App extends Component{
           side_bar_open: false, 
           agent_side_bar_open: false, 
           location_side_bar_open: false, 
+          manual_location_side_bar: false,
           clicked_user: {}, 
           clicked_agent: {},
           center: {lat: 6.5244,lng: 3.3792}, 
@@ -108,7 +110,12 @@ class App extends Component{
           action_message: "",
           tracked_area: "lllaser", //the user in which the admin is currently viewing whether the user wants to be tracked or not
           date: new Date(),
-          message: ""
+          message: "",
+
+          selected_manual_call:"Emergency Management(LASEMA)",
+          selected_manual_gender:"Male",
+          manual_name: "",
+          manual_address: ""
       }
       
       this.pubnub = new PubNubReact({
@@ -151,6 +158,11 @@ class App extends Component{
       this.showConfirmResolveEmergency = this.showConfirmResolveEmergency.bind(this);
       this.showConfirmResolveLocation = this.showConfirmResolveLocation.bind(this);
 
+      this.onManualCallChanged = this.onManualCallChanged.bind(this);
+      this.onManualGenderChanged = this.onManualGenderChanged.bind(this);
+      this.onSubmitManualCallDetails = this.onSubmitManualCallDetails.bind(this);
+      this.openManualLocation = this.openManualLocation.bind(this);
+
       this.logout = this.logout.bind(this);
     
       var year = todays_date.split(/T(.+)/)[0];
@@ -158,6 +170,19 @@ class App extends Component{
       year = year+"T00:00:00.000Z";
 
       today = new Date(year);
+
+
+      Geocode.setApiKey("AIzaSyADNxHcgsHDyx_OSbqxBg5xB5lV2YJDcKI");
+ 
+      // set response language. Defaults to english.
+      Geocode.setLanguage("en");
+        
+      // set response region. Its optional.
+      // A Geocoding request with region=es (Spain) will return the Spanish city.
+      Geocode.setRegion("ngr");
+        
+      // Enable or disable logs. Its optional.
+      Geocode.enableDebug();
   }
 
   logout(){
@@ -496,9 +521,8 @@ class App extends Component{
           }
       );
 
-
       //tell other browsers about the agent being montiored
-      /*this.pubnub.publish(
+      this.pubnub.publish(
             {
                 message: {
                     agent
@@ -512,7 +536,7 @@ class App extends Component{
                 console.log({status})
                 console.log({response})
             }
-      );*/
+      );
 
       this.setState(state => {
           var agents = state.selected_agents;
@@ -521,20 +545,22 @@ class App extends Component{
           var new_selected_agents = [];
 
           if(agents.length > 0){
+              var bool = false;
+
               new_selected_agents = agents.map(a => {
-                
-                if(!a || (a.agent._id === agent.agent._id)){
-                  return agent;
-                }
-                else{
-                    return a;
-                }
+                    if(a.agent._id === agent.agent._id){
+                        bool = true;
+                        return agent;
+                    }
+                    else{
+                        if(a){
+                            return a;
+                        }
+                    }
               })
 
-              var found_agent = new_selected_agents.find(a => a.agent._id === agent.agent._id)
-
-              if(!found_agent){
-                new_selected_agents.push(agent)
+              if(!bool){
+                  new_selected_agents.push(agent)
               }
           }
           else{
@@ -542,7 +568,7 @@ class App extends Component{
           }
           
           if(list.indexOf(agent.agent._id)===-1){
-            list.push(agent.agent._id)
+             list.push(agent.agent._id)
           }
 
           //subscribe to the agents id to receive a response to the route request
@@ -654,6 +680,15 @@ class App extends Component{
       }
   }
 
+  openManualLocation(){
+      this.setState({
+            manual_location_side_bar: true,
+            side_bar_open: false,
+            location_side_bar_open: false,
+            agent_side_bar_open: false
+      })
+  }
+  
   onCalendarOpen(){
       this.setState({
         play_sound: false,
@@ -991,6 +1026,7 @@ class App extends Component{
           play_sound: false,
           side_bar_open: false,
           location_side_bar_open: false,
+          manual_location_side_bar: false,
           agent_side_bar_open: false,
           selected_location: {},
           selected_emergency: {},
@@ -1566,11 +1602,7 @@ class App extends Component{
                               this.setState(state => {
                                   var agents = state.selected_agents;
 
-                                  console.log({agents});
-
                                   agents[index].is_on_route = true;
-                                  
-                                  console.log({agents});
 
                                   persistence.saveSelectedAgents(agents);
 
@@ -1920,10 +1952,76 @@ class App extends Component{
       this.setState({
           play_sound: false
       })
- }
+  }
+
+  onManualCallChanged(call){
+    this.setState({
+        selected_manual_call: call.toLowerCase()
+    })
+  }
+
+  onManualGenderChanged(gender){
+    this.setState({
+        selected_manual_gender: gender
+    })
+  }
+
+  onSubmitManualCallDetails(e){
+      e.preventDefault();
+
+      if(this.state.selected_manual_call.length <= 0){
+          this.setState({
+              action: "message",
+              action_message: "Please enter a valid reason for call from the drop down"
+          });
+          return;
+      }
+
+      if(this.state.selected_manual_gender.length <= 0){
+          this.setState({
+              action: "message",
+              action_message: "Please enter a valid gender"
+          });
+          return;
+      }
+
+      if(this.state.manual_name.length <= 0){
+          this.setState({
+              action: "message",
+              action_message: "Please enter a valid name"
+          });
+          return;
+      }
+
+      if(this.state.manual_address.length >= 0){
+          this.setState({
+              action: "message",
+              action_message: "Please enter an address"
+          });
+          return;
+      }
+
+      //show loading
+      //translate address to longitude and latitude
+      this.setState({
+            action: "loading",
+            action_message: ""
+      });
+
+      Geocode.fromAddress(this.state.manual_address).then(
+        response => {
+          const { lat, lng } = response.results[0].geometry.location;
+          console.log(lat, lng);
+        },
+        error => {
+          console.error(error);
+        }
+      );
+
+  }
 
 
-render(){
+  render(){
     let sound;
 
     if(this.state.play_sound){
@@ -1956,18 +2054,21 @@ render(){
     else{
       show_side_bar = "";
     }
-
+    
     return (
         <div className="laser-parent-div" style={mapStyle}>
             <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
             {show_location_side_bar}
             {show_side_bar}
+            {this.state.manual_location_side_bar ? <AddCallManually closeSidebar={this.closeSideBar} selected_manual_call={this.state.selected_manual_call} selected_manual_gender={this.state.selected_manual_gender} manual_address={this.state.manual_address} manual_name={this.state.manual_name} onManualCallChanged={this.onManualCallChanged} onManualGenderChanged={this.onManualGenderChanged}  onSubmitManualCallDetails={this.onSubmitManualCallDetails}/> : "" }
+            
             {this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" }
 
-            <TopPanel logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
+            <TopPanel openManualLocation={this.openManualLocation} logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
             onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAllAgentsLocation={this.subscribeAndGetAllAgentsLocation}/>
 
             {sound}
+
             <Map google={this.props.google} 
                 style={mapStyle}
                 onReady={this.fetchPlaces}
