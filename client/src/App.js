@@ -2084,6 +2084,7 @@ class App extends Component{
   }
 
   tryAgainClicked(){
+      this.hideConfirmManualLocation();
       Geocode.fromAddress(this.state.manual_address).then(
         response => {
           const { lat, lng } = response.results[0].geometry.location;
@@ -2102,11 +2103,11 @@ class App extends Component{
   }
 
   continueConfirmAddressNotFoundClicked(){
-
+    this.hideConfirmManualLocation();
   }
 
   closeConfirmAddressNotFoundClicked(){
-      
+    this.hideConfirmManualLocation();
   }
 
   render(){
