@@ -2010,7 +2010,7 @@ class App extends Component{
           return;
       }
 
-      if(this.state.manual_address.length >= 0){
+      if(this.state.manual_address.length <= 0){
           this.setState({
               action: "message",
               action_message: "Please enter an address"
