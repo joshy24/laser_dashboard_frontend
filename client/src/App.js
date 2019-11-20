@@ -162,6 +162,7 @@ class App extends Component{
       this.onManualGenderChanged = this.onManualGenderChanged.bind(this);
       this.onSubmitManualCallDetails = this.onSubmitManualCallDetails.bind(this);
       this.openManualLocation = this.openManualLocation.bind(this);
+      this.onFieldChanged = this.onFieldChanged.bind(this);
 
       this.logout = this.logout.bind(this);
     
@@ -1954,6 +1955,16 @@ class App extends Component{
       })
   }
 
+  onFieldChanged(event){
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+        [name]: value
+    });
+  }
+
   onManualCallChanged(call){
     this.setState({
         selected_manual_call: call.toLowerCase()
@@ -2060,7 +2071,7 @@ class App extends Component{
             <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
             {show_location_side_bar}
             {show_side_bar}
-            {this.state.manual_location_side_bar ? <AddCallManually closeSidebar={this.closeSideBar} selected_manual_call={this.state.selected_manual_call} selected_manual_gender={this.state.selected_manual_gender} manual_address={this.state.manual_address} manual_name={this.state.manual_name} onManualCallChanged={this.onManualCallChanged} onManualGenderChanged={this.onManualGenderChanged}  onSubmitManualCallDetails={this.onSubmitManualCallDetails}/> : "" }
+            {this.state.manual_location_side_bar ? <AddCallManually onFieldChanged={this.onFieldChanged} closeSidebar={this.closeSideBar} selected_manual_call={this.state.selected_manual_call} selected_manual_gender={this.state.selected_manual_gender} manual_address={this.state.manual_address} manual_name={this.state.manual_name} onManualCallChanged={this.onManualCallChanged} onManualGenderChanged={this.onManualGenderChanged}  onSubmitManualCallDetails={this.onSubmitManualCallDetails}/> : "" }
             
             {this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" }
 
