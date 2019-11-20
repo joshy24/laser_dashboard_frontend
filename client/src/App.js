@@ -42,6 +42,7 @@ import Action from './components/Action';
 import AgentDetails from './components/AgentDetails';
 import LocationSidebar from './components/LocationSideBar';
 import AddCallManually from './components/AddCallManually';
+import ConfirmAddressNotFound from './components/ConfirmAddressNotFound';
 import TopPanel from './components/TopPanel';
 import Latest from './components/Latest';
 import RouteStatus from './components/RouteStatus';
@@ -115,7 +116,9 @@ class App extends Component{
           selected_manual_call:"Emergency Management(LASEMA)",
           selected_manual_gender:"Male",
           manual_name: "",
-          manual_address: ""
+          manual_phone: "",
+          manual_address: "",
+          showConfirmManualLocation: false
       }
       
       this.pubnub = new PubNubReact({
@@ -163,6 +166,13 @@ class App extends Component{
       this.onSubmitManualCallDetails = this.onSubmitManualCallDetails.bind(this);
       this.openManualLocation = this.openManualLocation.bind(this);
       this.onFieldChanged = this.onFieldChanged.bind(this);
+
+      this.showConfirmManualLocation = this.showConfirmManualLocation.bind(this);
+      this.hideConfirmManualLocation = this.hideConfirmManualLocation.bind(this);
+
+      this.tryAgainClicked = this.tryAgainClicked.bind(this);
+      this.continueConfirmAddressNotFoundClicked = this.continueConfirmAddressNotFoundClicked.bind(this);
+      this.closeConfirmAddressNotFoundClicked = this.closeConfirmAddressNotFoundClicked.bind(this);
 
       this.logout = this.logout.bind(this);
     
@@ -1994,6 +2004,14 @@ class App extends Component{
           return;
       }
 
+      if(this.state.manual_phone.lenght <= 0){
+          this.setState({
+               action: "message",
+               action_message: "Please enter a valid phone number"
+          });
+          return;
+      }
+
       if(this.state.selected_manual_gender.length <= 0){
           this.setState({
               action: "message",
@@ -2028,15 +2046,68 @@ class App extends Component{
       Geocode.fromAddress(this.state.manual_address).then(
         response => {
           const { lat, lng } = response.results[0].geometry.location;
+
+          console.log(lat, lng);
+          
+          var location = {
+              created : Date.now(),
+              action: this.state.selected_manual_call,
+              longitude: lng,
+              latitude: lat,
+              full_address: this.state.manual_address,
+              full_name: this.state.manual_name,
+              phone_number: this.state.manual_phone
+          }
+        },
+        error => {
+          console.error(error);
+
+          this.setState({
+            action: "message",
+            action_message: "We could not find that address",
+            showConfirmManualLocation: true
+          });
+        }
+      );
+  }
+
+  showConfirmManualLocation(){
+      this.setState({
+          showConfirmManualLocation: true
+      })
+  }
+
+  hideConfirmManualLocation(){
+    this.setState({
+        showConfirmManualLocation: false
+    })
+  }
+
+  tryAgainClicked(){
+      Geocode.fromAddress(this.state.manual_address).then(
+        response => {
+          const { lat, lng } = response.results[0].geometry.location;
+
           console.log(lat, lng);
         },
         error => {
           console.error(error);
+
+          this.setState({
+            action: "message",
+            action_message: "We could not find that address"
+          });
         }
       );
+  }
+
+  continueConfirmAddressNotFoundClicked(){
 
   }
 
+  closeConfirmAddressNotFoundClicked(){
+      
+  }
 
   render(){
     let sound;
@@ -2077,6 +2148,7 @@ class App extends Component{
             <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
             {show_location_side_bar}
             {show_side_bar}
+            {this.state.showConfirmManualLocation ? <ConfirmAddressNotFound continueConfirmAddressNotFoundClicked={this.continueConfirmAddressNotFoundClicked} closeConfirmAddressNotFoundClicked={this.continueConfirmAddressNotFoundClicked} tryAgainClicked={this.continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={this.hideConfirmManualLocation} /> : ""}
             {this.state.manual_location_side_bar ? <AddCallManually onFieldChanged={this.onFieldChanged} closeSidebar={this.closeSideBar} selected_manual_call={this.state.selected_manual_call} selected_manual_gender={this.state.selected_manual_gender} manual_address={this.state.manual_address} manual_name={this.state.manual_name} onManualCallChanged={this.onManualCallChanged} onManualGenderChanged={this.onManualGenderChanged}  onSubmitManualCallDetails={this.onSubmitManualCallDetails}/> : "" }
             
             {this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" }
