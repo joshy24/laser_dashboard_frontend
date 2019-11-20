@@ -498,7 +498,7 @@ class App extends Component{
 
 
       //tell other browsers about the agent being montiored
-      this.pubnub.publish(
+      /*this.pubnub.publish(
             {
                 message: {
                     agent
@@ -512,7 +512,7 @@ class App extends Component{
                 console.log({status})
                 console.log({response})
             }
-      );
+      );*/
 
       this.setState(state => {
           var agents = state.selected_agents;
