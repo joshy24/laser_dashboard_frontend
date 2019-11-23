@@ -32,6 +32,24 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));//accept strings
 
 app.disable('x-powered-by');
 
+
+
+
+var NodeGeocoder = require('node-geocoder');
+ 
+var options = {
+  provider: 'google',
+ 
+  // Optional depending on the providers
+  httpAdapter: 'http', // Default
+  apiKey: config.google_api_key, // for Mapquest, OpenCage, Google Premier
+  formatter: null         // 'gpx', 'string', ...
+};
+
+global.geocoder = NodeGeocoder(options);
+
+
+
 var PubNub = require('pubnub');
 
 var pubnub = new PubNub({

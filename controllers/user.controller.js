@@ -254,7 +254,11 @@ module.exports.saveEmergencyLocation = function(req,res){
     var is_trackable =  req.body.is_trackable;
     var user = req.user;
 
-    if(!action){
+    geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
+        console.log(res);
+    });
+
+    /*if(!action){
         return res.status(400).send({"response":"bad request"});
     }
 
@@ -285,7 +289,7 @@ module.exports.saveEmergencyLocation = function(req,res){
                 })
                 .catch(err => {
                     return res.status(500).send({"response":err});
-                })
+                })*/
 }
 
 module.exports.sendEmergencyMessage = function(req,res){

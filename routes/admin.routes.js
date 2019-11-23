@@ -74,6 +74,7 @@ module.exports = function(router){
         AdminController.getEmergencies(req,res);
     });
 
+    
     //unauthorized access check
     router.use((req,res,next) => {
         if(req.admin.priviledge==="full_control"){
@@ -82,6 +83,10 @@ module.exports = function(router){
         else{
             return res.status(503).send("You are not Authorized");
         }
+    })
+
+    router.post('/create_manual_location', (req,res) => {
+        AdminController.saveManualEmergencyLocation(req,res);
     })
 
     router.post('/create_admin', (req,res) => {

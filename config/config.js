@@ -14,6 +14,7 @@ module.exports = {
         }
     },
     secret: process.env.SECRET_KEY, 
+    google_api_key: process.env.GOOGLE_API_KEY,
     socket: {
         port: process.env.SOCKET_IO_PORT
     },

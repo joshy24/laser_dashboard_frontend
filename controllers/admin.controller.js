@@ -250,6 +250,41 @@ module.exports.getEmergencies = function(req,res){
             })
 }
 
+module.exports.saveManualEmergencyLocation = function(req,res){
+    var action = req.body.action;
+    var longitude = req.body.longitude;
+    var latitude = req.body.latitude;
+    var full_address = full_address;
+    var full_name = req.body.full_name;
+    var phone_number = req.body.phone_number;
+    var is_trackable = false;
+
+    if(!action){
+        return res.status(400).send({"response":"bad request"});
+    }
+
+    var data = {};
+    data.latitude = latitude;
+    data.longitude = longitude;
+
+    data.full_name = full_name;
+    data.phone_number = phone_number;
+    data.reason = action;
+    data.status = "pending";
+    
+    data.full_address = full_address;
+    data.is_trackable = is_trackable;
+
+    LocationService.saveLocation(data)
+                .then(saved => {
+                    io.emit("call", saved);
+                    return res.status(200).send({"response":saved._id});
+                })
+                .catch(err => {
+                    return res.status(500).send({"response":err});
+                })
+}
+
 
 //resolve issues
 module.exports.resolveEmergency = (req,res) => {
