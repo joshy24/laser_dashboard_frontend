@@ -255,6 +255,7 @@ module.exports.saveEmergencyLocation = function(req,res){
     var user = req.user;
 
     geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
+        console.log(err)
         console.log(res);
     });
 
