@@ -41,7 +41,7 @@ var options = {
   provider: 'google',
  
   // Optional depending on the providers
-  httpAdapter: 'http', // Default
+  httpAdapter: 'https', // Default
   apiKey: config.google_api_key, // for Mapquest, OpenCage, Google Premier
   formatter: null         // 'gpx', 'string', ...
 };
