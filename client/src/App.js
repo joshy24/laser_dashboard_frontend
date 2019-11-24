@@ -2178,7 +2178,7 @@ class App extends Component{
                 action_message: "The location has been saved and is displayed on the map"
             })
 
-            this.setState(state => {
+            /*this.setState(state => {
                 let arr = state.locations;
                 let lat = state.latest;
                 
@@ -2196,7 +2196,7 @@ class App extends Component{
                         lng: response.data.response.longitude
                     }
                 }
-            })
+            })*/
         }
   }
 
