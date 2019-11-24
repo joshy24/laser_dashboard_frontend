@@ -263,26 +263,43 @@ module.exports.saveManualEmergencyLocation = function(req,res){
         return res.status(400).send({"response":"bad request"});
     }
 
-    var data = {};
-    data.latitude = latitude;
-    data.longitude = longitude;
+    if(lng && lat){
+        geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
+            if(err){
+                return res.status(500).send({"response":err});
+            }
+            else{
+                if(res[0].city === "Lagos"){
+                    var data = {};
+                    data.latitude = latitude;
+                    data.longitude = longitude;
 
-    data.full_name = full_name;
-    data.phone_number = phone_number;
-    data.reason = action;
-    data.status = "pending";
-    
-    data.full_address = full_address;
-    data.is_trackable = is_trackable;
+                    data.full_name = full_name;
+                    data.phone_number = phone_number;
+                    data.reason = action;
+                    data.status = "pending";
+                    
+                    data.full_address = full_address;
+                    data.is_trackable = is_trackable;
 
-    LocationService.saveLocation(data)
-                .then(saved => {
-                    io.emit("call", saved);
-                    return res.status(200).send({"response":saved._id});
-                })
-                .catch(err => {
-                    return res.status(500).send({"response":err});
-                })
+                    LocationService.saveLocation(data)
+                                .then(saved => {
+                                    io.emit("call", saved);
+                                    return res.status(200).send({"response":saved});
+                                })
+                                .catch(err => {
+                                    return res.status(500).send({"response":err});
+                                })
+                }
+                else{
+                    return res.status(200).send({"response":"out_of_lagos"});
+                }
+            }
+        });
+    }
+    else{
+        return res.status(400).send({"response":"bad request"});
+    }
 }
 
 

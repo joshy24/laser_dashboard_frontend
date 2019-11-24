@@ -254,43 +254,55 @@ module.exports.saveEmergencyLocation = function(req,res){
     var is_trackable =  req.body.is_trackable;
     var user = req.user;
 
-    geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
-        console.log(err)
-        console.log(res);
-    });
-
-    /*if(!action){
+    if(!action){
         return res.status(400).send({"response":"bad request"});
     }
 
-    var data = {};
-    data.latitude = lat;
-    data.longitude = lng;
-    data.full_name = user.firstname +" " + user.lastname;
-
-    if(user.email)
-        data.email = user.email;
-
-    if(user.phone_number)
-        data.phone_number = user.phone_number;
-
-    data.user = user._id;
-    data.reason = action;
-    data.status = "pending";
-    
-    data.full_address = full_address;
-    data.sub_admin_address = sub_admin_address;
-
-    data.is_trackable = is_trackable;
-
-    LocationService.saveLocation(data)
-                .then(saved => {
-                    io.emit("call", saved);
-                    return res.status(200).send({"response":saved._id});
-                })
-                .catch(err => {
-                    return res.status(500).send({"response":err});
-                })*/
+    if(lng && lat){
+        geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
+            if(err){
+                return res.status(500).send({"response":err});
+            }
+            else{
+                if(res[0].city === "Lagos"){
+                    var data = {};
+                    data.latitude = lat;
+                    data.longitude = lng;
+                    data.full_name = user.firstname +" " + user.lastname;
+                
+                    if(user.email)
+                        data.email = user.email;
+                
+                    if(user.phone_number)
+                        data.phone_number = user.phone_number;
+                
+                    data.user = user._id;
+                    data.reason = action;
+                    data.status = "pending";
+                    
+                    data.full_address = full_address;
+                    data.sub_admin_address = res[0].extra.administrativeLevels.level2long;
+                
+                    data.is_trackable = is_trackable;
+                
+                    LocationService.saveLocation(data)
+                                .then(saved => {
+                                    io.emit("call", saved);
+                                    return res.status(200).send({"response":saved._id});
+                                })
+                                .catch(err => {
+                                    return res.status(500).send({"response":err});
+                                })
+                }
+                else{
+                    return res.status(200).send({"response":"out_of_lagos"});
+                }
+            }
+        });
+    }
+    else{
+        return res.status(400).send({"response":"bad request"});
+    }
 }
 
 module.exports.sendEmergencyMessage = function(req,res){
@@ -308,64 +320,81 @@ module.exports.sendEmergencyMessage = function(req,res){
         return res.status(400).send({"response":"bad request"});
     }
 
-    var data = {};
-    data.latitude = lat;
-    data.longitude = lng;
-    var full_name = user.firstname +" " + user.lastname;
-    data.full_name = full_name;
+    if(lng && lat){
+        geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
+            if(err){
+                return res.status(500).send({"response":err});
+            }
+            else{
+                if(res[0].city === "Lagos"){
+                    var data = {};
+                    data.latitude = lat;
+                    data.longitude = lng;
+                    var full_name = user.firstname +" " + user.lastname;
+                    data.full_name = full_name;
 
-    if(user.email)
-        data.email = user.email;
+                    if(user.email)
+                        data.email = user.email;
 
-    if(user.phone_number)
-        data.phone_number = user.phone_number;
+                    if(user.phone_number)
+                        data.phone_number = user.phone_number;
 
-    data.user = user._id;
-    data.reasons = reasons;
-    data.device = device;
+                    data.user = user._id;
+                    data.reasons = reasons;
+                    data.device = device;
 
-    data.full_address = full_address;
-    data.sub_admin_address = sub_admin_address;
+                    data.full_address = full_address;
+                    data.sub_admin_address = sub_admin_address;
 
-    data.is_trackable = is_trackable;
-    data.status = "pending";
+                    data.is_trackable = is_trackable;
+                    data.status = "pending";
 
-    if(numbers&&numbers.length>0){
-        data.emergency_numbers = numbers;
-    }
+                    if(numbers&&numbers.length>0){
+                        data.emergency_numbers = numbers;
+                    }
 
-    EmergencyService.saveEmergency(data)
-                .then(saved => {
-                    io.emit("emergency", saved);
-                    return res.status(200).send({"response":saved._id});
-                })
-                .catch(err => {
-                    return res.status(500).send({"response":err});
-                })
+                    EmergencyService.saveEmergency(data)
+                                .then(saved => {
+                                    io.emit("emergency", saved);
+                                    return res.status(200).send({"response":saved._id});
+                                })
+                                .catch(err => {
+                                    return res.status(500).send({"response":err});
+                                })
 
-    var sid = config.twilio.sid;
-    var token = config.twilio.auth_token;
-    var phone = config.twilio.phone;
-    
-    var client = new twilio(sid, token);
+                    var sid = config.twilio.sid;
+                    var token = config.twilio.auth_token;
+                    var phone = config.twilio.phone;
+                    
+                    var client = new twilio(sid, token);
 
-    var location = lat +", " +lng;
-    
-    if(numbers && numbers.length>0){
-        numbers.map(phone_number => {
-            var edited_number = Utils.parsePhoneNumber(phone_number);
+                    var location = lat +", " +lng;
+                    
+                    if(numbers && numbers.length>0){
+                        numbers.map(phone_number => {
+                            var edited_number = Utils.parsePhoneNumber(phone_number);
 
-            if(edited_number!=null){
-                client.messages.create({
-                    body: Utils.getEmergencyMessage(full_name, device, full_address, user.phone_number, user.email, reasons),
-                    to: edited_number,  // Text this number
-                    from:  phone// From a valid Twilio number
-                })
-                .then((message) => {
-                    return res.status(200).send("Msg Sent"); 
-                })
-                .catch(err => console.log({err}));
+                            if(edited_number!=null){
+                                client.messages.create({
+                                    body: Utils.getEmergencyMessage(full_name, device, full_address, user.phone_number, user.email, reasons),
+                                    to: edited_number,  // Text this number
+                                    from:  phone// From a valid Twilio number
+                                })
+                                .then((message) => {
+                                    return res.status(200).send("Msg Sent"); 
+                                })
+                                .catch(err => console.log({err}));
+                            }
+                        })
+                    }
+                }
+                else{
+                    return res.status(200).send({"response":"out_of_lagos"});
+                }
             }
         })
+    }
+    else{
+        return res.status(400).send({"response":"bad request"});
     }
 }

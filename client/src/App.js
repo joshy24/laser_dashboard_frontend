@@ -173,6 +173,7 @@ class App extends Component{
       this.tryAgainClicked = this.tryAgainClicked.bind(this);
       this.continueConfirmAddressNotFoundClicked = this.continueConfirmAddressNotFoundClicked.bind(this);
       this.closeConfirmAddressNotFoundClicked = this.closeConfirmAddressNotFoundClicked.bind(this);
+      this.saveManualLocation = this.saveManualLocation.bind(this);
 
       this.logout = this.logout.bind(this);
     
@@ -879,6 +880,7 @@ class App extends Component{
           clicked_user: location,
           side_bar_open: false,
           agent_side_bar_open: false,
+          manual_location_side_bar: false,
           location_side_bar_open: true,
           center: {
             lat: location.latitude,
@@ -897,6 +899,7 @@ class App extends Component{
           clicked_user: emergency,
           clicked_agent: {},
           side_bar_open: true,
+          manual_location_side_bar: false,
           agent_side_bar_open: false,
           location_side_bar_open: false,
           center: {
@@ -914,6 +917,7 @@ class App extends Component{
       this.setState({
           play_sound: false,
           clicked_agent: agent,
+          manual_location_side_bar: false,
           agent_side_bar_open: true
     })
   }
@@ -2047,10 +2051,7 @@ class App extends Component{
         response => {
           const { lat, lng } = response.results[0].geometry.location;
 
-          console.log(lat, lng);
-          
           var location = {
-              created : Date.now(),
               action: this.state.selected_manual_call,
               longitude: lng,
               latitude: lat,
@@ -2058,6 +2059,9 @@ class App extends Component{
               full_name: this.state.manual_name,
               phone_number: this.state.manual_phone
           }
+
+          this.saveManualLocation(location);
+
         },
         error => {
           console.error(error);
@@ -2090,7 +2094,16 @@ class App extends Component{
         response => {
           const { lat, lng } = response.results[0].geometry.location;
 
-          console.log(lat, lng);
+          var location = {
+                action: this.state.selected_manual_call,
+                longitude: lng,
+                latitude: lat,
+                full_address: this.state.manual_address,
+                full_name: this.state.manual_name,
+                phone_number: this.state.manual_phone
+          }
+
+          this.saveManualLocation(location);
         },
         error => {
           console.error(error);
@@ -2102,12 +2115,16 @@ class App extends Component{
         }
       );
   }
-
+  
   continueConfirmAddressNotFoundClicked(){
-        this.hideConfirmManualLocation();
+        /*this.hideConfirmManualLocation();
+
+        this.setState({
+            action: "loading",
+            action_message: ""
+        });
 
         var location = {
-            created : Date.now(),
             action: this.state.selected_manual_call,
             longitude: lng,
             latitude: lat,
@@ -2115,10 +2132,55 @@ class App extends Component{
             full_name: this.state.manual_name,
             phone_number: this.state.manual_phone
         }
+
+        this.saveManualLocation(location);*/
   }
 
   closeConfirmAddressNotFoundClicked(){
     this.hideConfirmManualLocation();
+  }
+
+  async saveManualLocation(location){
+        const response = await API.createManualLocation(location)
+
+        if(response=="error"){
+            //show error message
+            this.setState({
+            action: "message",
+            action_message: "An error occurred saving the location. Please try again"
+            })
+            return;
+        }
+        
+        if(response&&response.data){
+            if(response.data.response==="out_of_lagos"){
+                this.setState({
+                    action: "message",
+                    action_message: "That location is outside Lagos State"
+                })
+                return;
+            }
+
+            this.setState(state => {
+                let arr = state.locations;
+                let lat = state.latest;
+                
+                lat.push(response.data.response);
+                arr.push(response.data.response)
+
+                return {
+                    play_sound: true,
+                    latest: lat,
+                    clicked_marker_id: response.data.response._id,
+                    zoom: 18,
+                    locations: arr,
+                    center: {
+                        lat: response.data.response.latitude,
+                        lng: response.data.response.longitude
+                    }
+                }
+            })
+        }
   }
 
   render(){
