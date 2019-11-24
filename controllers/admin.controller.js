@@ -280,7 +280,7 @@ module.exports.saveManualEmergencyLocation = function(req,res){
                     data.status = "pending";
                     
                     data.full_address = full_address;
-                    data.sub_admin_address = res[0].extra.administrativeLevels.level2long;
+                    data.sub_admin_address = res[0].administrativeLevels.level2long;
                     data.is_trackable = is_trackable;
 
                     LocationService.saveLocation(data)

@@ -281,7 +281,7 @@ module.exports.saveEmergencyLocation = function(req,res){
                     data.status = "pending";
                     
                     data.full_address = full_address;
-                    data.sub_admin_address = res[0].extra.administrativeLevels.level2long;
+                    data.sub_admin_address = res[0].administrativeLevels.level2long;
                 
                     data.is_trackable = is_trackable;
                 
@@ -344,7 +344,7 @@ module.exports.sendEmergencyMessage = function(req,res){
                     data.device = device;
 
                     data.full_address = full_address;
-                    data.sub_admin_address = sub_admin_address;
+                    data.sub_admin_address = res[0].administrativeLevels.level2long;
 
                     data.is_trackable = is_trackable;
                     data.status = "pending";

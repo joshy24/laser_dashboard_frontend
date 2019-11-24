@@ -25,7 +25,7 @@ global.jwt = require('jsonwebtoken');
 
 global.moment = require('moment');
 
-global.log = bunyan.createLogger({name: "nifi"});
+global.log = bunyan.createLogger({name: "laser"});
 
 app.use(bodyParser.json({ type: 'application/json', limit: '50mb' }));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));//accept strings, arrays and any other type as values
