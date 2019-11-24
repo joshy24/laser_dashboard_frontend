@@ -2143,6 +2143,10 @@ class App extends Component{
   }
 
   closeConfirmAddressNotFoundClicked(){
+    this.setState({
+        action: "message",
+        action_message: ""
+    });
     this.hideConfirmManualLocation();
   }
 
