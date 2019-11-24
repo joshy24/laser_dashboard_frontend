@@ -2152,7 +2152,7 @@ class App extends Component{
 
   async saveManualLocation(location){
         const response = await API.createManualLocation(location)
-        console.log({response});
+        
         if(response=="error"){
             //show error message
             this.setState({
@@ -2164,6 +2164,7 @@ class App extends Component{
         }
         
         if(response&&response.data){
+            console.log({response})
             if(response.data.response==="out_of_lagos"){
                 this.setState({
                     action: "message",
@@ -2171,6 +2172,11 @@ class App extends Component{
                 })
                 return;
             }
+
+            this.setState({
+                action: "message",
+                action_message: "The location has been saved and is displayed on the map"
+            })
 
             this.setState(state => {
                 let arr = state.locations;
@@ -2188,9 +2194,7 @@ class App extends Component{
                     center: {
                         lat: response.data.response.latitude,
                         lng: response.data.response.longitude
-                    },
-                    action: "message",
-                    action_message: "The location has been saved and is displayed on the map"
+                    }
                 }
             })
         }
