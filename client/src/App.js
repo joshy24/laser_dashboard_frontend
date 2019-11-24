@@ -2088,8 +2088,12 @@ class App extends Component{
   }
 
   tryAgainClicked(){
-      console.log("clicked");
       this.hideConfirmManualLocation();
+
+      this.setState({
+        action: "loading",
+        action_message: ""
+      });
 
       Geocode.fromAddress(this.state.manual_address).then(
         response => {
