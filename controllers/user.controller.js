@@ -259,12 +259,12 @@ module.exports.saveEmergencyLocation = function(req,res){
     }
 
     if(lng && lat){
-        geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
+        geocoder.reverse({lat:lat, lon:lng}, function(err, result) {
             if(err){
                 return res.status(500).send({"response":err});
             }
             else{
-                if(res[0].city === "Lagos"){
+                if(result[0].city === "Lagos"){
                     var data = {};
                     data.latitude = lat;
                     data.longitude = lng;
@@ -281,7 +281,7 @@ module.exports.saveEmergencyLocation = function(req,res){
                     data.status = "pending";
                     
                     data.full_address = full_address;
-                    data.sub_admin_address = res[0].administrativeLevels.level2long;
+                    data.sub_admin_address = result[0].administrativeLevels.level2long;
                 
                     data.is_trackable = is_trackable;
                 
@@ -321,12 +321,12 @@ module.exports.sendEmergencyMessage = function(req,res){
     }
 
     if(lng && lat){
-        geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
+        geocoder.reverse({lat:lat, lon:lng}, function(err, result) {
             if(err){
                 return res.status(500).send({"response":err});
             }
             else{
-                if(res[0].city === "Lagos"){
+                if(result[0].city === "Lagos"){
                     var data = {};
                     data.latitude = lat;
                     data.longitude = lng;
@@ -344,7 +344,7 @@ module.exports.sendEmergencyMessage = function(req,res){
                     data.device = device;
 
                     data.full_address = full_address;
-                    data.sub_admin_address = res[0].administrativeLevels.level2long;
+                    data.sub_admin_address = result[0].administrativeLevels.level2long;
 
                     data.is_trackable = is_trackable;
                     data.status = "pending";
