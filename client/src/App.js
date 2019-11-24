@@ -2142,13 +2142,14 @@ class App extends Component{
 
   async saveManualLocation(location){
         const response = await API.createManualLocation(location)
-
+        console.log({response});
         if(response=="error"){
             //show error message
             this.setState({
-            action: "message",
-            action_message: "An error occurred saving the location. Please try again"
+                action: "message",
+                action_message: "An error occurred saving the location. Please try again"
             })
+
             return;
         }
         

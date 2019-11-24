@@ -262,9 +262,9 @@ module.exports.saveManualEmergencyLocation = function(req,res){
     if(!action){
         return res.status(400).send({"response":"bad request"});
     }
-
-    if(lng && lat){
-        geocoder.reverse({lat:lat, lon:lng}, function(err, res) {
+    
+    if(longitude && latitude){
+        geocoder.reverse({lat:latitude, lon:longitude}, function(err, res) {
             if(err){
                 return res.status(500).send({"response":err});
             }
@@ -288,6 +288,7 @@ module.exports.saveManualEmergencyLocation = function(req,res){
                                     return res.status(200).send({"response":saved});
                                 })
                                 .catch(err => {
+                                    console.log({err})
                                     return res.status(500).send({"response":err});
                                 })
                 }
