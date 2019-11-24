@@ -2178,7 +2178,9 @@ class App extends Component{
                     center: {
                         lat: response.data.response.latitude,
                         lng: response.data.response.longitude
-                    }
+                    },
+                    action: "message",
+                    action_message: "The location has been saved and is displayed on the map"
                 }
             })
         }
@@ -2223,7 +2225,7 @@ class App extends Component{
             <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
             {show_location_side_bar}
             {show_side_bar}
-            {this.state.showConfirmManualLocation ? <ConfirmAddressNotFound continueConfirmAddressNotFoundClicked={this.continueConfirmAddressNotFoundClicked} closeConfirmAddressNotFoundClicked={this.continueConfirmAddressNotFoundClicked} tryAgainClicked={this.continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={this.hideConfirmManualLocation} /> : ""}
+            {this.state.showConfirmManualLocation ? <ConfirmAddressNotFound closeConfirmAddressNotFoundClicked={this.continueConfirmAddressNotFoundClicked} tryAgainClicked={this.continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={this.hideConfirmManualLocation} /> : ""}
             {this.state.manual_location_side_bar ? <AddCallManually onFieldChanged={this.onFieldChanged} closeSidebar={this.closeSideBar} selected_manual_call={this.state.selected_manual_call} selected_manual_gender={this.state.selected_manual_gender} manual_address={this.state.manual_address} manual_name={this.state.manual_name} onManualCallChanged={this.onManualCallChanged} onManualGenderChanged={this.onManualGenderChanged}  onSubmitManualCallDetails={this.onSubmitManualCallDetails}/> : "" }
             
             {this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" }
