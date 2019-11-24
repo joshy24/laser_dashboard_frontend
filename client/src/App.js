@@ -2088,6 +2088,7 @@ class App extends Component{
   }
 
   tryAgainClicked(){
+      console.log("clicked");
       this.hideConfirmManualLocation();
 
       Geocode.fromAddress(this.state.manual_address).then(
@@ -2117,7 +2118,8 @@ class App extends Component{
   }
   
   continueConfirmAddressNotFoundClicked(){
-        /*this.hideConfirmManualLocation();
+        this.hideConfirmManualLocation();
+        /*
 
         this.setState({
             action: "loading",
