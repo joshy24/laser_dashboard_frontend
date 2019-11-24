@@ -285,8 +285,8 @@ module.exports.saveManualEmergencyLocation = function(req,res){
 
                     LocationService.saveLocation(data)
                                 .then(saved => {
-                                    io.emit("call", saved);
                                     return res.status(200).send({"response":saved});
+                                    io.emit("call", saved);
                                 })
                                 .catch(err => {
                                     console.log({err})
