@@ -2175,7 +2175,13 @@ class App extends Component{
 
             this.setState({
                 action: "message",
-                action_message: "The location has been saved and is displayed on the map"
+                action_message: "The location has been saved and is displayed on the map",
+                selected_manual_call:"Emergency Management(LASEMA)",
+                selected_manual_gender:"Male",
+                manual_name: "",
+                manual_phone: "",
+                manual_address: "",
+                manual_location_side_bar: false
             })
 
             /*this.setState(state => {
