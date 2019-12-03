@@ -1521,11 +1521,11 @@ class App extends Component{
                   var agents = this.state.laser_agents;
                   var found_agent;
 
-                  this.state.laser_agents.map(agent => {    
+                  /*this.state.laser_agents.map(agent => {    
                       if(agent.agent._id === message.message.agent._id){
                           found_agent = agent;
                       }
-                  })
+                  })*/
 
                   //testing
                   /*var new_agents = [];
@@ -1539,6 +1539,14 @@ class App extends Component{
                      new_agents = this.state.laser_agents.map(agent => {    
                         if(agent.agent._id === message.message.agent._id){
                             found_agent = agent;
+
+                            this.state.selected_agents.forEach((age,index) => {
+                                                        if(age){
+                                                            if(age.agent._id === message.message.agent._id){
+                                                                
+                                                            }
+                                                        }
+                                                    });
 
                             return message.message;
                         }
@@ -1560,7 +1568,6 @@ class App extends Component{
 
                   //end of testing
 
-                  if(found_agent){
                         this.state.laser_agents.map(agent => {
                             if(agent.agent._id === message.message.agent._id){
                                     found_agent = agent;
@@ -1569,9 +1576,9 @@ class App extends Component{
                                         agents.push(message.message);
                                     }
                                     else{
-                                        agents = this.state.laser_agents.map(agent => {
+                                        agents = this.state.laser_agents.map(agentl => {
                                             
-                                            if(agent.agent._id === message.message.agent._id){
+                                            if(agentl.agent._id === message.message.agent._id){
                                                 
                                                 if(this.state.selected_agents.length>0){
                                                     var found_agent_on_route_possibly;
@@ -1610,26 +1617,23 @@ class App extends Component{
                                                     });
                                                 
                                                     if(found_agent_on_route_possibly){
-                                                        agent.is_on_route = found_agent_on_route_possibly.is_on_route;
+                                                        agentl.is_on_route = found_agent_on_route_possibly.is_on_route;
                                                     }
                                                     else{
-                                                        agent.is_on_route = false;
+                                                        agentl.is_on_route = false;
                                                     }
                                                 }
                                                 else{
-                                                    agent.is_on_route = false;
+                                                    agentl.is_on_route = false;
                                                 }
 
-                                                return agent;
+                                                return agentl;
                                             }
                                         });
                                     }
                             }
                         })
-                  }
-                  else{
-                      agents.push(message.message);
-                  }
+                 
                   
                   this.setState(state => {
                       return {
