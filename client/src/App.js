@@ -1519,16 +1519,16 @@ class App extends Component{
           if(message.channel === this.state.tracked_area ){
               if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
                   var agents = this.state.laser_agents;
-                  /*var found_agent;
+                  var found_agent;
 
                   this.state.laser_agents.map(agent => {    
                       if(agent.agent._id === message.message.agent._id){
                           found_agent = agent;
                       }
-                  })*/
+                  })
 
                   //testing
-                  var new_agents = [];
+                  /*var new_agents = [];
 
                   if(this.state.laser_agents.length<=0){
                      new_agents.push(message.message);
@@ -1556,11 +1556,11 @@ class App extends Component{
                     return {
                           laser_agents: new_agents
                     }
-                  })
+                  })*/
 
                   //end of testing
 
-                  /*if(found_agent){
+                  if(found_agent){
                         this.state.laser_agents.map(agent => {
                             if(agent.agent._id === message.message.agent._id){
                                     found_agent = agent;
@@ -1635,7 +1635,7 @@ class App extends Component{
                       return {
                             laser_agents: agents
                       }
-                  })*/
+                  })
                   
               }
           }
