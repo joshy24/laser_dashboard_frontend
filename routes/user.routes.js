@@ -33,7 +33,7 @@ module.exports = function(router){
                 res.status(403).send();
                 //the token should be removed from users list of tokens
 
-                //on client side 403 should mean that the token has expired and the user should be forced to re-authenticate except during a game
+                //on client side 403 should mean that the token has expired and the user should be forced to re-authenticate
                 } else {
                 //still have to query db for full user profile and check if the token is present in the users list of tokens
                 UserService.readUser(decodedPayload.id)

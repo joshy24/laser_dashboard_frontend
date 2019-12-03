@@ -428,7 +428,9 @@ class App extends Component{
               laser_agents: laser_agents,
               channels_list: new_list,
               agent_side_bar_open: false,
-              clicked_agent: {}
+              clicked_agent: {},
+              action: "message",
+              action_message: "Agent " +agent.agent.firstname +" " +agent.agent.lastname +" has been removed from attending to "+this.state.clicked_user.full_name
           }
       })
   }
@@ -503,7 +505,9 @@ class App extends Component{
               channels_list: new_list,
               route_responses_from_agents: array,
               agent_side_bar_open: false,
-              clicked_agent: {}
+              clicked_agent: {},
+              action: "message",
+              action_message: "Agent " +agent.agent.firstname +" " +agent.agent.lastname +" has been removed from attending to "+this.state.clicked_user.full_name
           }
       })
   }
@@ -1515,16 +1519,48 @@ class App extends Component{
           if(message.channel === this.state.tracked_area ){
               if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
                   var agents = this.state.laser_agents;
-                
-                  var found_agent;
+                  /*var found_agent;
 
                   this.state.laser_agents.map(agent => {    
                       if(agent.agent._id === message.message.agent._id){
                           found_agent = agent;
                       }
+                  })*/
+
+                  //testing
+                  var new_agents = [];
+
+                  if(this.state.laser_agents.length<=0){
+                     new_agents.push(message.message);
+                  }
+                  else{
+                     var found_agent;
+
+                     new_agents = this.state.laser_agents.map(agent => {    
+                        if(agent.agent._id === message.message.agent._id){
+                            found_agent = agent;
+
+                            return message.message;
+                        }
+                        else{
+                            return agent;
+                        }
+                     })
+
+                     if(!found_agent){
+                        new_agents.push(message.message);
+                     }
+                  }
+
+                  this.setState(state => {
+                    return {
+                          laser_agents: new_agents
+                    }
                   })
 
-                  if(found_agent){
+                  //end of testing
+
+                  /*if(found_agent){
                         this.state.laser_agents.map(agent => {
                             if(agent.agent._id === message.message.agent._id){
                                     found_agent = agent;
@@ -1599,7 +1635,7 @@ class App extends Component{
                       return {
                             laser_agents: agents
                       }
-                  })
+                  })*/
                   
               }
           }
