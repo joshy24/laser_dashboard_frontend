@@ -93,7 +93,7 @@ module.exports = function(router){
         AdminController.createAdmin(req,res);
     })
 
-    router.get('/get_admins', (req,res) => {
+    router.post('/get_admins', (req,res) => {
         AdminController.getAdmins(req,res);
     })
 
