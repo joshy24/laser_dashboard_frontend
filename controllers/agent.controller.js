@@ -277,7 +277,7 @@ module.exports.deleteAgent = (req,res) => {
 
     AgentService.deleteAgent(id)
                     .then(done => {
-                        return res.status(200).send();
+                        return res.status(200).send(done);
                     })
                     .catch(err => {
                         return res.status(500).send("server error");

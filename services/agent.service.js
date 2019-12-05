@@ -94,7 +94,7 @@ module.exports.updateAgent = function(id, new_data){
 
 module.exports.deleteAgent = function(id){
     return new Promise((resolve,reject) => {
-        Department.remove({_id:id})//delete the asset from DB
+        Agent.remove({_id:id})//delete the asset from DB
             .exec()
             .then(rem => {
                 resolve(rem);
