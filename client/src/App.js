@@ -973,6 +973,7 @@ class App extends Component{
 
       if(this.state.laser_agents.length>0){
             agents_ui = this.state.laser_agents.map((agent,i) => {
+                console.log({agent});
                 return <Marker key={i}  onClick={e => this.onAgentClicked(agent,e)}
                             name={agent.full_address} 
                             title={agent.full_address}
@@ -993,6 +994,8 @@ class App extends Component{
   }
 
   getAgentIcon(agent){
+      console.log({agent});
+
       if(agent){
             if(this.state.selected_agents.length > 0){
                 this.state.selected_agents.map(age => {
@@ -1003,8 +1006,6 @@ class App extends Component{
                     }
                 })
             }
-
-            console.log({agent})
     
             switch(agent.agent.department){
                 case "police":
@@ -1524,11 +1525,11 @@ class App extends Component{
                   var agents = this.state.laser_agents;
                   var found_agent;
 
-                  this.state.laser_agents.map(agent => {    
+                  /*this.state.laser_agents.map(agent => {    
                       if(agent.agent._id === message.message.agent._id){
                           found_agent = agent;
                       }
-                  })
+                  })*/
 
                   //testing
                   /*var new_agents = [];
@@ -1571,7 +1572,6 @@ class App extends Component{
 
                   //end of testing
 
-                  if(!found_agent){
                         this.state.laser_agents.map(agent => {
                             if(agent.agent._id === message.message.agent._id){
                                     found_agent = agent;
@@ -1637,15 +1637,11 @@ class App extends Component{
                                     }
                             }
                         })
-                    }
-                    else{
-                        agents.push(message.message);
-                    }
                  
                   
                   this.setState(state => {
                       return {
-                            laser_agents: agents
+                          laser_agents: agents
                       }
                   })
                   
