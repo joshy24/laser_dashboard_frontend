@@ -1003,6 +1003,8 @@ class App extends Component{
                     }
                 })
             }
+
+            console.log({agent})
     
             switch(agent.agent.department){
                 case "police":
@@ -1518,6 +1520,7 @@ class App extends Component{
           
           if(message.channel === this.state.tracked_area ){
               if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
+                  console.log("agent location")
                   var agents = this.state.laser_agents;
                   var found_agent;
 
