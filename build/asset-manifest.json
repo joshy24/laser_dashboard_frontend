@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/static/css/main.874eaba5.chunk.css",
+    "main.js": "/static/js/main.9c7115c1.chunk.js",
+    "main.js.map": "/static/js/main.9c7115c1.chunk.js.map",
+    "runtime~main.js": "/static/js/runtime~main.a8a9905a.js",
+    "runtime~main.js.map": "/static/js/runtime~main.a8a9905a.js.map",
+    "static/css/2.2507d4ca.chunk.css": "/static/css/2.2507d4ca.chunk.css",
+    "static/js/2.d5f180cc.chunk.js": "/static/js/2.d5f180cc.chunk.js",
+    "static/js/2.d5f180cc.chunk.js.map": "/static/js/2.d5f180cc.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.9a98fbb03987fa218875fed52c8e798b.js": "/precache-manifest.9a98fbb03987fa218875fed52c8e798b.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.2507d4ca.chunk.css.map": "/static/css/2.2507d4ca.chunk.css.map",
+    "static/css/main.874eaba5.chunk.css.map": "/static/css/main.874eaba5.chunk.css.map",
+    "static/media/alert.mp3": "/static/media/alert.77e4ae16.mp3",
+    "static/media/ambulance.png": "/static/media/ambulance.3ff333a4.png",
+    "static/media/ambulance_yellow.png": "/static/media/ambulance_yellow.8b74e8df.png",
+    "static/media/App.css": "/static/media/bg.bb9cbc9b.jpg",
+    "static/media/burger_menu.png": "/static/media/burger_menu.f128647b.png",
+    "static/media/call.gif": "/static/media/call.37865c67.gif",
+    "static/media/call_with_circle.gif": "/static/media/call_with_circle.34c87478.gif",
+    "static/media/car_test.png": "/static/media/car_test.4b63a07a.png",
+    "static/media/emergency.gif": "/static/media/emergency.445ccffb.gif",
+    "static/media/emergency_with_circle.gif": "/static/media/emergency_with_circle.0153b7ea.gif",
+    "static/media/fire_truck.png": "/static/media/fire_truck.651626d2.png",
+    "static/media/fire_truck_yellow.png": "/static/media/fire_truck_yellow.4a7d4051.png",
+    "static/media/logo.svg": "/static/media/logo.5d5d9eef.svg",
+    "static/media/phone_white.png": "/static/media/phone_white.23d1feaf.png",
+    "static/media/police_car.png": "/static/media/police_car.d5d82e20.png",
+    "static/media/police_car_yellow.png": "/static/media/police_car_yellow.303f7897.png"
+  }
+}
