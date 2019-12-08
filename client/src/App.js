@@ -971,9 +971,12 @@ class App extends Component{
   getAgentMarkers(){
       let agents_ui;
 
+      console.log("markers");
+      console.log("length - "+this.state.laser_agents.length);
+
       if(this.state.laser_agents.length>0){
             agents_ui = this.state.laser_agents.map((agent,i) => {
-                console.log({agent});
+                
                 return <Marker key={i}  onClick={e => this.onAgentClicked(agent,e)}
                             name={agent.full_address} 
                             title={agent.full_address}
