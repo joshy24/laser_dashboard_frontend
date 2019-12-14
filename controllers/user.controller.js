@@ -264,7 +264,7 @@ module.exports.saveEmergencyLocation = function(req,res){
                 return res.status(500).send({"response":err});
             }
             else{
-                if(result[0].city === "Lagos"){
+                //if(result[0].city === "Lagos"){
                     var data = {};
                     data.latitude = lat;
                     data.longitude = lng;
@@ -293,10 +293,10 @@ module.exports.saveEmergencyLocation = function(req,res){
                                 .catch(err => {
                                     return res.status(500).send({"response":err});
                                 })
-                }
-                else{
-                    return res.status(200).send({"response":"out_of_lagos"});
-                }
+                //}
+                //else{
+                //    return res.status(200).send({"response":"out_of_lagos"});
+                //}
             }
         });
     }
@@ -326,7 +326,7 @@ module.exports.sendEmergencyMessage = function(req,res){
                 return res.status(500).send({"response":err});
             }
             else{
-                if(result[0].city === "Lagos"){
+                //if(result[0].city === "Lagos"){
                     var data = {};
                     data.latitude = lat;
                     data.longitude = lng;
@@ -387,10 +387,10 @@ module.exports.sendEmergencyMessage = function(req,res){
                             }
                         })
                     }
-                }
-                else{
-                    return res.status(200).send({"response":"out_of_lagos"});
-                }
+                //}
+                //else{
+                //    return res.status(200).send({"response":"out_of_lagos"});
+                //}
             }
         })
     }
