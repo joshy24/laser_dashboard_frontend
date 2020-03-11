@@ -68,7 +68,7 @@ const mapStyle = {
 }
 
 const socket_io_url = 'http://52.59.255.174';
-//const socket_io_url = 'http://localhost:3077';
+//const socket_io_url = 'http://localhost:3080';
 
 let todays_date = new Date().toISOString();
 
@@ -356,160 +356,189 @@ class App extends Component{
   removeAgentFromRoute(e, agent){
       e.preventDefault();
 
-      this.pubnub.publish(
+      if(agent){
+        this.pubnub.publish(
+            {
+                message: {
+                  pn_gcm: {
+                      data: {
+                          notification_body: "You need to abandon route. Tap to open app",
+                          data: {},
+                          action: "leave_route"
+                      }
+                  }
+                },
+                channel: agent.agent._id,
+                sendByPost: false, // true to send via POST
+                storeInHistory: false //override default storage options
+            },
+            (status, response) => {
+                // handle status, response
+            }
+        );
+  
+        //tell other browsers about the agent being montiored
+        this.pubnub.publish(
           {
               message: {
-                pn_gcm: {
-                    data: {
-                        notification_body: "You need to abandon route. Tap to open app",
-                        data: {},
-                        action: "leave_route"
-                    }
-                }
+                  agent
               },
-              channel: agent.agent._id,
+              channel: "agent_untracked",
               sendByPost: false, // true to send via POST
               storeInHistory: false //override default storage options
           },
           (status, response) => {
               // handle status, response
           }
-      );
-
-      //tell other browsers about the agent being montiored
-      this.pubnub.publish(
-        {
-            message: {
-                agent
-            },
-            channel: "agent_untracked",
-            sendByPost: false, // true to send via POST
-            storeInHistory: false //override default storage options
-        },
-        (status, response) => {
-            // handle status, response
-        }
-      );
-
-      this.setState(state => {
-          var agents = state.selected_agents;
-          var list = state.channels_list;
-          var laser_agents = state.laser_agents;
-          
-          var new_selected_agents = [];
-
-          if(agents.length > 1){
-              new_selected_agents = agents.map(age => {
-                  if(age && (age.agent._id !== agent.agent._id)){
-                      return age;
-                  }
-              })
-          }
-
-          var new_list = list.splice(list.indexOf(agent.agent._id), 1);
-
-          var found_agent = laser_agents.find(age => age.agent._id === agent.agent._id);
-
-          var new_found_agent = Object.assign({}, found_agent);
-
-          new_found_agent.is_on_route = false;
-
-          var new_laser_agents = laser_agents.splice(laser_agents.indexOf(found_agent), 1, new_found_agent);
-
-          //unsubscribe to the agents id to receive a response to the route request
-          this.pubnub.unsubscribe({
-             channels: [agent.agent._id]
-          })
-          
-          persistence.saveSelectedAgents(new_selected_agents);
-
-          return {  
-              selected_agents: new_selected_agents,
-              laser_agents: laser_agents,
-              channels_list: new_list,
-              agent_side_bar_open: false,
-              clicked_agent: {},
-              action: "message",
-              action_message: "Agent " +agent.agent.firstname +" " +agent.agent.lastname +" has been removed from attending to "+this.state.clicked_user.full_name
-          }
-      })
+        );
+  
+        this.setState(state => {
+            var agents = state.selected_agents;
+            var list = state.channels_list;
+            var laser_agents = state.laser_agents;
+            
+            var new_selected_agents = [];
+  
+            var new_list = list.splice(list.indexOf(agent.agent._id), 1);
+  
+            if(agents.length > 0){
+                new_selected_agents = agents.map(age => {
+                    if(age && (age.agent._id !== agent.agent._id)){
+                        return age;
+                    }
+                })
+  
+                var found_agent = laser_agents.find(age => age.agent._id === agent.agent._id);
+  
+                var new_found_agent = Object.assign({}, found_agent);
+  
+                new_found_agent.is_on_route = false;
+  
+                var new_laser_agents = laser_agents.splice(laser_agents.indexOf(found_agent), 1, new_found_agent);
+  
+                //unsubscribe to the agents id to receive a response to the route request
+                this.pubnub.unsubscribe({
+                    channels: [agent.agent._id]
+                })
+              
+                persistence.saveSelectedAgents(new_selected_agents);
+  
+                return {  
+                  selected_agents: new_selected_agents,
+                  laser_agents: new_laser_agents,
+                  channels_list: new_list,
+                  agent_side_bar_open: false,
+                  clicked_agent: {},
+                  action: "message",
+                  action_message: "Agent " +agent.agent.firstname +" " +agent.agent.lastname +" has been removed from attending to "+this.state.clicked_user.full_name
+                }
+            }
+            else{
+              return {  
+                  selected_agents: agents,
+                  laser_agents: laser_agents,
+                  channels_list: new_list,
+                  agent_side_bar_open: false,
+                  clicked_agent: {},
+                  action: "message",
+                  action_message: "Agent " +agent.agent.firstname +" " +agent.agent.lastname +" has been removed from attending to "+this.state.clicked_user.full_name
+              }
+            }
+        })
+      }
   }
 
   removeAgentFromRouteAndCloseRouteResponse(e, agent, route_response){
       e.preventDefault();
 
-      this.pubnub.publish(
-          {
-              message: {
-                pn_gcm: {
-                    data: {
-                        notification_body: "You need to abandon route. Tap to open app",
-                        data: {},
-                        action: "leave_route"
-                    }
-                }
-              },
-              channel: agent.agent._id,
-              sendByPost: false, // true to send via POST
-              storeInHistory: false //override default storage options
-          },
-          (status, response) => {
-              // handle status, response
-          }
-      );
-
-      //tell other browsers about the agent being montiored
-      this.pubnub.publish(
-                {
-                    message: {
-                        agent
-                    },
-                    channel: "agent_untracked",
-                    sendByPost: false, // true to send via POST
-                    storeInHistory: false //override default storage options
-                },
-                (status, response) => {
-                    // handle status, response
-                }
-      );
-
-      this.setState(state => {
-          var agents = state.selected_agents;
-          var list = state.channels_list;
-          var array = state.route_responses_from_agents;
-
-          array.splice(array.indexOf(route_response),1);
-          
-          var new_selected_agents = [];
-          
-          if(agents.length > 1){
-              new_selected_agents = agents.map(age => {
-                  
-                  if(age.agent._id!==agent.agent._id){
-                      return age;
+      if(agent){
+        this.pubnub.publish(
+            {
+                message: {
+                  pn_gcm: {
+                      data: {
+                          notification_body: "You need to abandon route. Tap to open app",
+                          data: {},
+                          action: "leave_route"
+                      }
                   }
-              })
-          }
-
-          var new_list = list.splice(list.indexOf(agent.agent._id), 1);
-
-          //subscribe to the agents id to receive a response to the route request
-          this.pubnub.unsubscribe({
-                channels: [agent.agent._id]
-          })
-
-          persistence.saveSelectedAgents(new_selected_agents);
-
-          return {  
-              selected_agents: new_selected_agents,
-              channels_list: new_list,
-              route_responses_from_agents: array,
-              agent_side_bar_open: false,
-              clicked_agent: {},
-              action: "message",
-              action_message: "Agent " +agent.agent.firstname +" " +agent.agent.lastname +" has been removed from attending to "+this.state.clicked_user.full_name
-          }
-      })
+                },
+                channel: agent.agent._id,
+                sendByPost: false, // true to send via POST
+                storeInHistory: false //override default storage options
+            },
+            (status, response) => {
+                // handle status, response
+            }
+        );
+  
+        //tell other browsers about the agent being montiored
+        this.pubnub.publish(
+                  {
+                      message: {
+                          agent
+                      },
+                      channel: "agent_untracked",
+                      sendByPost: false, // true to send via POST
+                      storeInHistory: false //override default storage options
+                  },
+                  (status, response) => {
+                      // handle status, response
+                  }
+        );
+  
+        this.setState(state => {
+            var agents = state.selected_agents;
+            var list = state.channels_list;
+            var array = state.route_responses_from_agents;
+  
+            array.splice(array.indexOf(route_response),1);
+            
+            var new_list = list.splice(list.indexOf(agent.agent._id), 1);
+  
+            var new_selected_agents = [];
+            
+            if(agents.length > 1){
+                new_selected_agents = agents.map(age => {
+                    if(age){
+                        if(age.agent._id !== agent.agent._id){
+                            return age;
+                        }
+                    }
+                })
+  
+                var new_list = list.splice(list.indexOf(agent.agent._id), 1);
+  
+                //subscribe to the agents id to receive a response to the route request
+                this.pubnub.unsubscribe({
+                      channels: [agent.agent._id]
+                })
+      
+                persistence.saveSelectedAgents(new_selected_agents);
+  
+                return {  
+                  selected_agents: new_selected_agents,
+                  channels_list: new_list,
+                  route_responses_from_agents: array,
+                  agent_side_bar_open: false,
+                  clicked_agent: {},
+                  action: "message",
+                  action_message: "Agent " +agent.agent.firstname +" " +agent.agent.lastname +" has been removed from attending to "+this.state.clicked_user.full_name
+              }
+            }
+            else{
+              return {  
+                  selected_agents: agents,
+                  channels_list: new_list,
+                  route_responses_from_agents: array,
+                  agent_side_bar_open: false,
+                  clicked_agent: {},
+                  action: "message",
+                  action_message: "Agent " +agent.agent.firstname +" " +agent.agent.lastname +" has been removed from attending to "+this.state.clicked_user.full_name
+              }
+            }
+        })
+      }
   }
   
   addAgentToMonitoring(e, agent){
@@ -517,88 +546,97 @@ class App extends Component{
       //send a request to the agent via pubnub
       //wait for response
       //if agent accepts set agent as on route
-      this.pubnub.publish(
-          {
-            message: {
-                pn_gcm: {
-                    data: {
-                        notification_body: "You have a new route. Tap to open app.",
-                        data: this.state.clicked_user.phone_number ? {full_name: this.state.clicked_user.full_name, _id: this.state.clicked_user.user, phone_number: this.state.clicked_user.phone_number, latitude: this.state.clicked_user.latitude, longitude: this.state.clicked_user.longitude} : {full_name: this.state.clicked_user.full_name, _id: this.state.clicked_user.user, latitude: this.state.clicked_user.latitude, longitude: this.state.clicked_user.longitude},
-                        action: "route_request"
-                    }
-                }
-            },
-            channel: agent.agent._id,
-            sendByPost: false, // true to send via POST
-            storeInHistory: false //override default storage options
-          },
-          (status, response) => {
-              // handle status, response
-          }
-      );
-
-      //tell other browsers about the agent being montiored
-      this.pubnub.publish(
+      if(agent){
+        this.pubnub.publish(
             {
-                message: {
-                    agent
-                },
-                channel: "agent_tracked",
-                sendByPost: false, // true to send via POST
-                storeInHistory: false //override default storage options
+              message: {
+                  pn_gcm: {
+                      data: {
+                          notification_body: "You have a new route. Tap to open app.",
+                          data: this.state.clicked_user.phone_number ? {full_name: this.state.clicked_user.full_name, _id: this.state.clicked_user.user, phone_number: this.state.clicked_user.phone_number, latitude: this.state.clicked_user.latitude, longitude: this.state.clicked_user.longitude} : {full_name: this.state.clicked_user.full_name, _id: this.state.clicked_user.user, latitude: this.state.clicked_user.latitude, longitude: this.state.clicked_user.longitude},
+                          action: "route_request"
+                      }
+                  }
+              },
+              channel: agent.agent._id,
+              sendByPost: false, // true to send via POST
+              storeInHistory: false //override default storage options
             },
             (status, response) => {
                 // handle status, response
-                console.log({status})
-                console.log({response})
             }
-      );
-
-      this.setState(state => {
-          var agents = state.selected_agents;
-          var list = state.channels_list;
-
-          var new_selected_agents = [];
-
-          if(agents.length > 0){
-              var bool = false;
-
-              new_selected_agents = agents.map(a => {
-                    if(a.agent._id === agent.agent._id){
-                        bool = true;
-                        return agent;
-                    }
-                    else{
-                        if(a){
-                            return a;
-                        }
-                    }
-              })
-
-              if(!bool){
-                  new_selected_agents.push(agent)
+        );
+  
+        //tell other browsers about the agent being montiored
+        this.pubnub.publish(
+              {
+                  message: {
+                      agent
+                  },
+                  channel: "agent_tracked",
+                  sendByPost: false, // true to send via POST
+                  storeInHistory: false //override default storage options
+              },
+              (status, response) => {
+                  // handle status, response
+                  console.log({status})
+                  console.log({response})
               }
-          }
-          else{
-              new_selected_agents.push(agent)
-          }
-          
-          if(list.indexOf(agent.agent._id)===-1){
-             list.push(agent.agent._id)
-          }
-
-          //subscribe to the agents id to receive a response to the route request
-          this.pubnub.subscribe({
-            channels: list
-          })
-
-          persistence.saveSelectedAgents(new_selected_agents);
-
-          return {  
-            selected_agents: new_selected_agents,
-            channels_list: list
-          }
-      })
+        );
+  
+        this.setState(state => {
+            var agents = state.selected_agents;
+            var list = state.channels_list;
+  
+            var new_selected_agents = [];
+  
+            if(agent){ //to prevent adding a null agent to the list of selected agents
+                  if(agents.length > 0){
+                      var bool = false;
+      
+                      new_selected_agents = agents.map(a => {
+                          if(a==null || !a){
+                              return agent;
+                          }
+                          else{
+                                if(a.agent._id === agent.agent._id){
+                                    bool = true;
+                                    return agent;
+                                }
+                                else{
+                                    if(a){
+                                        return a;
+                                    }
+                                }
+                          }
+                      })
+      
+                      if(!bool){
+                          new_selected_agents.push(agent)
+                      }
+                  }
+                  else{
+                      new_selected_agents.push(agent)
+                  }
+                  
+                  if(list.indexOf(agent.agent._id)===-1){
+                    list.push(agent.agent._id)
+                  }
+            }
+  
+            //subscribe to the agents id to receive a response to the route request
+            this.pubnub.subscribe({
+              channels: list
+            })
+  
+            persistence.saveSelectedAgents(new_selected_agents);
+  
+            return {  
+              selected_agents: new_selected_agents,
+              channels_list: list
+            }
+        })
+      }
   }
 
   //Subscribe to the users sub admin area to receive updates and send out a request to all agents on the channel to send their location 
@@ -653,7 +691,6 @@ class App extends Component{
                 action: "message",
                 action_message: "You are now monitoring "+item.full_name,
                 channels_list: list,
-                laser_agents: [],
                 tracked_users: tracked_users
             }
       })
@@ -952,6 +989,7 @@ class App extends Component{
 
       if(this.state.filtered_emergencies.length>0){
           emergencies_ui = this.state.filtered_emergencies.map(emer => {
+            console.log({emer});
             return <Marker key={emer._id} onClick={e => this.onEmergencyClicked(emer,e)}
                       name={emer.reasons[0]} 
                       title={emer.full_name}
@@ -970,9 +1008,6 @@ class App extends Component{
 
   getAgentMarkers(){
       let agents_ui;
-
-      console.log("markers");
-      console.log("length - "+this.state.laser_agents.length);
 
       if(this.state.laser_agents.length>0){
             agents_ui = this.state.laser_agents.map((agent,i) => {
@@ -997,10 +1032,9 @@ class App extends Component{
   }
 
   getAgentIcon(agent){
-      console.log({agent});
 
       if(agent){
-            if(this.state.selected_agents.length > 0){
+            /*if(this.state.selected_agents.length > 0){
                 this.state.selected_agents.map(age => {
                     if(age){
                         if(agent.agent._id === age._id){
@@ -1008,7 +1042,10 @@ class App extends Component{
                         }
                     }
                 })
-            }
+            }*/
+
+            //we got the icon
+            
     
             switch(agent.agent.department){
                 case "police":
@@ -1091,7 +1128,9 @@ class App extends Component{
         laser_agents: []
       })
 
-      this.pubnub.publish(
+
+      //05/03/2020
+      /*this.pubnub.publish(
         {
             message: {
                 pn_gcm: {
@@ -1109,7 +1148,7 @@ class App extends Component{
         (status, response) => {
             // handle status, response
         }
-      );
+      );*/
   }
 
   getSelectedAgentsIds(){
@@ -1118,7 +1157,7 @@ class App extends Component{
             var ids = [];
 
             this.state.selected_agents.map(agent => {
-                if(agent!==null){
+                if(agent){
                     ids.push(agent.agent._id);
                 }
             });
@@ -1523,13 +1562,14 @@ class App extends Component{
           }
           
           if(message.channel === this.state.tracked_area ){
+              console.log({message})
               if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
                   
                   var agents = this.state.laser_agents;
                   var found_agent;
 
                   this.state.laser_agents.map(agent => {    
-                      if(agent.agent._id === message.message.agent._id){
+                      if(agent && (agent.agent._id === message.message.agent._id)){
                           found_agent = agent;
                       }
                   })
@@ -1576,7 +1616,7 @@ class App extends Component{
                   //end of testing
                    if(found_agent){
                         this.state.laser_agents.map(agent => {
-                            if(agent.agent._id === message.message.agent._id){
+                            if(agent && (agent.agent._id === message.message.agent._id)){
                                     found_agent = agent;
 
                                     if(this.state.laser_agents.length<=0||!found_agent){
@@ -1659,7 +1699,7 @@ class App extends Component{
               
               this.state.selected_agents.forEach((agent,index) => {
                   
-                  if(agent!==null && (agent.agent._id === message.channel)){
+                  if(agent && (agent.agent._id === message.channel)){
                       
                       if(message.userMetadata && message.userMetadata.action === "route_request_response"){
                           if(message.message.response===true){
@@ -1736,23 +1776,23 @@ class App extends Component{
       data => {
          if(data){
              this.setState(state => {
-              let arr = state.emergencies;
-              let lat = state.latest;
-              
-              lat.push(data);
-              arr.push(data)
+                let arr = state.emergencies;
+                let lat = state.latest;
+                
+                lat.push(data);
+                arr.push(data)
 
-              return {
-                  play_sound: true,
-                  latest: lat,
-                  clicked_marker_id: data._id,
-                  zoom: 18,
-                  emergencies: arr,
-                  center: {
-                    lat: data.latitude,
-                    lng: data.longitude
-                 }
-              }
+                return {
+                    play_sound: true,
+                    latest: lat,
+                    clicked_marker_id: data._id,
+                    zoom: 18,
+                    emergencies: arr,
+                    center: {
+                        lat: data.latitude,
+                        lng: data.longitude
+                    }
+                }
             })
          }
       }
