@@ -2343,8 +2343,6 @@ class App extends Component{
             <TopPanel openManualLocation={this.openManualLocation} logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
             onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAllAgentsLocation={this.subscribeAndGetAllAgentsLocation}/>
 
-            {sound}
-
             <Map google={this.props.google} 
                 style={mapStyle}
                 onReady={this.fetchPlaces}
@@ -2359,6 +2357,8 @@ class App extends Component{
             </Map>
 
             <Action action={this.state.action} closeAction={this.closeAction} message={this.state.action_message}/>
+
+            {sound}
 
             {
                 this.state.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={this.state.route_responses_from_agents[this.state.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={this.removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={this.closeRouteResponse} /> : ""
