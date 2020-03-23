@@ -5,6 +5,7 @@ var EmergencyService = require('../services/emergency.service');
 var FeedbackService = require('../services/feedback.service');
 var AdminService = require('../services/admin.service');
 var DepartmentService = require('../services/department.service');
+var RedisService = require('../services/redis.service');
 var Utils = require('../modules/utils');
 var asyncForEach = require('../modules/asyncforeach');
 var filter = require('../modules/filter');
@@ -38,7 +39,10 @@ module.exports.login = (req,res) => {
                                             .then(updated_admin => {
                                                     if(updated_admin){
                                                         admin.tokens = null;
-                                                        return res.status(200).send({"token": token, "priviledge": admin.priviledge});
+                                                        admin.priviledge = null;
+                                                        admin.password = null;
+                                                        admin.phone_number = null;
+                                                        return res.status(200).send({"token": token, "priviledge": admin.priviledge, "admin": admin});
                                                     }
                                                     else{
                                                         return res.status(500).send("Server Error");
@@ -437,4 +441,45 @@ module.exports.deleteDepartment = (req,res) => {
                     .catch(err => {
                         return res.status(500).send("error");
                     })
+}
+
+module.exports.setAdminMonitorings = (req,res) => {
+    const monitorings = req.body.monitorings;
+
+    RedisService.setAdminMonitoring(monitorings, (result => {
+        if(result){
+            return res.status(200).send("successful");
+        }
+        else{
+            return res.status(200).send("unsuccessful");
+        }
+    }))
+}
+
+module.exports.setAdminMonitoringsSingle = (req,res) => {
+    const monitoring = req.body.monitoring;
+
+    RedisService.getAdminMonitoring((result => {
+        if(result){
+            result.map(admin => {
+                if(Object.keys(admin)[0]===Object.keys(monitoring)[0]){
+                    result[admin_id] = monitoring;
+
+                    RedisService.setAdminMonitoring(result, (resu => {
+                        if(resu){
+                            return res.status(200).send("success");
+                        }
+                    }))
+                }
+            })
+        }
+    }))
+}
+
+module.exports.getAdminMonitorings = (req,res) => {
+    RedisService.getAdminMonitoring((result => {
+        if(result){
+            return res.status(200).send({"response": result});
+        }
+    }))
 }

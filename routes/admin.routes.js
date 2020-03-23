@@ -66,6 +66,14 @@ module.exports = function(router){
         }
     });
 
+    router.post('/setMonitorings', (req,res) => {
+        AdminController.setAdminMonitorings(req,res);
+    })
+
+    router.get('/getMonitorings', (req,res) => {
+        AdminController.getAdminMonitorings(req,res);
+    })
+
     router.post('/getLocations', function(req,res){
         AdminController.getLocations(req,res);
     });
