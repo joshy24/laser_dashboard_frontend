@@ -39,7 +39,6 @@ module.exports.login = (req,res) => {
                                             .then(updated_admin => {
                                                     if(updated_admin){
                                                         admin.tokens = null;
-                                                        admin.priviledge = null;
                                                         admin.password = null;
                                                         admin.phone_number = null;
                                                         return res.status(200).send({"token": token, "priviledge": admin.priviledge, "admin": admin});
@@ -446,8 +445,11 @@ module.exports.deleteDepartment = (req,res) => {
 module.exports.setAdminMonitorings = (req,res) => {
     const monitorings = req.body.monitorings;
 
+    const id = req.admin._id;
+
     RedisService.setAdminMonitoring(monitorings, (result => {
         if(result){
+            io.emit("monitoring_update", id);
             return res.status(200).send("successful");
         }
         else{
@@ -459,19 +461,29 @@ module.exports.setAdminMonitorings = (req,res) => {
 module.exports.setAdminMonitoringsSingle = (req,res) => {
     const monitoring = req.body.monitoring;
 
+    const id = req.admin._id;
+
     RedisService.getAdminMonitoring((result => {
         if(result){
-            result.map(admin => {
-                if(Object.keys(admin)[0]===Object.keys(monitoring)[0]){
+            result.map(row => {
+                if(Object.keys(row)[0]===Object.keys(monitoring)[0]){
                     result[admin_id] = monitoring;
 
                     RedisService.setAdminMonitoring(result, (resu => {
                         if(resu){
+                            io.emit("monitoring_update", id);
+
                             return res.status(200).send("success");
+                        }
+                        else{
+                            return res.status(200).send("unsuccessful");
                         }
                     }))
                 }
             })
+        }
+        else{
+            return res.status(200).send("unsuccessful");
         }
     }))
 }
@@ -479,7 +491,7 @@ module.exports.setAdminMonitoringsSingle = (req,res) => {
 module.exports.getAdminMonitorings = (req,res) => {
     RedisService.getAdminMonitoring((result => {
         if(result){
-            return res.status(200).send({"response": result});
+            return res.status(200).send(result);
         }
     }))
 }

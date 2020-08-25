@@ -29,6 +29,7 @@
     "mongoose": "^5.5.11",
     "node-geocoder": "^3.25.0",
     "pubnub": "^4.24.2",
+    "redis": "^3.0.2",
     "socket.io": "^2.2.0",
     "twilio": "^3.31.1"
   },

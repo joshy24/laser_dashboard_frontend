@@ -7,11 +7,11 @@ module.exports = {
     port: process.env.PORT,
     base_url: process.env.BASE_URL,
     db: {
-        uri: process.env.PROD_DB_URL,
+        uri: process.env.DB_URL/*,
         options: {
             user: process.env.DB_USER,
             pass: process.env.DB_PWD
-        }
+        }*/
     },
     secret: process.env.SECRET_KEY, 
     google_api_key: process.env.GOOGLE_API_KEY,
@@ -27,5 +27,9 @@ module.exports = {
         pub_key: process.env.PUB_KEY,
         sub_key: process.env.SUB_KEY,
         secret_key: process.env.SECRET_KEY
+    },
+    redis: { 
+        password: process.env.REDIS_PWD,
+        host: process.env.REDIS_HOST 
     }
 }

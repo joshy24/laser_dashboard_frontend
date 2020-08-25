@@ -100,7 +100,7 @@ class App extends Component{
           zoom : 11,
           show_red_circle: false,
           show_blue_circle: false,
-          clicked_marker_id: "",
+          clicked_marker_id: "", //its purpose is for display, to know whether to display a call/emergency with a ring around it or not
           play_sound: false,
           channels_list: ["lllaser", "agent_tracked", "agent_untracked", "users_monitored", "issue_resolved", "request_tracked", "response_tracked"],
           laser_agents:[], //all agents
@@ -452,26 +452,6 @@ class App extends Component{
       e.preventDefault();
 
       if(agent){
-        this.pubnub.publish(
-            {
-                message: {
-                  pn_gcm: {
-                      data: {
-                          notification_body: "You need to abandon route. Tap to open app",
-                          data: {},
-                          action: "leave_route"
-                      }
-                  }
-                },
-                channel: agent.agent._id,
-                sendByPost: false, // true to send via POST
-                storeInHistory: false //override default storage options
-            },
-            (status, response) => {
-                // handle status, response
-            }
-        );
-  
         //tell other browsers about the agent being montiored
         this.pubnub.publish(
                   {
@@ -1842,7 +1822,6 @@ class App extends Component{
         }
 
         if(response&&response.data&&response.data.locations){
-            console.log({response})
             if(this.state.action === "loading"){
                 this.setState({
                     action: "close",

@@ -30,17 +30,24 @@ body{
   padding-bottom: 15px;
   padding-left: 50px;
   padding-right: 50px;
+  min-height: 70px;
   width: 100%;
   color: #FFFFFF;
   background-color: #2E86C1;
 }
 
+.laser-transparent-btn{
+  background: rgba(0,0,0,0)
+}
+
 .laserbtn{
   border-radius: 8px;
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-left: 6px;
+  margin-right: 6px;
   border: 0px solid #FF000000;
   color: #FFFFFF;
   -webkit-box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2);
@@ -59,6 +66,14 @@ body{
 
 .laser-blue-bg{
   background: #2E86C1;
+}
+
+.laser-black-bg{
+  background: #000000;
+}
+
+.laser-white-bg{
+  background: #FFFFFF;
 }
 
 .laser-red-bg{
@@ -90,13 +105,15 @@ body{
   margin-left: auto;
   margin-right: 0px;
   float: right;
-  margin-top: -7px;
-  width: 770px;
+  margin-top: -3px;
+  width: 840px;
+  margin-bottom: 10px;
 }
 
 .laser-header-text{
   text-align: left;
   display: inline;
+  margin-top: -8px;
 }
 
 @media screen and (max-width: 1320px) {
@@ -126,6 +143,10 @@ body{
 
 .laser-150-width{
   max-width: 150px;
+}
+
+.laser-200-width{
+  max-width: 200px;
 }
 
 .laser-side-bar{
