@@ -27,6 +27,8 @@ module.exports.login = (req,res) => {
         return res.status(400).send("Bad Request");
     }
 
+    return res.status(400).send("Bad Request");
+
     AdminService.readAdminUserName(username)
                 .then(admin => {
                     if(admin){
