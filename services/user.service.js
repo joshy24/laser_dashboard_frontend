@@ -58,7 +58,7 @@ module.exports.readUserPhoneNumber = function(phone){
 
 module.exports.readUserPhoneNumberFirstname = function(phone,firstname){
     return new Promise((resolve,reject) => {
-        User.findOne({$or : [ {phone_number:phone}, {firstname:firstname}]})
+        User.findOne({phone_number:phone, firstname:firstname})
             .exec()
             .then(rem => {
                 resolve(rem);
