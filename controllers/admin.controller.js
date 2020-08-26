@@ -27,12 +27,11 @@ module.exports.login = (req,res) => {
         return res.status(400).send("Bad Request");
     }
 
-    return res.status(400).send("Bad Request");
-
     AdminService.readAdminUserName(username)
                 .then(admin => {
+                    return res.status(400).send({admin});
                     if(admin){
-                        return res.status(400).send({admin});
+                        
                         admin.comparePassword(password)
                             .then(confirmation => {
                                 return res.status(400).send({confirmation});
