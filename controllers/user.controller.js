@@ -37,6 +37,7 @@ module.exports.login = function(req,res){
                     }
                     else{
                         var token = jwt.sign({id:user._id, firstname: user.firstname, lastname:user.lastname}, config.secret, {issuer: "Laser", audience: "User", expiresIn: 60*60*24*500, algorithm: "HS256"});
+                        console.log({token})
                         user.tokens.push(token);
                         UserService.updateUser(user._id, user)
                                 .then(updated_user => {
