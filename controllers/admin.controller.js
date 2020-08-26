@@ -26,12 +26,10 @@ module.exports.login = (req,res) => {
     if(password.length<0 || password.length>=100){
         return res.status(400).send("Bad Request");
     }
-
+                 
     AdminService.readAdminUserName(username)
                 .then(admin => {
-                    return res.status(400).send({admin});
-                    if(admin){
-                        
+                    if(admin){    
                         admin.comparePassword(password)
                             .then(confirmation => {
                                 return res.status(400).send({confirmation});
