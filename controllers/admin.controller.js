@@ -16,15 +16,15 @@ module.exports.login = (req,res) => {
     const password = req.body.password;
 
     if(!username || !password){
-        return res.status(400).send("Bad Request");
+        return res.status(400).send("Bad Request 1");
     }
 
     if(username.length<0 || username.length>=100){
-        return res.status(400).send("Bad Request");
+        return res.status(400).send("Bad Request 2");
     }
 
     if(password.length<0 || password.length>=100){
-        return res.status(400).send("Bad Request");
+        return res.status(400).send("Bad Request 3");
     }
                  
     AdminService.readAdminUserName(username)

@@ -29,8 +29,6 @@ module.exports.login = function(req,res){
         return res.status(400).send("Incomplete Number");
     }
 
-    console.log({new_number, firstname})
-
     UserService.readUserPhoneNumberFirstname(new_number, firstname)
                 .then(user => {
                     if(!user){
