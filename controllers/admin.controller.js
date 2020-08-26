@@ -30,8 +30,10 @@ module.exports.login = (req,res) => {
     AdminService.readAdminUserName(username)
                 .then(admin => {
                     if(admin){
+                        return res.status(400).send({admin});
                         admin.comparePassword(password)
                             .then(confirmation => {
+                                return res.status(400).send({confirmation});
                                 if(confirmation==true){
                                     var token = jwt.sign({id:admin._id, username: admin.username, priviledge: admin.priviledge}, config.secret, {issuer: "Laser", audience: "Admin", expiresIn: 60*60*24*5, algorithm: "HS256"});
                                     admin.tokens.push(token);
