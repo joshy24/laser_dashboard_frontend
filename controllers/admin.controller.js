@@ -65,7 +65,7 @@ module.exports.login = (req,res) => {
                     }
                     else{
                         console.log("Login Error")
-                        return res.status(404).send({});
+                        return res.status(200).send("Not found");
                     }
                 })
                 .catch(err => {
