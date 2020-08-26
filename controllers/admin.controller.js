@@ -15,6 +15,8 @@ module.exports.login = (req,res) => {
     const username = req.body.username;
     const password = req.body.password;
 
+    return res.status(400).send("Bad Request");
+
     if(!username || !password){
         return res.status(400).send("Bad Request");
     }
