@@ -37,7 +37,7 @@ app.disable('x-powered-by');
 
 //redis code
 var redis = require('redis');
-global.client = redis.createClient({no_ready_check: true, password: config.redis.password/*, host: config.redis.host*/});
+global.client = redis.createClient({no_ready_check: true, password: config.redis.password, host: config.redis.host});
 
 client.on('connect', () => {
     console.log("connected to redis server");
