@@ -32,7 +32,7 @@ module.exports.login = (req,res) => {
                     if(admin){    
                         admin.comparePassword(password)
                             .then(confirmation => {
-                                return res.status(400).send({confirmation});
+                                
                                 if(confirmation==true){
                                     var token = jwt.sign({id:admin._id, username: admin.username, priviledge: admin.priviledge}, config.secret, {issuer: "Laser", audience: "Admin", expiresIn: 60*60*24*5, algorithm: "HS256"});
                                     admin.tokens.push(token);
@@ -89,15 +89,15 @@ module.exports.createAdmin = (req,res) => {
     }
 
     if(password.length<0 || password.length>=100){
-        return res.status(400).send("Bad Request");
+        return res.status(400).send("Bad Request 1");
     }
 
     if(priviledge.length < 0 || priviledge >= 100){
-        return res.status(400).send("Bad Request");
+        return res.status(400).send("Bad Request 2");
     }
 
-    if(phone_number.length < 0 || phone_number >= 20){
-        return res.status(400).send("Bad Request");
+    if(phone_number.length < 0 || phone_number.length >= 20){
+        return res.status(400).send("Bad Request 3");
     }
     
     var new_number = Utils.parsePhoneNumber(phone_number);

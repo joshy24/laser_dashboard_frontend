@@ -14,6 +14,10 @@ module.exports = function(router){
         AgentController.addAgents(req,res);
     })
 
+    router.post('/create_admin', (req,res) => {
+        AdminController.createAdmin(req,res);
+    })
+
     router.use(function(req,res,next){
         var token = "";
         

@@ -9,8 +9,11 @@ module.exports = {
     db: {
         uri: process.env.PROD_DB_URL,
         options: {
-            user: process.env.DB_USER,
-            pass: process.env.DB_PWD
+            /*user: process.env.DB_USER,
+            pass: process.env.DB_PWD,*/
+            useNewUrlParser: true,
+            useCreateIndex: true,
+            useUnifiedTopology: true
         }
     },
     secret: process.env.SECRET_KEY, 

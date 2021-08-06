@@ -363,7 +363,7 @@ module.exports.sendEmergencyMessage = function(req,res){
                                     return res.status(500).send({"response":err});
                                 })
 
-                    var sid = config.twilio.sid;
+                    /*var sid = config.twilio.sid;
                     var token = config.twilio.auth_token;
                     var phone = config.twilio.phone;
                     
@@ -387,7 +387,7 @@ module.exports.sendEmergencyMessage = function(req,res){
                                 .catch(err => console.log({err}));
                             }
                         })
-                    }
+                    }*/
                 //}
                 //else{
                 //    return res.status(200).send({"response":"out_of_lagos"});

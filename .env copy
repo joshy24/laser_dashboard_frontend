@@ -1,6 +1,6 @@
 NODE_ENV = 'development'
 DB_URL = 'mongodb://localhost:27017/laser'
-PROD_DB_URL = 'mongodb+srv://laseruser18102020:Thisisapasswordthatwewilluseforthelaserdatabasehopethisislongenough@laserdashboard.rpu61.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+PROD_DB_URL = 'mongodb://172.31.47.204:27017/laser'
 DB_USER = 'lazeruser'
 DB_PWD = 'lazeradminpassword'
 PORT = 3077
@@ -15,4 +15,4 @@ SUB_KEY = 'sub-c-21e1e450-9457-11e9-bf84-1623aee89087'
 SECRET_KEY = 'sec-c-ZTVkZjI5NTAtOGUwYS00YWE1LTlmZGEtZjk3NTI3MzFiM2Jk'
 GOOGLE_API_KEY = 'AIzaSyA9XiWjAs1_PnPTzSk8oGd3r8vyLup0w6U'
 REDIS_PWD = laseradminredisP@5sword@24$EKURE
-REDIS_HOST =  192.168.43.136
+REDIS_HOST = 172.31.47.204

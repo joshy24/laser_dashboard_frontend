@@ -37,7 +37,7 @@ app.disable('x-powered-by');
 
 //redis code
 var redis = require('redis');
-global.client = redis.createClient({no_ready_check: true, password: config.redis.password, host: config.redis.host});
+global.client = redis.createClient({no_ready_check: true/*, password: config.redis.password, host: config.redis.host*/});
 
 client.on('connect', () => {
     console.log("connected to redis server");
@@ -96,26 +96,16 @@ pubnub.addListener({
 
 
 
-/* The two blocks below of app.options and app.use are necessary for allowing CORS in development environment*/
-app.options('*', cors({"origin": "*", //origin value to be changed in production to domain name
-"methods": "GET,POST",
-"preflightContinue": false,
-"optionsSuccessStatus": 204}))
-
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-/* End of allowing CORS*/
-
-
-
-
 /* Start of socket-io stuff*/
 
 var http = require('http').createServer(app);
-global.io = require('socket.io')(http);
+global.io = require('socket.io')(http, {
+    cors: {
+        origin: "http://localhost:3000",
+        //credentials: true,
+        methods: ["GET", "POST"],
+    }
+});
 
 io.on("connection", socket => {
     console.log("New client connected");
@@ -127,6 +117,23 @@ io.on("connection", socket => {
 http.listen(config.socket.port, () => console.log(`Socket IO listening on port ${config.socket.port}`));
 
 /* End of socket-io stuff*/
+
+
+
+
+
+/* The two blocks below of app.options and app.use are necessary for allowing CORS in development environment*/
+app.options('*', cors({"origin": "*", //origin value to be changed in production to domain name
+"methods": "GET,POST",
+"preflightContinue": false,
+"optionsSuccessStatus": 204}))
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    next();
+});
+/* End of allowing CORS*/
 
 
 
