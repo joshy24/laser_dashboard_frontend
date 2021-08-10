@@ -494,5 +494,8 @@ module.exports.getAdminMonitorings = (req,res) => {
         if(result){
             return res.status(200).send(result);
         }
+        else{
+            return res.status(200).send([]);
+        }
     }))
 }
