@@ -42,8 +42,6 @@ object-assign
  * @license  MIT
  */
 
-/*! https://mths.be/utf8js v2.1.2 by @mathias */
-
 /** @license
  *
  * SoundManager 2: JavaScript Sound for the Web
