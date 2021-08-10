@@ -163,7 +163,7 @@ body{
   padding-right: 24px;
   padding-bottom: 16px;
   padding-top: 8px;
-  margin-top: 51px;
+  margin-top: 71px;
 }
 
 .laser-agent_side-bar{
@@ -180,7 +180,7 @@ body{
   padding-right: 24px;
   padding-bottom: 16px;
   padding-top: 8px;
-  margin-top: 51px;
+  margin-top: 71px;
 }
 
 .close_btn{
@@ -255,9 +255,9 @@ body{
   right: 0;
   bottom: 0;
   overflow-y: scroll;
-  margin-top: 50px;
+  margin-top: 0px;
   z-index: 10000;
-  background-color: rgba(0,0,0,0.2)
+  background-color: rgba(0,0,0,0.4)
 }
 
 .LoadingModal{
@@ -360,10 +360,10 @@ body{
     }
 
     .laser-side-bar{
-        margin-top: 118px;
+        margin-top: 129px;
     }
 
     .laser-agent_side-bar{
-        margin-top: 118px;
+        margin-top: 129px;
     }
 }
