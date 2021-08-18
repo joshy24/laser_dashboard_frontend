@@ -6,9 +6,9 @@ var bcrypt = require('bcryptjs');
 
 module.exports.addAgents = function(req,res){
     var new_agent = {
-        firstname: "Simon",
-        lastname: "Peter",
-        phone_number: '08033333333',
+        firstname: "Sarah",
+        lastname: "May",
+        phone_number: '08044444444',
         password: "password24",
         department: "police"
     }
@@ -16,9 +16,9 @@ module.exports.addAgents = function(req,res){
     addAgent(new_agent);
 
     var new_agent1 = {
-        firstname: "David",
-        lastname: "Johnson",
-        phone_number: '08022222222',
+        firstname: "Mary",
+        lastname: "Arnold",
+        phone_number: '08055555555',
         password: "password24",
         department: "fire"
     }
@@ -26,9 +26,9 @@ module.exports.addAgents = function(req,res){
     addAgent(new_agent1);
 
     var new_agent2 = {
-        firstname: "Moses",
-        lastname: "Kelly",
-        phone_number: '08011111111',
+        firstname: "Divine",
+        lastname: "Marlon",
+        phone_number: '08066666666',
         password: "password24",
         department: "hospital"
     }
