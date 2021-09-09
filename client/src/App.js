@@ -50,7 +50,10 @@ import ConfirmAction from './components/ConfirmAction';
 import Utils from './utils/Utils';
 import Persistence from './utils/Persistence';
 import Sound from 'react-sound';
-import PubNubReact from 'pubnub-react';
+
+import PubNub from 'pubnub';
+import { PubNubProvider, usePubNub } from 'pubnub-react';
+
 import Geocode from "react-geocode";
 
 import './App.css';
@@ -74,7 +77,23 @@ let todays_date = new Date().toISOString();
 
 let today = null;
 
-class App extends Component{
+
+const pubnub = new PubNub({
+    publishKey: 'pub-c-da5b31c8-45d5-4018-82be-843221a3b91c',
+    subscribeKey: 'sub-c-de1f05de-af97-11e9-a732-8a2b99383297',
+    uuid: 'Bartender247ng'
+});
+
+function App(apiKey) {
+    return (
+      <PubNubProvider apiKey={apiKey} client={pubnub}>
+        <Dashboard  />
+      </PubNubProvider>
+    );
+}
+
+
+class Dashboard extends Component{
   constructor(props){
       super(props);
 
@@ -121,10 +140,6 @@ class App extends Component{
           showConfirmManualLocation: false
       }
       
-      this.pubnub = new PubNubReact({
-        publishKey: 'pub-c-100b3918-0e25-4fac-ade6-c58d013cd019',
-        subscribeKey: 'sub-c-21e1e450-9457-11e9-bf84-1623aee89087'
-      });
       this.pubnub.init(this);
 
       this.closeSideBar = this.closeSideBar.bind(this);

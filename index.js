@@ -139,7 +139,7 @@ app.use(function(req, res, next) {
 
 
 app.use(helmet({
-    frameguard: {action: 'deny'}
+    frameguard: {action: 'deny'},
 }))
 
 
