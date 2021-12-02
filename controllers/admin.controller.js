@@ -17,6 +17,7 @@ module.exports.login = (req,res) => {
 
     console.log(username, password)
 
+
     if(!username || !password){
         return res.status(400).send("Bad Request 1");
     }
@@ -71,7 +72,7 @@ module.exports.login = (req,res) => {
                 })
                 .catch(err => {
                     console.log({err})
-                    return res.status(500).send("Server Error");
+                    return res.status(500).send(err);
                 })
 }
 
