@@ -41,6 +41,8 @@ import ConfirmAction from './components/ConfirmAction';
 import Utils from './utils/Utils';
 import Persistence from './utils/Persistence';
 import Sound from 'react-sound';
+
+//Refactor 
 import PubNubReact from 'pubnub-react';
 import Geocode from "react-geocode";
 
@@ -119,12 +121,15 @@ class App extends Component{
           isLoading: false
       }
       
+      //Refactor 
       this.pubnub = new PubNubReact({
         publishKey: 'pub-c-100b3918-0e25-4fac-ade6-c58d013cd019',
         subscribeKey: 'sub-c-21e1e450-9457-11e9-bf84-1623aee89087'
       });
       
       this.pubnub.init(this);
+
+      //Refactor End  ---------------------------------------------------------------------
 
       this.closeSideBar = this.closeSideBar.bind(this);
       this.onCallsChanged = this.onCallsChanged.bind(this);
@@ -328,6 +333,8 @@ async removeAgentFromRoute(e, agent){
                     persistence.deleteAssignedAgents();
                 }
 
+
+                //Refactor  ---------------------------------------------------------------------
                 //unsubscribe from agents channel
                 this.pubnub.unsubscribe({
                     channels: [agent.agent._id]
@@ -353,6 +360,8 @@ async removeAgentFromRoute(e, agent){
                         // handle status, response
                     }
                 );
+
+                //Refactor End  ---------------------------------------------------------------------
 
                 //we set state and update the monitoring grid and the laser agents list
                 this.setState({
@@ -420,10 +429,14 @@ async removeAgentFromRoute(e, agent){
                     persistence.deleteAssignedAgents();
                 }
 
+                //Refactor  ---------------------------------------------------------------------
+
                 //unsubscribe from agents channel
                 this.pubnub.unsubscribe({
                     channels: [agent.agent._id]
                 })
+
+                //End Refactor  ---------------------------------------------------------------------
 
 
                 var route_response_array = this.state.route_responses_from_agents;
@@ -503,6 +516,9 @@ async removeAgentFromRoute(e, agent){
                     var emergency_monitored = emergency_full_row.emergency;
 
                     if(emergency_monitored){
+
+                        //Refactor  ---------------------------------------------------------------------
+
                         //we tell the agent to open the new route and go to the emergency or call
                         this.pubnub.publish(
                             {
@@ -524,6 +540,8 @@ async removeAgentFromRoute(e, agent){
                             }
                         );
 
+                        //Refactor End  ---------------------------------------------------------------------
+
                         //we subscribe the admin to the agents id channel
                         var list = this.state.channels_list;
 
@@ -531,9 +549,13 @@ async removeAgentFromRoute(e, agent){
                             list.push(agent.agent._id)
                         }
 
+                        //Refactor  ---------------------------------------------------------------------
+
                         this.pubnub.subscribe({
                             channels: list
                         })
+
+                        //End Refactor  ---------------------------------------------------------------------
 
 
                         //persist agents incase the user reloads the page or closes the browser
@@ -606,9 +628,13 @@ async removeAgentFromRoute(e, agent){
                             list.push(item.user)
                         }
 
+                        //Refactor  ---------------------------------------------------------------------
+
                         this.pubnub.subscribe({
                             channels: list
                         })
+
+                        //Refactor End  ---------------------------------------------------------------------
                     }
                     
                     this.setState({
@@ -648,6 +674,8 @@ async removeAgentFromRoute(e, agent){
                 .then(boolean_value => {
                     if(boolean_value){
 
+                        //Refactor  ---------------------------------------------------------------------
+
                         //ideally this shiuld be sent to those agents in the emergency's LGA
                         //for now we are publishing to all agents 
                         this.pubnub.publish(
@@ -669,6 +697,9 @@ async removeAgentFromRoute(e, agent){
                                 // handle status, response
                             }
                         );
+
+                        //Refactor End  ---------------------------------------------------------------------
+
 
                         this.utils.getAdminEmergencyMonitored(this.browserAdmin._id, this.state.monitoring_grid)
                                 .then(emergency_monitored => {
@@ -1177,9 +1208,13 @@ async removeAgentFromRoute(e, agent){
                             if(this.state.channels_list.indexOf(admin_emergency.user) === -1){
                                 var list = this.state.channels_list.concat([admin_emergency.user]);
                                 
+                                //Refactor  ---------------------------------------------------------------------
+
                                 this.pubnub.subscribe({
                                     channels: list
                                 })
+
+                                //Refactor End ---------------------------------------------------------------------
             
                                 this.setState({
                                     action: "message",
@@ -1190,9 +1225,14 @@ async removeAgentFromRoute(e, agent){
                                 this.hideLoading();
                             }
                             else{
+
+                                //Refactor  ---------------------------------------------------------------------
+
                                 this.pubnub.subscribe({
                                     channels: this.state.channels_list
                                 })
+
+                                //Refactor End  ---------------------------------------------------------------------
             
                                 this.setState({
                                     action: "message",
@@ -1241,9 +1281,13 @@ async removeAgentFromRoute(e, agent){
                 //we subscribe to the id of each agent
                 var list = this.state.channels_list.concat(result[0]);
                 
+                //Refactor  ---------------------------------------------------------------------
+
                 this.pubnub.subscribe({
                     channels: list
                 })
+
+                //Refactor End  ---------------------------------------------------------------------
 
                 this.setState({
                     laser_agents: result[1],
@@ -1261,17 +1305,26 @@ async removeAgentFromRoute(e, agent){
   }
 
   componentWillUnmount() {
+
+      //Refactor  ---------------------------------------------------------------------
+
       this.pubnub.unsubscribe({
           channels: this.state.channels_list
       });
+
+      //Refactor End  ---------------------------------------------------------------------
   }
 
   async componentDidMount(){
+
+    //Refactor  ---------------------------------------------------------------------
 
     //subscribe to the parent channel to receive location updates from agents
     this.pubnub.subscribe({
         channels: this.state.channels_list
     })
+
+    //Refactor End  ---------------------------------------------------------------------
 
     this.setState({
         laser_agents: []
@@ -1286,6 +1339,8 @@ async removeAgentFromRoute(e, agent){
             route_responses_from_agents: responses
         })
     }
+
+    //Refactor  ---------------------------------------------------------------------
 
     this.pubnub.addListener({
       status: (st) => {
@@ -1479,6 +1534,8 @@ async removeAgentFromRoute(e, agent){
       }
     });
 
+    //Refactor End  ---------------------------------------------------------------------
+
     /*const socket = socketIOClient(socket_io_url, {
         //withCredentials: true
     });*/
@@ -1618,10 +1675,14 @@ async removeAgentFromRoute(e, agent){
                         persistence.deleteAssignedAgents();
                     }
 
+                    //Refactor  ---------------------------------------------------------------------
+
                     //unsubscribe from agents channel
                     this.pubnub.unsubscribe({
                         channels: [agent.agent._id]
                     })
+
+                    //Refactor End  ---------------------------------------------------------------------
 
                     //we set state and update the monitoring grid and the laser agents list
                     this.setState({
