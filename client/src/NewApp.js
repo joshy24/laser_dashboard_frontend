@@ -24,10 +24,9 @@ import ambulance_using from './icons/PNG/ambulance_using.png'
 import ambulance_using_other from './icons/PNG/ambulance_other_using.png'
 import ambulance_in_focus from './icons/PNG/ambulance_in_focus.png'
 
-
 import alert from "./sounds/alert.mp3";
 import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
-//import socketIOClient from "socket.io-client";
+
 import io from "socket.io-client";
 import Sidebar from './components/Sidebar';
 import Action from './components/Action';
@@ -61,8 +60,8 @@ const mapStyle = {
     width: '100%'
 }
 
-const socket_io_url = 'http://18.192.254.193';
-//const socket_io_url = 'http://localhost:3080';
+//const socket_io_url = 'http://18.192.254.193';
+const socket_io_url = 'http://localhost:3077';
 
 let todays_date = new Date().toISOString();
 
@@ -124,6 +123,7 @@ class App extends Component{
         publishKey: 'pub-c-100b3918-0e25-4fac-ade6-c58d013cd019',
         subscribeKey: 'sub-c-21e1e450-9457-11e9-bf84-1623aee89087'
       });
+      
       this.pubnub.init(this);
 
       this.closeSideBar = this.closeSideBar.bind(this);
@@ -1286,8 +1286,6 @@ async removeAgentFromRoute(e, agent){
             route_responses_from_agents: responses
         })
     }
-    
-
 
     this.pubnub.addListener({
       status: (st) => {

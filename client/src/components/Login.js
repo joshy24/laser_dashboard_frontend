@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 
 import Loader from '../components/Loader';
-
-//Our Auth Service
+ //Our Auth Service
 import AuthHelperMethods from '../auth/AuthHelperMethods';
 
 const Auth = new AuthHelperMethods();
@@ -62,7 +61,17 @@ export default class Login extends Component{
 
         this.hideLoading();
 
-        if(response==="error"){
+        
+        if(response.data == "Not found"){
+            this.setState({
+                error: "Please check the username and password you entered"
+            })
+        }
+        else if(response && response.data && response.data.token && response.data.admin){
+            this.props.login(); 
+            this.props.history.push('/')
+        }
+        else if(response==="error"){
             //show error message
 
             this.setState({
@@ -71,10 +80,10 @@ export default class Login extends Component{
 
             return;
         }
-
-        if(response && response.data){
-            this.props.login();
-            this.props.history.push('/')
+        else{
+            this.setState({
+                error: "We could not log you in at this moment. Try again later"
+            })
         }
     }
 

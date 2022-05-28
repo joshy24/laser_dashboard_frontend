@@ -9,10 +9,12 @@ export default class AuthHelperMethods{
     login = (username, password) => {
         return  this.axios(login_url, {username, password})
                     .then(res => {
-                        this.setToken(res.data.token);
-                        this.setPriviledge(res.data.priviledge);
-                        this.setAdmin(res.data.admin);
-                        console.log(res.data)
+                        if(res.data.token && res.data.admin && res.data.priviledge){
+                            this.setToken(res.data.token);
+                            this.setPriviledge(res.data.priviledge);
+                            this.setAdmin(res.data.admin);
+                        }
+                        
                         return res;
                     })
                     .catch(err => {
@@ -100,8 +102,8 @@ export default class AuthHelperMethods{
             url:url,
             method: method,
             data: data, 
-            baseURL: 'http://18.192.254.193/admin',
-            //baseURL: 'http://localhost:3077/admin',
+            //baseURL: 'http://18.192.254.193/admin',
+            baseURL: 'http://localhost:3077/admin',
             timeout: 30000,
             headers: headers
         })
