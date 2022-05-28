@@ -15,9 +15,6 @@ module.exports.login = (req,res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    console.log(username, password)
-
-
     if(!username || !password){
         return res.status(400).send("Bad Request 1");
     }
@@ -203,7 +200,7 @@ module.exports.getLocations = function(req,res){
     LocationService.getLocations(date)
         .then(locations => {
             
-            const results = async(() => {
+            const results = async() => {
 
                 var arrays = [];
 
@@ -225,7 +222,7 @@ module.exports.getLocations = function(req,res){
                 }))
 
                 return arrays;
-            })
+            }
 
             results()
                 .then(data => {

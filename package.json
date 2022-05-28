@@ -15,25 +15,24 @@
   "author": "Joshua",
   "license": "ISC",
   "dependencies": {
-    "asyncawait": "^1.0.8",
+    "asyncawait": "^3.0.0",
     "bcryptjs": "^2.4.3",
-    "bluebird": "^3.5.5",
-    "body-parser": "^1.19.0",
-    "bunyan": "^1.8.12",
+    "bluebird": "^3.7.2",
+    "bunyan": "^1.8.15",
     "cors": "^2.8.5",
-    "dotenv": "^8.0.0",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "helmet": "^3.21.2",
+    "helmet": "^5.1.0",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.24.0",
-    "mongoose": "^5.5.11",
-    "node-geocoder": "^3.25.0",
-    "pubnub": "^4.24.2",
-    "redis": "^3.0.2",
-    "socket.io": "^2.2.0",
-    "twilio": "^3.31.1"
+    "moment": "^2.29.1",
+    "mongoose": "^5.12.14",
+    "node-geocoder": "^4.0.0",
+    "pubnub": "^7.0.0",
+    "redis": "^4.1.0",
+    "socket.io": "^4.5.1",
+    "twilio": "^3.77.1"
   },
   "devDependencies": {
-    "nodemon": "^1.19.1"
+    "nodemon": "^2.0.7"
   }
 }

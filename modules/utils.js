@@ -25,7 +25,7 @@ module.exports.parsePhoneNumber = function(phone_number){
     }
 }
 
-module.exports.formatNumbers = async((list, my_number) => {
+module.exports.formatNumbers = async(list, my_number) => {
     let all = [];
 
     await(asyncForEach(list,item  => {
@@ -37,9 +37,9 @@ module.exports.formatNumbers = async((list, my_number) => {
     }))
 
     return all;
-})
+}
 
-module.exports.arrayToStrings = async((user_ids) => {
+module.exports.arrayToStrings = async(user_ids) => {
     let all = [];
 
     await(asyncForEach(user_ids, id => {
@@ -48,7 +48,7 @@ module.exports.arrayToStrings = async((user_ids) => {
     )
 
     return all;
-})
+}
 
 module.exports.getEmergencyMessage = function(name, device, location, phone, email, reasons){
     var message = "\n\n"+"Name - "+name+"\n\n";

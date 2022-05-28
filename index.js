@@ -1,6 +1,6 @@
 'use strict'
 
-var helmet = require('helmet');
+const helmet = require('helmet');
 
 const express = require('express');
 
@@ -11,15 +11,12 @@ const bunyan = require('bunyan');
 
 global.path = require('path');
 
-global.async = require('asyncawait/async');
-global.await = require('asyncawait/await');
-
 require('dotenv').config();
 global.mongoose = require('mongoose');
 mongoose.Promise = bluebird;
 
-var app = express();
-var router = express.Router();
+const app = express();
+const router = express.Router();
 global.config = require('./config/config');
 global.jwt = require('jsonwebtoken');
 
@@ -36,11 +33,14 @@ app.disable('x-powered-by');
 
 
 //redis code
-var redis = require('redis');
-global.client = redis.createClient({no_ready_check: true, password: config.redis.password, host: config.redis.host});
+const redis = require("redis")
+
+const client = redis.createClient();
+
+client.connect()
 
 client.on('connect', () => {
-    console.log("connected to redis server");
+    console.log("Connected to redis server");
 });
 
 client.on('error', err => {
@@ -63,35 +63,6 @@ var options = {
 };
 
 global.geocoder = NodeGeocoder(options);
-
-
-
-var PubNub = require('pubnub');
-
-var pubnub = new PubNub({
-    subscribeKey: config.pubnub.sub_key,
-    publishKey: config.pubnub.pub_key,
-    //secretKey: config.pubnub.secret_key,
-    ssl: false //should be true in release production
-});
-
-pubnub.subscribe({
-    channels: ['mych'] 
-});
-
-pubnub.addListener({
-    status: function(statusEvent) {
-        if (statusEvent.category === "PNConnectedCategory") {
-           console.log("pubnub connected");
-        }
-    },
-    message: function(m) {
-        console.log({m});
-    },
-    presence: function(presenceEvent) {
-        // handle presence
-    }
-});
 
 
 
@@ -169,6 +140,6 @@ app.get('*', (req, res) => {
 const server = app.listen(config.port, function(){
     console.log("Express started on " +config.base_url +' in '+config.env +' environment. Press Ctrl + C to terminate');
     mongoose.connect(config.db.uri , config.db.options)
-    .then(()=> { log.info(`Succesfully Connected to the Mongodb Database  at URL : `+config.db.uri)})
+    .then(()=> { log.info(`Succesfully Connected to the Mongodb Database`)})
     .catch((error)=> { log.error(error)})
 });
