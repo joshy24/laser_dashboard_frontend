@@ -76,7 +76,7 @@ class Dashboard extends Component{
   constructor(props){
       super(props);
 
-      this.state = {
+      state = {
           showConfirm: {
               action: "",
               status: false
@@ -127,62 +127,62 @@ class Dashboard extends Component{
 
       pubnub = usePubNub();
       
-      this.closeSideBar = this.closeSideBar.bind(this);
-      this.onCallsChanged = this.onCallsChanged.bind(this);
-      this.onEmergenciesChanged = this.onEmergenciesChanged.bind(this);
-      this.onAgentClicked = this.onAgentClicked.bind(this);
-      this.onDateChange = this.onDateChange.bind(this);
-      this.onCalendarOpen = this.onCalendarOpen.bind(this);
-      this.latestClicked = this.latestClicked.bind(this);
-      this.startMonitoring = this.startMonitoring.bind(this);
-      this.closeAction = this.closeAction.bind(this);
-      this.closeAgentSideBar = this.closeAgentSideBar.bind(this);
-      this.addAgentToMonitoring = this.addAgentToMonitoring.bind(this);
-      this.getAgentIcon = this.getAgentIcon.bind(this);
-      this.getAgentsAroundEmergency = this.getAgentsAroundEmergency.bind(this);
-      this.handleSongFinishedPlaying = this.handleSongFinishedPlaying.bind(this);
-      this.removeAgentFromRoute = this.removeAgentFromRoute.bind(this);
-      this.closeRouteResponse = this.closeRouteResponse.bind(this);
-      this.removeAgentFromRouteAndCloseRouteResponse = this.removeAgentFromRouteAndCloseRouteResponse.bind(this);
-      this.showMonitoredEmergency = this.showMonitoredEmergency.bind(this);
+      closeSideBar = closeSideBar.bind(this);
+      onCallsChanged = onCallsChanged.bind(this);
+      onEmergenciesChanged = onEmergenciesChanged.bind(this);
+      onAgentClicked = onAgentClicked.bind(this);
+      onDateChange = onDateChange.bind(this);
+      onCalendarOpen = onCalendarOpen.bind(this);
+      latestClicked = latestClicked.bind(this);
+      startMonitoring = startMonitoring.bind(this);
+      closeAction = closeAction.bind(this);
+      closeAgentSideBar = closeAgentSideBar.bind(this);
+      addAgentToMonitoring = addAgentToMonitoring.bind(this);
+      getAgentIcon = getAgentIcon.bind(this);
+      getAgentsAroundEmergency = getAgentsAroundEmergency.bind(this);
+      handleSongFinishedPlaying = handleSongFinishedPlaying.bind(this);
+      removeAgentFromRoute = removeAgentFromRoute.bind(this);
+      closeRouteResponse = closeRouteResponse.bind(this);
+      removeAgentFromRouteAndCloseRouteResponse = removeAgentFromRouteAndCloseRouteResponse.bind(this);
+      showMonitoredEmergency = showMonitoredEmergency.bind(this);
 
-      this.getEmergencies = this.getEmergencies.bind(this);
-      this.getLocations = this.getLocations.bind(this);
-      this.getLocationsDate = this.getLocationsDate.bind(this);
-      this.getEmergenciesDate = this.getEmergenciesDate.bind(this);
-      this.getLatestEmergencies = this.getLatestEmergencies.bind(this);
-      this.getLatestLocations = this.getLatestLocations.bind(this);
+      getEmergencies = getEmergencies.bind(this);
+      getLocations = getLocations.bind(this);
+      getLocationsDate = getLocationsDate.bind(this);
+      getEmergenciesDate = getEmergenciesDate.bind(this);
+      getLatestEmergencies = getLatestEmergencies.bind(this);
+      getLatestLocations = getLatestLocations.bind(this);
 
-      this.getSelectedAgentsIds = this.getSelectedAgentsIds.bind(this);
-      this.setSelectedAgentsFromIds = this.setSelectedAgentsFromIds.bind(this);
+      getSelectedAgentsIds = getSelectedAgentsIds.bind(this);
+      setSelectedAgentsFromIds = setSelectedAgentsFromIds.bind(this);
 
-      this.resolveCall = this.resolveCall.bind(this);
-      this.resolveEmergency = this.resolveEmergency.bind(this);
-      this.hideConfirm = this.hideConfirm.bind(this);
-      this.showConfirmResolveEmergency = this.showConfirmResolveEmergency.bind(this);
-      this.showConfirmResolveLocation = this.showConfirmResolveLocation.bind(this);
-      this.getMonitoringGridFromServerAndReconcileAssignedAgents = this.getMonitoringGridFromServerAndReconcileAssignedAgents.bind(this);
-      this.setUpAssignedAgentsIfAny = this.setUpAssignedAgentsIfAny.bind(this);
-      this.removeAgentFromEmergencyAfterDecliningRequest = this.removeAgentFromEmergencyAfterDecliningRequest.bind(this);
+      resolveCall = resolveCall.bind(this);
+      resolveEmergency = resolveEmergency.bind(this);
+      hideConfirm = hideConfirm.bind(this);
+      showConfirmResolveEmergency = showConfirmResolveEmergency.bind(this);
+      showConfirmResolveLocation = showConfirmResolveLocation.bind(this);
+      getMonitoringGridFromServerAndReconcileAssignedAgents = getMonitoringGridFromServerAndReconcileAssignedAgents.bind(this);
+      setUpAssignedAgentsIfAny = setUpAssignedAgentsIfAny.bind(this);
+      removeAgentFromEmergencyAfterDecliningRequest = removeAgentFromEmergencyAfterDecliningRequest.bind(this);
 
-      this.onManualCallChanged = this.onManualCallChanged.bind(this);
-      this.onManualGenderChanged = this.onManualGenderChanged.bind(this);
-      this.onSubmitManualCallDetails = this.onSubmitManualCallDetails.bind(this);
-      this.openManualLocation = this.openManualLocation.bind(this);
-      this.onFieldChanged = this.onFieldChanged.bind(this);
+      onManualCallChanged = onManualCallChanged.bind(this);
+      onManualGenderChanged = onManualGenderChanged.bind(this);
+      onSubmitManualCallDetails = onSubmitManualCallDetails.bind(this);
+      openManualLocation = openManualLocation.bind(this);
+      onFieldChanged = onFieldChanged.bind(this);
 
-      this.showConfirmManualLocation = this.showConfirmManualLocation.bind(this);
-      this.hideConfirmManualLocation = this.hideConfirmManualLocation.bind(this);
+      showConfirmManualLocation = showConfirmManualLocation.bind(this);
+      hideConfirmManualLocation = hideConfirmManualLocation.bind(this);
 
-      this.tryAgainClicked = this.tryAgainClicked.bind(this);
-      this.continueConfirmAddressNotFoundClicked = this.continueConfirmAddressNotFoundClicked.bind(this);
-      this.closeConfirmAddressNotFoundClicked = this.closeConfirmAddressNotFoundClicked.bind(this);
-      this.saveManualLocation = this.saveManualLocation.bind(this);
+      tryAgainClicked = tryAgainClicked.bind(this);
+      continueConfirmAddressNotFoundClicked = continueConfirmAddressNotFoundClicked.bind(this);
+      closeConfirmAddressNotFoundClicked = closeConfirmAddressNotFoundClicked.bind(this);
+      saveManualLocation = saveManualLocation.bind(this);
 
-      this.showLoading = this.showLoading.bind(this);
-      this.hideLoading = this.hideLoading.bind(this);
+      showLoading = showLoading.bind(this);
+      hideLoading = hideLoading.bind(this);
 
-      this.logout = this.logout.bind(this);
+      logout = logout.bind(this);
     
       var year = todays_date.split(/T(.+)/)[0];
 
@@ -203,27 +203,27 @@ class Dashboard extends Component{
       // Enable or disable logs. Its optional.
       Geocode.enableDebug();
 
-      this.utils = new Utils();
+      utils = new Utils();
 
       const Auth = new AuthHelperMethods();
 
-      this.browserAdmin = Auth.getAdmin();
+      browserAdmin = Auth.getAdmin();
   }
 
   showLoading(){
-      this.setState({
+      setState({
           isLoading: true
       })
   }
 
   hideLoading(){
-      this.setState({
+      setState({
           isLoading: false
       })
   }
 
   logout(){
-      this.props.logout();
+      props.logout();
   }
 
   async resolveEmergency(){
@@ -235,14 +235,14 @@ class Dashboard extends Component{
   }
 
 async showMonitoredEmergency(e){
-    const emergency_full_row = await this.utils.getAdminEmergencyMonitored(this.browserAdmin._id, this.state.monitoring_grid);
+    const emergency_full_row = await utils.getAdminEmergencyMonitored(browserAdmin._id, state.monitoring_grid);
     
     if(emergency_full_row && emergency_full_row.emergency){
         var item = emergency_full_row.emergency;
         
         switch(item.laser_type){
             case "emergency":
-                this.setState({
+                setState({
                   clicked_user: item,
                   side_bar_open: true,
                   location_side_bar_open: false,
@@ -258,7 +258,7 @@ async showMonitoredEmergency(e){
                 })
                 break;
             case "call":
-                this.setState({
+                setState({
                   clicked_user: item,
                   side_bar_open: false,
                   location_side_bar_open: true,
@@ -276,7 +276,7 @@ async showMonitoredEmergency(e){
         }
     }
     else{
-        this.setState({
+        setState({
             action: "message",
             action_message: "You are not monitoring any emergency or call at the moment",
         })
@@ -285,7 +285,7 @@ async showMonitoredEmergency(e){
 
 showConfirmResolveEmergency(e){
     e.preventDefault();
-    this.setState({
+    setState({
         showConfirm: {
           action: "emergency",
           status: true
@@ -295,7 +295,7 @@ showConfirmResolveEmergency(e){
 }
 
 showConfirmResolveLocation(){
-    this.setState({
+    setState({
         showConfirm: {
           action: "location",
           status: true
@@ -305,9 +305,9 @@ showConfirmResolveLocation(){
 }
 
 async removeAgentFromRoute(e, agent){
-    this.showLoading();
+    showLoading();
 
-    const result = await this.utils.removeAgentFromBrowserAdminMonitoringGrid(agent, this.browserAdmin._id, this.state.monitoring_grid, this.state.laser_agents);
+    const result = await utils.removeAgentFromBrowserAdminMonitoringGrid(agent, browserAdmin._id, state.monitoring_grid, state.laser_agents);
     
     if(result){
         //result[0] //monitoring_grid
@@ -320,7 +320,7 @@ async removeAgentFromRoute(e, agent){
                 //persist agents incase the user reloads the page or closes the browser
                 var assigned_agents = persistence.getAssignedAgents();
 
-                var new_assigned_agents = this.utils.removeAgentFromListOfAssignedAgentsForPersistsnce(agent, assigned_agents)
+                var new_assigned_agents = utils.removeAgentFromListOfAssignedAgentsForPersistsnce(agent, assigned_agents)
                 
                 if(new_assigned_agents.length > 0){
                     persistence.saveAssignedAgents(new_assigned_agents);
@@ -332,13 +332,13 @@ async removeAgentFromRoute(e, agent){
 
                 //Refactor  ---------------------------------------------------------------------
                 //unsubscribe from agents channel
-                this.props.pubnub.unsubscribe({
+                props.pubnub.unsubscribe({
                     channels: [agent.agent._id]
                 })
 
                 try{
                     //tell agent to leave the emergency
-                    const result = await this.pubnub.publish(
+                    const result = await pubnub.publish(
                         {
                             message: {
                             pn_gcm: {
@@ -362,7 +362,7 @@ async removeAgentFromRoute(e, agent){
                 //Refactor End  ---------------------------------------------------------------------
 
                 //we set state and update the monitoring grid and the laser agents list
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "Agent " +agent.agent.firstname +" was successfully removed from monitoring the emergency",
                     monitoring_grid: result[0],
@@ -371,20 +371,20 @@ async removeAgentFromRoute(e, agent){
                     clicked_agent: {},
                 })
 
-                this.hideLoading();
+                hideLoading();
             }
 
             if(save_result.data === "unsuccessful"){
-                this.hideLoading();
-                this.setState({
+                hideLoading();
+                setState({
                     action: "message",
                     action_message: "An error occurred removing the agent from the emergency"
                 })
             }
         }
         else{
-            this.hideLoading();
-            this.setState({
+            hideLoading();
+            setState({
                 action: "message",
                 action_message: "An error occurred removing the agent from the emergency"
             })
@@ -392,8 +392,8 @@ async removeAgentFromRoute(e, agent){
 
     }
     else{
-        this.hideLoading();
-        this.setState({
+        hideLoading();
+        setState({
             action: "message",
             action_message: "An error occurred removing the agent from the emergency"
         })
@@ -403,9 +403,9 @@ async removeAgentFromRoute(e, agent){
   async removeAgentFromRouteAndCloseRouteResponse(e, route_response){
     var agent = route_response.agent;
 
-    this.showLoading();
+    showLoading();
 
-    const result = await this.utils.removeAgentFromBrowserAdminMonitoringGrid(agent, this.browserAdmin._id, this.state.monitoring_grid, this.state.laser_agents);
+    const result = await utils.removeAgentFromBrowserAdminMonitoringGrid(agent, browserAdmin._id, state.monitoring_grid, state.laser_agents);
     
     if(result){
         //result[0] //monitoring_grid
@@ -418,7 +418,7 @@ async removeAgentFromRoute(e, agent){
                 //persist agents incase the user reloads the page or closes the browser
                 var assigned_agents = persistence.getAssignedAgents();
 
-                var new_assigned_agents = this.utils.removeAgentFromListOfAssignedAgentsForPersistsnce(agent, assigned_agents)
+                var new_assigned_agents = utils.removeAgentFromListOfAssignedAgentsForPersistsnce(agent, assigned_agents)
                 
                 if(new_assigned_agents.length > 0){
                     persistence.saveAssignedAgents(new_assigned_agents);
@@ -430,14 +430,14 @@ async removeAgentFromRoute(e, agent){
                 //Refactor  ---------------------------------------------------------------------
 
                 //unsubscribe from agents channel
-                this.pubnub.unsubscribe({
+                pubnub.unsubscribe({
                     channels: [agent.agent._id]
                 })
 
                 //End Refactor  ---------------------------------------------------------------------
 
 
-                var route_response_array = this.state.route_responses_from_agents;
+                var route_response_array = state.route_responses_from_agents;
   
                 route_response_array.splice(route_response_array.indexOf(route_response),1);
 
@@ -446,7 +446,7 @@ async removeAgentFromRoute(e, agent){
 
 
                 //we set state and update the monitoring grid and the laser agents list
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "Agent " +agent.agent.firstname +" was successfully removed from monitoring the emergency",
                     monitoring_grid: result[0],
@@ -456,20 +456,20 @@ async removeAgentFromRoute(e, agent){
                     route_responses_from_agents: route_response_array
                 })
 
-                this.hideLoading();
+                hideLoading();
             }
 
             if(save_result.data === "unsuccessful"){
-                this.hideLoading();
-                this.setState({
+                hideLoading();
+                setState({
                     action: "message",
                     action_message: "An error occurred removing the agent from the emergency"
                 })
             }
         }
         else{
-            this.hideLoading();
-            this.setState({
+            hideLoading();
+            setState({
                 action: "message",
                 action_message: "An error occurred removing the agent from the emergency"
             })
@@ -477,8 +477,8 @@ async removeAgentFromRoute(e, agent){
 
     }
     else{
-        this.hideLoading();
-        this.setState({
+        hideLoading();
+        setState({
             action: "message",
             action_message: "An error occurred removing the agent from the emergency"
         })
@@ -486,13 +486,13 @@ async removeAgentFromRoute(e, agent){
   }
   
   async addAgentToMonitoring(e, agent){
-      const monitored_result = this.utils.checkIfEmergencyMonitoredByBrowserAdmin(this.browserAdmin._id, this.state.monitoring_grid);
+      const monitored_result = utils.checkIfEmergencyMonitoredByBrowserAdmin(browserAdmin._id, state.monitoring_grid);
 
       if(monitored_result){
-        var check_result = await this.utils.checkIfOtherAdminIsUsingAgent(this.browserAdmin._id, agent, this.state.monitoring_grid);
+        var check_result = await utils.checkIfOtherAdminIsUsingAgent(browserAdmin._id, agent, state.monitoring_grid);
       
         if(check_result){
-            this.setState({
+            setState({
                 action: "message",
                 action_message: "Another admin has assigned agent " +agent.agent.firstname +" to an emergency"
             })
@@ -500,7 +500,7 @@ async removeAgentFromRoute(e, agent){
         else{
                 //we continue
                 //add agent to monitoring grid and save on the server
-                const grid_and_agents_array = await this.utils.setAgentOnMonitoringGridAndChangeAgentStatus(agent, this.state.monitoring_grid, this.browserAdmin._id, this.state.laser_agents);
+                const grid_and_agents_array = await utils.setAgentOnMonitoringGridAndChangeAgentStatus(agent, state.monitoring_grid, browserAdmin._id, state.laser_agents);
 
                 var new_monitoring_grid = grid_and_agents_array[0];
                 var new_laser_agents = grid_and_agents_array[1];
@@ -509,7 +509,7 @@ async removeAgentFromRoute(e, agent){
                 
                 if(result.data==="successful"){
                     //we get the emregency monitored from the monitoring grid which is the central source of truth
-                    const emergency_full_row = await this.utils.getAdminEmergencyMonitored(this.browserAdmin._id, this.state.monitoring_grid);
+                    const emergency_full_row = await utils.getAdminEmergencyMonitored(browserAdmin._id, state.monitoring_grid);
 
                     var emergency_monitored = emergency_full_row.emergency;
 
@@ -519,7 +519,7 @@ async removeAgentFromRoute(e, agent){
 
                         //we tell the agent to open the new route and go to the emergency or call
                         try{
-                            const result = await this.pubnub.publish({
+                            const result = await pubnub.publish({
                                 message: {
                                     pn_gcm: {
                                         data: {
@@ -542,7 +542,7 @@ async removeAgentFromRoute(e, agent){
                         //Refactor End  ---------------------------------------------------------------------
 
                         //we subscribe the admin to the agents id channel
-                        var list = this.state.channels_list;
+                        var list = state.channels_list;
 
                         if(list.indexOf(agent.agent._id)===-1){
                             list.push(agent.agent._id)
@@ -550,7 +550,7 @@ async removeAgentFromRoute(e, agent){
 
                         //Refactor  ---------------------------------------------------------------------
 
-                        this.pubnub.subscribe({
+                        pubnub.subscribe({
                             channels: list
                         })
 
@@ -560,12 +560,12 @@ async removeAgentFromRoute(e, agent){
                         //persist agents incase the user reloads the page or closes the browser
                         var assigned_agents = persistence.getAssignedAgents();
 
-                        var new_assigned_agents = this.utils.addAgentToListOfAssignedAgentsForPersistence(agent, assigned_agents)
+                        var new_assigned_agents = utils.addAgentToListOfAssignedAgentsForPersistence(agent, assigned_agents)
                         
                         persistence.saveAssignedAgents(new_assigned_agents);
 
                         //we then update state
-                        this.setState({
+                        setState({
                             monitoring_grid: new_monitoring_grid,
                             laser_agents: new_laser_agents,
                             //channels_list: list,
@@ -578,7 +578,7 @@ async removeAgentFromRoute(e, agent){
                 if(result.data==="unsuccessful"){
                     //the grid was NOT successfully saved 
                         //show message
-                        this.setState({
+                        setState({
                             action: "message",
                             action_message: "The system could NOT successfully assign the agent to the emergency"
                         })
@@ -594,19 +594,19 @@ async removeAgentFromRoute(e, agent){
         
         try{
             //check if another admin is monitoring the emergency
-            const boolean_value = await this.utils.checkIfEmergencyMonitoredByOtherAdmin(this.state.monitoring_grid, item, this.browserAdmin._id);
+            const boolean_value = await utils.checkIfEmergencyMonitoredByOtherAdmin(state.monitoring_grid, item, browserAdmin._id);
 
             if(boolean_value){
                 //the emergency is being monitored by another admin
                 //tell the browser admin about this
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "Another admin is already monitoring the selected emergency"
                 })
             }
             else{
                 //we continue by editing the monitoring_grid and persisting it
-                const new_monitoring_grid = await this.utils.setEmergencyOnMonitoringGrid(item, this.state.monitoring_grid, this.browserAdmin._id);
+                const new_monitoring_grid = await utils.setEmergencyOnMonitoringGrid(item, state.monitoring_grid, browserAdmin._id);
                 
                 const result = await API.saveMonitoringGrid(new_monitoring_grid);
                 
@@ -616,7 +616,7 @@ async removeAgentFromRoute(e, agent){
                     //subscribe to channel if user chose to be tracked
                     //show message
 
-                    var list = this.state.channels_list ? this.state.channels_list : [];
+                    var list = state.channels_list ? state.channels_list : [];
 
                     //we subscribe to the items channel ONLY if the item is trackable
                     if(item.is_trackable){ 
@@ -629,14 +629,14 @@ async removeAgentFromRoute(e, agent){
 
                         //Refactor  ---------------------------------------------------------------------
 
-                        this.pubnub.subscribe({
+                        pubnub.subscribe({
                             channels: list
                         })
 
                         //Refactor End  ---------------------------------------------------------------------
                     }
                     
-                    this.setState({
+                    setState({
                         action: "message",
                         action_message: "You are now monitoring "+item.full_name,
                         channels_list: list,
@@ -647,7 +647,7 @@ async removeAgentFromRoute(e, agent){
                 if(result.data==="unsuccessful"){
                     //the grid was NOT successfully saved 
                     //show message
-                    this.setState({
+                    setState({
                         action: "message",
                         action_message: "The system could not initiate the monitoring of that emergency"
                     })
@@ -658,18 +658,20 @@ async removeAgentFromRoute(e, agent){
         catch(err){
             console.log({err})
             //show message
-            this.setState({
+            setState({
                 action: "message",
                 action_message: "Error occurred initiating monitoring of emergency"
             })
         }
   }
 
+  //---------------Joshua-------------------
+
   //this is not showing the agents in the same lga
   getAgentsAroundEmergency(){
     //show the agents around an emergency
     //search to see if an emergency is being monitored by the admin browser
-    this.utils.checkIfEmergencyMonitoredByBrowserAdmin(this.browserAdmin._id, this.state.monitoring_grid)
+    utils.checkIfEmergencyMonitoredByBrowserAdmin(browserAdmin._id, state.monitoring_grid)
                 .then( async (boolean_value) => {
                     if(boolean_value){
 
@@ -678,7 +680,7 @@ async removeAgentFromRoute(e, agent){
                         //ideally this shiuld be sent to those agents in the emergency's LGA
                         //for now we are publishing to all agents 
                      try{
-                        const result = await this.pubnub.publish(
+                        const result = await pubnub.publish(
                         {
                             message: {
                                 pn_gcm: {
@@ -689,7 +691,7 @@ async removeAgentFromRoute(e, agent){
                                     }
                                 }
                             },
-                            channel: this.state.tracked_area,
+                            channel: state.tracked_area,
                             sendByPost: false, // true to send via POST
                             storeInHistory: false //override default storage     
                         })
@@ -701,20 +703,20 @@ async removeAgentFromRoute(e, agent){
                         //Refactor End  ---------------------------------------------------------------------
 
 
-                        this.utils.getAdminEmergencyMonitored(this.browserAdmin._id, this.state.monitoring_grid)
+                        utils.getAdminEmergencyMonitored(browserAdmin._id, state.monitoring_grid)
                                 .then(emergency_monitored => {
                                     //admin is monitoring an emergency or call
                                     //check for the agents in emergency LGA
-                                    this.utils.setAgentsInFocus(this.state.agents_in_focus, emergency_monitored.emergency, this.state.laser_agents)
+                                    utils.setAgentsInFocus(state.agents_in_focus, emergency_monitored.emergency, state.laser_agents)
                                         .then(result => {
                                             //we set the state for the laser agents and the agents in focus
-                                            this.setState({
+                                            setState({
                                                 laser_agents: result[0],
                                                 agents_in_focus: result[1]
                                             })
                                         })
                                         .catch(err => {
-                                            this.setState({
+                                            setState({
                                                 action: "message",
                                                 action_message: "An error occurred seeking agents around emergency"
                                             })
@@ -725,14 +727,14 @@ async removeAgentFromRoute(e, agent){
                                 })
                     }
                     else{
-                        this.setState({
+                        setState({
                             action: "message",
                             action_message: "You are NOT monitoring any emergency or call"
                         })
                     }
                 })
                 .catch(err => {
-                    this.setState({
+                    setState({
                         action: "message",
                         action_message: "An error occurred seeking agents around emergency"
                     })
@@ -742,7 +744,7 @@ async removeAgentFromRoute(e, agent){
   latestClicked(item){
       switch(item.laser_type){
           case "emergency":
-              this.setState({
+              setState({
                 clicked_user: item,
                 side_bar_open: true,
                 location_side_bar_open: false,
@@ -758,7 +760,7 @@ async removeAgentFromRoute(e, agent){
               })
               break;
           case "call":
-              this.setState({
+              setState({
                 clicked_user: item,
                 side_bar_open: false,
                 location_side_bar_open: true,
@@ -777,7 +779,7 @@ async removeAgentFromRoute(e, agent){
   }
 
   openManualLocation(){
-      this.setState({
+      setState({
             manual_location_side_bar: true,
             side_bar_open: false,
             location_side_bar_open: false,
@@ -786,7 +788,7 @@ async removeAgentFromRoute(e, agent){
   }
   
   onCalendarOpen(){
-      this.setState({
+      setState({
         play_sound: false,
         side_bar_open: false, 
         location_side_bar_open: false,
@@ -800,7 +802,7 @@ async removeAgentFromRoute(e, agent){
     date = new Date(date);
     date.setHours(date.getHours() + 1);
 
-     this.setState({
+     setState({
         play_sound: false,
         date: date,
         show_red_circle: false,
@@ -812,8 +814,8 @@ async removeAgentFromRoute(e, agent){
         selected_emergency:"Emergencies (All)"
      })
 
-     this.getLocationsDate(date);
-     this.getEmergenciesDate(date);
+     getLocationsDate(date);
+     getEmergenciesDate(date);
   }
 
   onCallsChanged(event){
@@ -823,9 +825,9 @@ async removeAgentFromRoute(e, agent){
 
       let arr = [];
 
-      if(this.state.locations.length>0){
+      if(state.locations.length>0){
           if(value==="Calls (All)"){
-            this.setState(state => ({
+            setState(state => ({
               play_sound: false,
               filtered_locations: state.locations,
               side_bar_open: false, 
@@ -836,7 +838,7 @@ async removeAgentFromRoute(e, agent){
             }))
           }
           else if(value==="None"){
-            this.setState({
+            setState({
               play_sound: false,
               filtered_locations: [],
               side_bar_open: false, 
@@ -847,14 +849,14 @@ async removeAgentFromRoute(e, agent){
             })
           }
           else{
-            this.state.locations.map(emer => {
+            state.locations.map(emer => {
               if(emer.reason.includes(value.toLowerCase())){
                 arr.push(emer)
               }
             })
             
             if(arr.length>0){
-              this.setState({
+              setState({
                 play_sound: false,
                 filtered_locations: arr,
                 selected_call: value,
@@ -867,7 +869,7 @@ async removeAgentFromRoute(e, agent){
             else{
               //show message that there are no locations found for that parameter
       
-              this.setState({
+              setState({
                   play_sound: false,
                   filtered_locations:[],
                   selected_call: value,
@@ -879,7 +881,7 @@ async removeAgentFromRoute(e, agent){
           }
       }
       else{
-          this.setState({
+          setState({
               selected_call: value
           })
       }
@@ -891,9 +893,9 @@ async removeAgentFromRoute(e, agent){
       const name = target.name;
       
       let arr = [];
-      if(this.state.emergencies.length>0){
+      if(state.emergencies.length>0){
           if(value==="Emergencies (All)"){
-            this.setState(state => ({
+            setState(state => ({
               play_sound: false,
               filtered_emergencies: state.emergencies,
               side_bar_open: false, 
@@ -904,7 +906,7 @@ async removeAgentFromRoute(e, agent){
             }))
           }
           else if(value==="None"){
-            this.setState({
+            setState({
               play_sound: false,
               filtered_emergencies:[],
               selected_emergency: value,
@@ -915,7 +917,7 @@ async removeAgentFromRoute(e, agent){
             })
           }
           else{
-            this.state.emergencies.map(emer => {
+            state.emergencies.map(emer => {
               if(emer.reasons&&emer.reasons.length>0){
                 emer.reasons.map(reason => {
                     if(value.toLowerCase().includes(reason)){
@@ -926,7 +928,7 @@ async removeAgentFromRoute(e, agent){
             })
       
             if(arr.length>0){
-              this.setState({
+              setState({
                 play_sound: false,
                 filtered_emergencies:arr,
                 selected_emergency: value,
@@ -939,7 +941,7 @@ async removeAgentFromRoute(e, agent){
             else{
               //show message that there are no emregencies found for that parameter
       
-              this.setState({
+              setState({
                   play_sound: false,
                   filtered_emergencies: [],
                   side_bar_open: false, 
@@ -952,7 +954,7 @@ async removeAgentFromRoute(e, agent){
           }
       }    
       else{
-          this.setState({
+          setState({
              selected_emergency: value
           })
       }
@@ -960,7 +962,7 @@ async removeAgentFromRoute(e, agent){
 
   //formerly onLocationClicked
   onCallClicked(location,e){
-    this.setState({
+    setState({
         play_sound: false,
         clicked_user: location,
         clicked_agent: {},
@@ -980,7 +982,7 @@ async removeAgentFromRoute(e, agent){
   }
 
   onEmergencyClicked(emergency,e){
-    this.setState({
+    setState({
         play_sound: false,
         clicked_user: emergency,
         clicked_agent: {},
@@ -1000,7 +1002,7 @@ async removeAgentFromRoute(e, agent){
   }
 
   onAgentClicked(agent,e){
-      this.setState({
+      setState({
           play_sound: false,
           clicked_agent: agent,
           manual_location_side_bar: false,
@@ -1011,14 +1013,14 @@ async removeAgentFromRoute(e, agent){
   getLocationsMarkers(){
         let locations_ui;
 
-        if(this.state.filtered_locations.length>0){
-            locations_ui = this.state.filtered_locations.map(loc => {
-                return  <Marker key={loc._id} onClick={e => this.onCallClicked(loc,e)}
+        if(state.filtered_locations.length>0){
+            locations_ui = state.filtered_locations.map(loc => {
+                return  <Marker key={loc._id} onClick={e => onCallClicked(loc,e)}
                             name={loc.reason} 
                             title={loc.full_name}
                             position={{lat: loc.latitude, lng: loc.longitude}}
                             icon={{
-                                url: (this.state.clicked_marker_id===loc._id) ? blue_circle : call_icon
+                                url: (state.clicked_marker_id===loc._id) ? blue_circle : call_icon
                             }}/> 
             })
         }
@@ -1032,15 +1034,15 @@ async removeAgentFromRoute(e, agent){
   getEmergenciesMarkers(){
       let emergencies_ui;
 
-      if(this.state.filtered_emergencies.length>0){
-          emergencies_ui = this.state.filtered_emergencies.map(emer => {
+      if(state.filtered_emergencies.length>0){
+          emergencies_ui = state.filtered_emergencies.map(emer => {
             
-            return <Marker key={emer._id} onClick={e => this.onEmergencyClicked(emer,e)}
+            return <Marker key={emer._id} onClick={e => onEmergencyClicked(emer,e)}
                       name={emer.reasons[0]} 
                       title={emer.full_name}
                       position={{lat: emer.latitude, lng: emer.longitude}}
                       icon={{
-                        url: (this.state.clicked_marker_id===emer._id) ? red_circle : emergency_icon
+                        url: (state.clicked_marker_id===emer._id) ? red_circle : emergency_icon
                       }}/>
           })
       }
@@ -1054,18 +1056,18 @@ async removeAgentFromRoute(e, agent){
   getAgentMarkers(){
       let agents_ui;
 
-      if(this.state.laser_agents.length>0){
-            agents_ui = this.state.laser_agents.map((agent,i) => {
+      if(state.laser_agents.length>0){
+            agents_ui = state.laser_agents.map((agent,i) => {
                 
-                return <Marker key={i}  onClick={e => this.onAgentClicked(agent,e)}
+                return <Marker key={i}  onClick={e => onAgentClicked(agent,e)}
                             name={agent.full_address} 
                             title={agent.full_address}
                             position={{lat: agent.latitude, lng: agent.longitude}}
                             //
                             icon={{
-                                url: this.getAgentIcon(agent),
-                                anchor: new this.props.google.maps.Point(40,40),
-                                scaledSize: new this.props.google.maps.Size(40,40)
+                                url: getAgentIcon(agent),
+                                anchor: new props.google.maps.Point(40,40),
+                                scaledSize: new props.google.maps.Size(40,40)
                             }}/>
             })
       }
@@ -1132,9 +1134,9 @@ async removeAgentFromRoute(e, agent){
             }
       }
   }
-
+//-----------------NICKY-----------
   hideConfirm(){
-    this.setState({
+    setState({
         showConfirm: {
           action: "",
           status: false
@@ -1144,14 +1146,14 @@ async removeAgentFromRoute(e, agent){
 }
 
   closeAction(e){
-      this.setState({
+      setState({
           action: "close",
           action_message: ""
       })
   }
 
   closeSideBar(e){
-      this.setState({
+      setState({
           play_sound: false,
           side_bar_open: false,
           location_side_bar_open: false,
@@ -1164,14 +1166,14 @@ async removeAgentFromRoute(e, agent){
   }
 
   closeAgentSideBar(e){
-      this.setState({
+      setState({
           clicked_agent: {},
           agent_side_bar_open: false
       })
   }
 
   closeRouteResponse(route_response){
-      this.setState(state => {
+      setState(state => {
           var array = state.route_responses_from_agents;
 
           array.splice(array.indexOf(route_response),1);
@@ -1192,77 +1194,77 @@ async removeAgentFromRoute(e, agent){
 
   //we get the monitoring grid from the server and update our variables
   async getMonitoringGridFromServerAndReconcileAssignedAgents(){
-        this.showLoading();
+        showLoading();
         const response = await API.getMonitoringGrid();
 
         if(response){
-            this.setUpAssignedAgentsIfAny(response.data);
+            setUpAssignedAgentsIfAny(response.data);
            
-            this.utils.getAdminEmergencyMonitored(this.browserAdmin._id, response.data)
+            utils.getAdminEmergencyMonitored(browserAdmin._id, response.data)
                     .then(emergency_full_row => {
                         var admin_emergency = emergency_full_row.emergency;
 
                         if(admin_emergency){
                             
                             //we need to subscribe to the emergencies user id to receive location updates
-                            if(this.state.channels_list.indexOf(admin_emergency.user) === -1){
-                                var list = this.state.channels_list.concat([admin_emergency.user]);
+                            if(state.channels_list.indexOf(admin_emergency.user) === -1){
+                                var list = state.channels_list.concat([admin_emergency.user]);
                                 
                                 //Refactor  ---------------------------------------------------------------------
 
-                                this.pubnub.subscribe({
+                                pubnub.subscribe({
                                     channels: list
                                 })
 
                                 //Refactor End ---------------------------------------------------------------------
             
-                                this.setState({
+                                setState({
                                     action: "message",
                                     action_message: "You are monitoring "+admin_emergency.full_name,
                                     monitoring_grid: response.data,
                                     channels_list: list
                                 })
-                                this.hideLoading();
+                                hideLoading();
                             }
                             else{
 
                                 //Refactor  ---------------------------------------------------------------------
 
-                                this.pubnub.subscribe({
-                                    channels: this.state.channels_list
+                                pubnub.subscribe({
+                                    channels: state.channels_list
                                 })
 
                                 //Refactor End  ---------------------------------------------------------------------
             
-                                this.setState({
+                                setState({
                                     action: "message",
                                     action_message: "You are monitoring "+admin_emergency.full_name,
                                     monitoring_grid: response.data
                                 })
-                                this.hideLoading();
+                                hideLoading();
                             }
                         }
                         else{
-                            this.setState({
+                            setState({
                                 monitoring_grid: response.data
                             })
-                            this.hideLoading();
+                            hideLoading();
                         }
                     })
                     .catch(err => {
-                        this.setState({
+                        setState({
                             monitoring_grid: response.data
                         })
-                        this.hideLoading();
+                        hideLoading();
                     })
         }
         else{
             //show appropriate message
-            this.setState({
+            setState({
                 action: "message",
                 action_message: "An error occurred. Please check the network."
             })
-            this.hideLoading();
+            hideLoading();
         }
   }
 
@@ -1270,7 +1272,7 @@ async removeAgentFromRoute(e, agent){
       var assigned_agents = persistence.getAssignedAgents();
 
       if(assigned_agents && assigned_agents.length > 0){
-            var result = await this.utils.reconcileAssignedAgentsListWithMonitoringGrid(this.browserAdmin._id, assigned_agents, monitoring_grid);
+            var result = await utils.reconcileAssignedAgentsListWithMonitoringGrid(browserAdmin._id, assigned_agents, monitoring_grid);
     
             //result[0] //assigned agents list
             //result[1] //laser agents
@@ -1279,17 +1281,17 @@ async removeAgentFromRoute(e, agent){
                 persistence.saveAssignedAgents(result[0]);
 
                 //we subscribe to the id of each agent
-                var list = this.state.channels_list.concat(result[0]);
+                var list = state.channels_list.concat(result[0]);
                 
                 //Refactor  ---------------------------------------------------------------------
 
-                this.pubnub.subscribe({
+                pubnub.subscribe({
                     channels: list
                 })
 
                 //Refactor End  ---------------------------------------------------------------------
 
-                this.setState({
+                setState({
                     laser_agents: result[1],
                     channels_list: list
                 })
@@ -1297,7 +1299,7 @@ async removeAgentFromRoute(e, agent){
             else{
                 persistence.deleteAssignedAgents();
 
-                this.setState({
+                setState({
                     laser_agents: result[1]
                 })
             }
@@ -1308,8 +1310,8 @@ async removeAgentFromRoute(e, agent){
 
       //Refactor  ---------------------------------------------------------------------
 
-      this.pubnub.unsubscribe({
-          channels: this.state.channels_list
+      pubnub.unsubscribe({
+          channels: state.channels_list
       });
 
       //Refactor End  ---------------------------------------------------------------------
@@ -1320,36 +1322,36 @@ async removeAgentFromRoute(e, agent){
     //Refactor  ---------------------------------------------------------------------
 
     //subscribe to the parent channel to receive location updates from agents
-    this.pubnub.subscribe({
-        channels: this.state.channels_list
+    pubnub.subscribe({
+        channels: state.channels_list
     })
 
     //Refactor End  ---------------------------------------------------------------------
 
-    this.setState({
+    setState({
         laser_agents: []
     })
 
-    this.getMonitoringGridFromServerAndReconcileAssignedAgents();
+    getMonitoringGridFromServerAndReconcileAssignedAgents();
 
     var responses = persistence.getCompletedEmergenciesResponse();
 
     if(responses && responses.length > 0){
-        this.setState({
+        setState({
             route_responses_from_agents: responses
         })
     }
 
     //Refactor  ---------------------------------------------------------------------
 
-    this.pubnub.addListener({
+    pubnub.addListener({
       status: (st) => {
             if(st.category === "PNNetworkUpCategory"){
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "You are back online."
                 })
-                this.getMonitoringGridFromServerAndReconcileAssignedAgents();
+                getMonitoringGridFromServerAndReconcileAssignedAgents();
             }
 
             if(st.category === "PNConnectedCategory"){
@@ -1357,29 +1359,29 @@ async removeAgentFromRoute(e, agent){
             }
 
             if (st.category === "PNReconnectedCategory") {
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "You are back online."
                 })
-                this.getMonitoringGridFromServerAndReconcileAssignedAgents();
+                getMonitoringGridFromServerAndReconcileAssignedAgents();
             }
 
             if (st.category === "PNNetworkIssuesCategory") {
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "It appears there is a network issue."
                 })
             }
 
             if (st.category === "PNNetworkDownCategory") {
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "It appears the network is down."
                 })
             }
 
             if (st.category === "PNTimeoutCategory") {
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "Could not connect to the internet."
                 })
@@ -1387,12 +1389,12 @@ async removeAgentFromRoute(e, agent){
       },
       message: (message) => {
 
-          /*var tracked_user_id = this.state.tracked_users.find(id => id === message.channel);
+          /*var tracked_user_id = state.tracked_users.find(id => id === message.channel);
 
           if(tracked_user_id){
                 //the message is from a user currently being monitored
                 if(message.userMetadata && message.userMetadata.action === "user_location_update"){
-                    var arr = this.state.emergencies.map(emergency => {
+                    var arr = state.emergencies.map(emergency => {
                         if(emergency.user === tracked_user_id){
                             emergency.latitude = message.message.latitude;
                             emergency.longitude = message.message.longitude;
@@ -1405,7 +1407,7 @@ async removeAgentFromRoute(e, agent){
 
                     //var found_emergency = state.emergencies.find(emergency => emergency.user === state.tracked_user_id);
 
-                    this.setState(state => {
+                    setState(state => {
                         return{
                             emergencies: arr
                         }
@@ -1413,14 +1415,14 @@ async removeAgentFromRoute(e, agent){
                 }
           }*/
 
-          this.utils.getAdminEmergencyMonitored(this.browserAdmin._id, this.state.monitoring_grid)
+          utils.getAdminEmergencyMonitored(browserAdmin._id, state.monitoring_grid)
                         .then(emergency_full_row => {
                             var emergency_monitored = emergency_full_row.emergency;
 
                             if(message.channel === emergency_monitored._id ){
                                 if(message.userMetadata && message.userMetadata.action === "user_location_update"){
                                     
-                                    var arr = this.state.emergencies.map(emergency => {
+                                    var arr = state.emergencies.map(emergency => {
                                         if(emergency.user === emergency_monitored.user){
                                             emergency.latitude = message.message.latitude;
                                             emergency.longitude = message.message.longitude;
@@ -1433,7 +1435,7 @@ async removeAgentFromRoute(e, agent){
                 
                                     //var found_emergency = state.emergencies.find(emergency => emergency.user === state.tracked_user_id);
                 
-                                    this.setState(state => {
+                                    setState(state => {
                                         return{
                                             emergencies: arr
                                         }
@@ -1445,7 +1447,7 @@ async removeAgentFromRoute(e, agent){
 
                         })
           
-          //if(message.channel === this.state.tracked_area ){
+          //if(message.channel === state.tracked_area ){
             
               if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
                   try{
@@ -1454,10 +1456,10 @@ async removeAgentFromRoute(e, agent){
                   catch(err){
 
                   }
-                  this.utils.updateAgentLocation(message.message, this.state.laser_agents, this.state.monitoring_grid, this.browserAdmin._id)
+                  utils.updateAgentLocation(message.message, state.laser_agents, state.monitoring_grid, browserAdmin._id)
                             .then(sorted_agents => {
                                 
-                                this.setState(state => {
+                                setState(state => {
                                     return {
                                         laser_agents: sorted_agents
                                     }
@@ -1475,19 +1477,19 @@ async removeAgentFromRoute(e, agent){
                 var emergency_agent = message.message;
 
                 if(message.channel === emergency_agent._id ){
-                    this.showLoading();
+                    showLoading();
 
                     var assigned_agents = persistence.getAssignedAgents();
 
                     //we get the agent full profile from the persisted listof assigned agents
-                    this.utils.getAgentFromAssignedAgentsInPersistence(assigned_agents, emergency_agent._id)
+                    utils.getAgentFromAssignedAgentsInPersistence(assigned_agents, emergency_agent._id)
                                 .then(agent_found =>{
                                     //we proceed to remove the agent from the emergency and update the monitoring grid and all other parts of the system
-                                    this.removeAgentFromEmergencyAfterDecliningRequest(agent_found);
+                                    removeAgentFromEmergencyAfterDecliningRequest(agent_found);
                                 })
                                 .catch(err => {
-                                    this.hideLoading();
-                                    this.setState({
+                                    hideLoading();
+                                    setState({
                                         action: "message",
                                         action_message: "Agent " +emergency_agent.firstname +" declined to attend to emergency but an error occurred updating the system. Please manually remove the agent from emergency"
                                     })
@@ -1500,13 +1502,13 @@ async removeAgentFromRoute(e, agent){
 
                 var responses = persistence.getCompletedEmergenciesResponse();
 
-                this.utils.getAdminEmergencyMonitored(this.browserAdmin._id, this.state.monitoring_grid)
+                utils.getAdminEmergencyMonitored(browserAdmin._id, state.monitoring_grid)
                         .then(emergency_monitored => {
 
                             var assigned_agents = persistence.getAssignedAgents();
 
                             //we get the agent full profile from the persisted listof assigned agents
-                            this.utils.getAgentFromAssignedAgentsInPersistence(assigned_agents, message.message._id)
+                            utils.getAgentFromAssignedAgentsInPersistence(assigned_agents, message.message._id)
                                         .then(agent_found =>{
                                             if(responses && responses.length > 0){
                                                 responses.push({agent:agent_found, user: emergency_monitored.emergency});
@@ -1517,7 +1519,7 @@ async removeAgentFromRoute(e, agent){
                             
                                             persistence.saveCompletedEmergenciesResponse(responses);
                             
-                                            this.setState({
+                                            setState({
                                                 route_responses_from_agents: responses
                                             })
                                         })
@@ -1558,7 +1560,7 @@ async removeAgentFromRoute(e, agent){
       data => {
          if(data){
             console.log({data});
-             this.setState(state => {
+             setState(state => {
                 let arr = state.emergencies;
                 let lat = state.latest;
                 
@@ -1584,7 +1586,7 @@ async removeAgentFromRoute(e, agent){
     socket.on("call", 
       data => {
         if(data){
-            this.setState(state => {
+            setState(state => {
               let arr = state.locations;
               let lat = state.latest;
               
@@ -1608,10 +1610,10 @@ async removeAgentFromRoute(e, agent){
     );
 
     socket.on("monitoring_update", (id) => {
-        if(id !== this.browserAdmin._id){
+        if(id !== browserAdmin._id){
             //pull the monitoring grid and re-evaluate variables
             //show loading UI
-            this.showLoading();
+            showLoading();
 
             var monitoring_grid = [];
 
@@ -1619,41 +1621,41 @@ async removeAgentFromRoute(e, agent){
                 .then(response => {
                     monitoring_grid = response.data;
 
-                    this.utils.reconcileAllAgentsWithMonitoringGrid(this.state.laser_agents, response.data, this.browserAdmin._id)
+                    utils.reconcileAllAgentsWithMonitoringGrid(state.laser_agents, response.data, browserAdmin._id)
                             .then(lasers => {
-                                this.setState({
+                                setState({
                                     monitoring_grid: monitoring_grid,
                                     laser_agents: lasers      
                                 })
 
-                                this.hideLoading();
+                                hideLoading();
                             })
                             .catch(err => {
-                                this.setState({
+                                setState({
                                     monitoring_grid: monitoring_grid         
                                 })
 
-                                this.hideLoading();
+                                hideLoading();
                             })
                 })
                 .catch(err => {
-                    this.setState({
+                    setState({
                         monitoring_grid: monitoring_grid         
                     })
 
-                    this.hideLoading();
+                    hideLoading();
                 })
         }
     });
 
-    this.getLocations();
-    this.getEmergencies();
+    getLocations();
+    getEmergencies();
   }
-
+//
   async removeAgentFromEmergencyAfterDecliningRequest(agent){
-        this.showLoading();
+        showLoading();
 
-        const result = await this.utils.removeAgentFromBrowserAdminMonitoringGrid(agent, this.browserAdmin._id, this.state.monitoring_grid, this.state.laser_agents);
+        const result = await utils.removeAgentFromBrowserAdminMonitoringGrid(agent, browserAdmin._id, state.monitoring_grid, state.laser_agents);
         
         if(result){
             //result[0] //monitoring_grid
@@ -1666,7 +1668,7 @@ async removeAgentFromRoute(e, agent){
                     //persist agents incase the user reloads the page or closes the browser
                     var assigned_agents = persistence.getAssignedAgents();
 
-                    var new_assigned_agents = this.utils.removeAgentFromListOfAssignedAgentsForPersistsnce(agent, assigned_agents)
+                    var new_assigned_agents = utils.removeAgentFromListOfAssignedAgentsForPersistsnce(agent, assigned_agents)
                     
                     if(new_assigned_agents.length > 0){
                         persistence.saveAssignedAgents(new_assigned_agents);
@@ -1678,14 +1680,14 @@ async removeAgentFromRoute(e, agent){
                     //Refactor  ---------------------------------------------------------------------
 
                     //unsubscribe from agents channel
-                    this.pubnub.unsubscribe({
+                    pubnub.unsubscribe({
                         channels: [agent.agent._id]
                     })
 
                     //Refactor End  ---------------------------------------------------------------------
 
                     //we set state and update the monitoring grid and the laser agents list
-                    this.setState({
+                    setState({
                         action: "message",
                         action_message: "Agent " +agent.agent.firstname +" declined the request to attend to the emergency",
                         monitoring_grid: result[0],
@@ -1694,20 +1696,20 @@ async removeAgentFromRoute(e, agent){
                         clicked_agent: {},
                     })
 
-                    this.hideLoading();
+                    hideLoading();
                 }
 
                 if(save_result.data === "unsuccessful"){
-                    this.hideLoading();
-                    this.setState({
+                    hideLoading();
+                    setState({
                         action: "message",
                         action_message: "An error occurred removing the agent from the emergency"
                     })
                 }
             }
             else{
-                this.hideLoading();
-                this.setState({
+                hideLoading();
+                setState({
                     action: "message",
                     action_message: "An error occurred removing the agent from the emergency"
                 })
@@ -1715,20 +1717,20 @@ async removeAgentFromRoute(e, agent){
 
         }
         else{
-            this.hideLoading();
-            this.setState({
+            hideLoading();
+            setState({
                 action: "message",
                 action_message: "An error occurred removing the agent from the emergency"
             })
         }
   }
-
+//done
 
   async getLocationsDate(date){
         const response = await API.getLocations({date})
         
         if(response=="error"){
-            this.setState({
+            setState({
                 action: "err_calls_load",
                 locations: [],
                 filtered_locations: []
@@ -1738,22 +1740,22 @@ async removeAgentFromRoute(e, agent){
         }
 
         if(response&&response.data&&response.data.locations){
-            if(this.state.action === "loading"){
-                this.setState({
+            if(state.action === "loading"){
+                setState({
                     action: "close",
                     locations: response.data.locations,
                     filtered_locations: response.data.locations
                 })
             }
             else{
-                this.setState({
+                setState({
                     locations: response.data.locations,
                     filtered_locations: response.data.locations
                 })
             }
         }
         else{
-            this.setState({
+            setState({
                 action: "close",
                 locations: [],
                 filtered_locations: []
@@ -1765,7 +1767,7 @@ async removeAgentFromRoute(e, agent){
         const response = await API.getEmergencies({date})
         
         if(response=="error"){
-            this.setState({
+            setState({
                 action: "err_emergency_load",
                 emergencies: [],
                 filtered_emergencies: []
@@ -1774,22 +1776,22 @@ async removeAgentFromRoute(e, agent){
         }
 
         if(response&&response.data&&response.data.emergencies){
-            if(this.state.action === "loading"){
-                this.setState({
+            if(state.action === "loading"){
+                setState({
                     action: "close",
                     emergencies: response.data.emergencies,
                     filtered_emergencies: response.data.emergencies
                 })
             }
             else{
-                this.setState({
+                setState({
                     emergencies: response.data.emergencies,
                     filtered_emergencies: response.data.emergencies
                 })
             }
         }
         else{
-            this.setState({
+            setState({
                 action: "close",
                 emergencies: [],
                 filtered_emergencies: []
@@ -1847,13 +1849,13 @@ async removeAgentFromRoute(e, agent){
             })
         }
   }
-
+  //joshua
   async getEmergencies(){
         const response = await API.getEmergencies({date: today})
 
         if(response=="error"){
             //show error message
-            this.setState({
+            setState({
                 action: "err_emergency_load",
                 emergencies: [],
                 filtered_emergencies: []
@@ -1862,7 +1864,7 @@ async removeAgentFromRoute(e, agent){
         }
 
         if(response&&response.data&&response.data.emergencies&&response.data.emergencies.length>0){
-            this.setState(state => {
+            setState(state => {
             var loc = state.latest;
 
             for(var i = 0; i<response.data.emergencies.length; i++){
@@ -1871,7 +1873,7 @@ async removeAgentFromRoute(e, agent){
 
             loc = utils.sortDates(loc);
 
-            if(this.state.action === "loading"){
+            if(state.action === "loading"){
                 return {
                     action: "close",
                     latest : loc,
@@ -1889,7 +1891,7 @@ async removeAgentFromRoute(e, agent){
             })
         }
         else{
-            this.setState({
+            setState({
                 action: "close",
                 emergencies: [],
                 filtered_emergencies: []
@@ -1903,7 +1905,7 @@ async removeAgentFromRoute(e, agent){
 
         if(response=="error"){
             //show error message
-            this.setState({
+            setState({
                 action: "err_calls_load",
                 locations: [],
                 filtered_locations: []
@@ -1912,7 +1914,7 @@ async removeAgentFromRoute(e, agent){
         }
 
         if(response&&response.data&&response.data.locations&&response.data.locations.length>0){
-            this.setState(state => {
+            setState(state => {
                 var loc = state.latest;
 
                 for(var i = 0; i<response.data.locations.length; i++){
@@ -1921,7 +1923,7 @@ async removeAgentFromRoute(e, agent){
 
                 loc = utils.sortDates(loc);
 
-                if(this.state.action === "loading"){
+                if(state.action === "loading"){
                     return {
                         action: "close",
                         latest : loc,
@@ -1939,7 +1941,7 @@ async removeAgentFromRoute(e, agent){
             })
         }
         else{
-            this.setState({
+            setState({
                 action: "close",
                 locations: [],
                 filtered_locations: []
@@ -1948,7 +1950,7 @@ async removeAgentFromRoute(e, agent){
   }
 
   handleSongFinishedPlaying(){
-      this.setState({
+      setState({
           play_sound: false
       })
   }
@@ -1958,7 +1960,7 @@ async removeAgentFromRoute(e, agent){
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
-    this.setState({
+    setState({
         [name]: value
     });
   }
@@ -1967,7 +1969,7 @@ async removeAgentFromRoute(e, agent){
     const target = event.target;
     const value = target.value;
 
-    this.setState({
+    setState({
         selected_manual_call: value
     })
   }
@@ -1976,7 +1978,7 @@ async removeAgentFromRoute(e, agent){
     const target = event.target;
     const value = target.value;
 
-    this.setState({
+    setState({
         selected_manual_gender: value
     })
   }
@@ -1984,40 +1986,40 @@ async removeAgentFromRoute(e, agent){
   onSubmitManualCallDetails(e){
       e.preventDefault();
 
-      if(this.state.selected_manual_call.length <= 0){
-          this.setState({
+      if(state.selected_manual_call.length <= 0){
+          setState({
               action: "message",
               action_message: "Please enter a valid reason for call from the drop down"
           });
           return;
       }
 
-      if(this.state.manual_phone.lenght <= 0){
-          this.setState({
+      if(state.manual_phone.lenght <= 0){
+          setState({
                action: "message",
                action_message: "Please enter a valid phone number"
           });
           return;
       }
 
-      if(this.state.selected_manual_gender.length <= 0){
-          this.setState({
+      if(state.selected_manual_gender.length <= 0){
+          setState({
               action: "message",
               action_message: "Please enter a valid gender"
           });
           return;
       }
 
-      if(this.state.manual_name.length <= 0){
-          this.setState({
+      if(state.manual_name.length <= 0){
+          setState({
               action: "message",
               action_message: "Please enter a valid name"
           });
           return;
       }
 
-      if(this.state.manual_address.length <= 0){
-          this.setState({
+      if(state.manual_address.length <= 0){
+          setState({
               action: "message",
               action_message: "Please enter an address"
           });
@@ -2026,31 +2028,31 @@ async removeAgentFromRoute(e, agent){
 
       //show loading
       //translate address to longitude and latitude
-      this.setState({
+      setState({
             action: "loading",
             action_message: ""
       });
 
-      Geocode.fromAddress(this.state.manual_address).then(
+      Geocode.fromAddress(state.manual_address).then(
             response => {
             const { lat, lng } = response.results[0].geometry.location;
 
             var location = {
-                action: this.state.selected_manual_call,
+                action: state.selected_manual_call,
                 longitude: lng,
                 latitude: lat,
-                full_address: this.state.manual_address,
-                full_name: this.state.manual_name,
-                phone_number: this.state.manual_phone
+                full_address: state.manual_address,
+                full_name: state.manual_name,
+                phone_number: state.manual_phone
             }
 
-            this.saveManualLocation(location);
+            saveManualLocation(location);
 
             },
             error => {
             console.error(error);
 
-            this.setState({
+            setState({
                 action: "message",
                 action_message: "We could not find that address",
                 showConfirmManualLocation: true
@@ -2060,44 +2062,44 @@ async removeAgentFromRoute(e, agent){
   }
 
   showConfirmManualLocation(){
-      this.setState({
+      setState({
           showConfirmManualLocation: true
       })
   }
 
   hideConfirmManualLocation(){
-    this.setState({
+    setState({
         showConfirmManualLocation: false
     })
   }
 
   tryAgainClicked(){
-      this.hideConfirmManualLocation();
+      hideConfirmManualLocation();
 
-      this.setState({
+      setState({
         action: "loading",
         action_message: ""
       });
 
-      Geocode.fromAddress(this.state.manual_address).then(
+      Geocode.fromAddress(state.manual_address).then(
         response => {
           const { lat, lng } = response.results[0].geometry.location;
 
           var location = {
-                action: this.state.selected_manual_call,
+                action: state.selected_manual_call,
                 longitude: lng,
                 latitude: lat,
-                full_address: this.state.manual_address,
-                full_name: this.state.manual_name,
-                phone_number: this.state.manual_phone
+                full_address: state.manual_address,
+                full_name: state.manual_name,
+                phone_number: state.manual_phone
           }
 
-          this.saveManualLocation(location);
+          saveManualLocation(location);
         },
         error => {
           console.error(error);
 
-          this.setState({
+          setState({
             action: "message",
             action_message: "We could not find that address"
           });
@@ -2106,32 +2108,32 @@ async removeAgentFromRoute(e, agent){
   }
   
   continueConfirmAddressNotFoundClicked(){
-        this.hideConfirmManualLocation();
+        hideConfirmManualLocation();
         /*
 
-        this.setState({
+        setState({
             action: "loading",
             action_message: ""
         });
 
         var location = {
-            action: this.state.selected_manual_call,
+            action: state.selected_manual_call,
             longitude: lng,
             latitude: lat,
-            full_address: this.state.manual_address,
-            full_name: this.state.manual_name,
-            phone_number: this.state.manual_phone
+            full_address: state.manual_address,
+            full_name: state.manual_name,
+            phone_number: state.manual_phone
         }
 
-        this.saveManualLocation(location);*/
+        saveManualLocation(location);*/
   }
 
   closeConfirmAddressNotFoundClicked(){
-    this.setState({
+    setState({
         action: "message",
         action_message: ""
     });
-    this.hideConfirmManualLocation();
+    hideConfirmManualLocation();
   }
 
   async saveManualLocation(location){
@@ -2139,7 +2141,7 @@ async removeAgentFromRoute(e, agent){
         
         if(response=="error"){
             //show error message
-            this.setState({
+            setState({
                 action: "message",
                 action_message: "An error occurred saving the location. Please try again"
             })
@@ -2149,14 +2151,14 @@ async removeAgentFromRoute(e, agent){
         
         if(response&&response.data){
             if(response.data.response==="out_of_lagos"){
-                this.setState({
+                setState({
                     action: "message",
                     action_message: "That location is outside Lagos State"
                 })
                 return;
             }
 
-            this.setState({
+            setState({
                 action: "message",
                 action_message: "The location has been saved and is displayed on the map",
                 selected_manual_call:"Emergency Management(LASEMA)",
@@ -2167,7 +2169,7 @@ async removeAgentFromRoute(e, agent){
                 manual_location_side_bar: false
             })
 
-            /*this.setState(state => {
+            /*setState(state => {
                 let arr = state.locations;
                 let lat = state.latest;
                 
@@ -2192,14 +2194,14 @@ async removeAgentFromRoute(e, agent){
   render(){
     let sound;
 
-    if(this.state.play_sound){
+    if(state.play_sound){
        sound = <Sound
        url={alert}
        playStatus={Sound.status.PLAYING}
        playFromPosition={1 /* in milliseconds */}
-       onLoading={this.handleSongLoading}
-       onPlaying={this.handleSongPlaying}
-       onFinishedPlaying={this.handleSongFinishedPlaying}/>;
+       onLoading={handleSongLoading}
+       onPlaying={handleSongPlaying}
+       onFinishedPlaying={handleSongFinishedPlaying}/>;
     }
     else{
       sound = "";
@@ -2207,8 +2209,8 @@ async removeAgentFromRoute(e, agent){
 
     let show_location_side_bar;
     
-    if(this.state.location_side_bar_open){
-      show_location_side_bar = <LocationSidebar closeSidebar={this.closeSideBar} startMonitoring={this.startMonitoring} location={this.state.clicked_user} resolve={this.showConfirmResolveLocation} />
+    if(state.location_side_bar_open){
+      show_location_side_bar = <LocationSidebar closeSidebar={closeSideBar} startMonitoring={startMonitoring} location={state.clicked_user} resolve={showConfirmResolveLocation} />
     }
     else{
       show_location_side_bar = "";
@@ -2216,7 +2218,7 @@ async removeAgentFromRoute(e, agent){
 
     let show_side_bar;
     
-    if(this.state.side_bar_open){
+    if(state.side_bar_open){
         
     }
     else{
@@ -2225,53 +2227,53 @@ async removeAgentFromRoute(e, agent){
 
     return (
             <div className="laser-parent-div" style={mapStyle}>
-                <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
+                <Latest latest={state.latest} latestClicked={latestClicked}/>
                 {show_location_side_bar}
                 {show_side_bar}
-                {this.state.showConfirmManualLocation ? <ConfirmAddressNotFound closeConfirmAddressNotFoundClicked={this.continueConfirmAddressNotFoundClicked} tryAgainClicked={this.continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={this.hideConfirmManualLocation} /> : ""}
-                {this.state.manual_location_side_bar ? <AddCallManually onFieldChanged={this.onFieldChanged} closeSidebar={this.closeSideBar} selected_manual_call={this.state.selected_manual_call} selected_manual_gender={this.state.selected_manual_gender} manual_address={this.state.manual_address} manual_name={this.state.manual_name} onManualCallChanged={this.onManualCallChanged} onManualGenderChanged={this.onManualGenderChanged}  onSubmitManualCallDetails={this.onSubmitManualCallDetails}/> : "" }
+                {state.showConfirmManualLocation ? <ConfirmAddressNotFound closeConfirmAddressNotFoundClicked={continueConfirmAddressNotFoundClicked} tryAgainClicked={continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={hideConfirmManualLocation} /> : ""}
+                {state.manual_location_side_bar ? <AddCallManually onFieldChanged={onFieldChanged} closeSidebar={closeSideBar} selected_manual_call={state.selected_manual_call} selected_manual_gender={state.selected_manual_gender} manual_address={state.manual_address} manual_name={state.manual_name} onManualCallChanged={onManualCallChanged} onManualGenderChanged={onManualGenderChanged}  onSubmitManualCallDetails={onSubmitManualCallDetails}/> : "" }
                 
                 { 
-                    this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" 
+                    state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={removeAgentFromRoute} closeAgentSideBar={closeAgentSideBar} addAgentToMonitoring={addAgentToMonitoring} agent={state.clicked_agent} user={state.clicked_user}/> : "" 
                 }
 
-                <TopPanel showMonitoredEmergency={this.showMonitoredEmergency} openManualLocation={this.openManualLocation} logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
-                onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAgentsAroundEmergency={this.getAgentsAroundEmergency}/>
+                <TopPanel showMonitoredEmergency={showMonitoredEmergency} openManualLocation={openManualLocation} logout={logout} onCalendarOpen={onCalendarOpen} onDateChange={onDateChange} date={state.date} selected_call={state.selected_call} 
+                onCallsChanged={onCallsChanged} selected_emergency={state.selected_emergency} onEmergenciesChanged={onEmergenciesChanged} getAgentsAroundEmergency={getAgentsAroundEmergency}/>
 
-                <Map google={this.props.google} 
+                <Map google={props.google} 
                     style={mapStyle}
-                    onReady={this.fetchPlaces}
-                    initialCenter={this.state.center}
-                    center={this.state.center}
-                    zoom={this.state.zoom}>
+                    onReady={fetchPlaces}
+                    initialCenter={state.center}
+                    center={state.center}
+                    zoom={state.zoom}>
             
-                    {this.getLocationsMarkers()}
-                    {this.getEmergenciesMarkers()}
-                    {this.getAgentMarkers()}
+                    {getLocationsMarkers()}
+                    {getEmergenciesMarkers()}
+                    {getAgentMarkers()}
 
                 </Map>
                 
-                <Loader isLoading={this.state.isLoading}/>
+                <Loader isLoading={state.isLoading}/>
 
-                <Action action={this.state.action} closeAction={this.closeAction} message={this.state.action_message}/>
+                <Action action={state.action} closeAction={closeAction} message={state.action_message}/>
 
-                <Loader isLoading={this.state.isLoading}/>
+                <Loader isLoading={state.isLoading}/>
 
                 {sound}
 
                 {
-                    this.state.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={this.state.route_responses_from_agents[this.state.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={this.removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={this.closeRouteResponse} /> : ""
+                    state.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={state.route_responses_from_agents[state.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={closeRouteResponse} /> : ""
                 }
 
                 {
-                    this.state.showConfirm.status===true ? <ConfirmAction  yesClicked={this.state.showConfirm.action==="emergency" ? this.resolveEmergency : this.resolveCall} noClicked={this.hideConfirm} message={this.state.message} /> : ""
+                    state.showConfirm.status===true ? <ConfirmAction  yesClicked={state.showConfirm.action==="emergency" ? resolveEmergency : resolveCall} noClicked={hideConfirm} message={state.message} /> : ""
                 }
             </div>
     );
   }
- 
+
 }
 
 export default GoogleApiWrapper({
     apiKey: ('AIzaSyADNxHcgsHDyx_OSbqxBg5xB5lV2YJDcKI')
-})(Dashboard)
+})(App)
