@@ -43,7 +43,8 @@ import Persistence from './utils/Persistence';
 import Sound from 'react-sound';
 
 //Refactor 
-import PubNubReact from 'pubnub-react';
+import { usePubNub } from 'pubnub-react'
+
 import Geocode from "react-geocode";
 
 import Loader from './components/Loader';
@@ -69,7 +70,9 @@ let todays_date = new Date().toISOString();
 
 let today = null;
 
-class App extends Component{
+let pubnub = null;
+
+class Dashboard extends Component{
   constructor(props){
       super(props);
 
@@ -122,15 +125,17 @@ class App extends Component{
       }
       
       //Refactor 
-      this.pubnub = new PubNubReact({
+      /*this.pubnub = new PubNubReact({
         publishKey: 'pub-c-100b3918-0e25-4fac-ade6-c58d013cd019',
         subscribeKey: 'sub-c-21e1e450-9457-11e9-bf84-1623aee89087'
       });
       
-      this.pubnub.init(this);
+      this.pubnub.init(this);*/
 
       //Refactor End  ---------------------------------------------------------------------
 
+      pubnub = usePubNub();
+      
       this.closeSideBar = this.closeSideBar.bind(this);
       this.onCallsChanged = this.onCallsChanged.bind(this);
       this.onEmergenciesChanged = this.onEmergenciesChanged.bind(this);
@@ -336,30 +341,32 @@ async removeAgentFromRoute(e, agent){
 
                 //Refactor  ---------------------------------------------------------------------
                 //unsubscribe from agents channel
-                this.pubnub.unsubscribe({
+                this.props.pubnub.unsubscribe({
                     channels: [agent.agent._id]
                 })
 
-                //tell agent to leave the emergency
-                this.pubnub.publish(
-                    {
-                        message: {
-                          pn_gcm: {
-                              data: {
-                                  notification_body: "You need to abandon route. Tap to open app",
-                                  data: {},
-                                  action: "leave_route"
-                              }
-                          }
-                        },
-                        channel: agent.agent._id,
-                        sendByPost: false, // true to send via POST
-                        storeInHistory: false //override default storage options
-                    },
-                    (status, response) => {
-                        // handle status, response
-                    }
-                );
+                try{
+                    //tell agent to leave the emergency
+                    const result = await this.pubnub.publish(
+                        {
+                            message: {
+                            pn_gcm: {
+                                data: {
+                                    notification_body: "You need to abandon route. Tap to open app",
+                                    data: {},
+                                    action: "leave_route"
+                                }
+                            }
+                            },
+                            channel: agent.agent._id,
+                            sendByPost: false, // true to send via POST
+                            storeInHistory: false //override default storage options
+                        }
+                    );
+                }
+                catch(status){
+
+                }
 
                 //Refactor End  ---------------------------------------------------------------------
 
@@ -520,25 +527,26 @@ async removeAgentFromRoute(e, agent){
                         //Refactor  ---------------------------------------------------------------------
 
                         //we tell the agent to open the new route and go to the emergency or call
-                        this.pubnub.publish(
-                            {
-                            message: {
-                                pn_gcm: {
-                                    data: {
-                                        notification_body: "You have a new route. Tap to open app.",
-                                        data: emergency_monitored.phone_number ? {full_name: emergency_monitored.full_name, _id: emergency_monitored.user, phone_number: emergency_monitored.phone_number, latitude: emergency_monitored.latitude, longitude: emergency_monitored.longitude} : {full_name: emergency_monitored.full_name, _id: emergency_monitored.user, latitude: emergency_monitored.latitude, longitude: emergency_monitored.longitude},
-                                        action: "route_request"
+                        try{
+                            const result = await this.pubnub.publish({
+                                message: {
+                                    pn_gcm: {
+                                        data: {
+                                            notification_body: "You have a new route. Tap to open app.",
+                                            data: emergency_monitored.phone_number ? {full_name: emergency_monitored.full_name, _id: emergency_monitored.user, phone_number: emergency_monitored.phone_number, latitude: emergency_monitored.latitude, longitude: emergency_monitored.longitude} : {full_name: emergency_monitored.full_name, _id: emergency_monitored.user, latitude: emergency_monitored.latitude, longitude: emergency_monitored.longitude},
+                                            action: "route_request"
+                                        }
                                     }
-                                }
-                            },
-                            channel: agent.agent._id,
-                            sendByPost: false, // true to send via POST
-                            storeInHistory: false //override default storage options
-                            },
-                            (status, response) => {
-                                // handle status, response
-                            }
-                        );
+                                },
+                                channel: agent.agent._id,
+                                sendByPost: false, // true to send via POST
+                                storeInHistory: false //override default storage options
+                            })
+                        }
+                        catch(status){
+
+                        }
+
 
                         //Refactor End  ---------------------------------------------------------------------
 
@@ -671,32 +679,33 @@ async removeAgentFromRoute(e, agent){
     //show the agents around an emergency
     //search to see if an emergency is being monitored by the admin browser
     this.utils.checkIfEmergencyMonitoredByBrowserAdmin(this.browserAdmin._id, this.state.monitoring_grid)
-                .then(boolean_value => {
+                .then( async (boolean_value) => {
                     if(boolean_value){
 
                         //Refactor  ---------------------------------------------------------------------
 
                         //ideally this shiuld be sent to those agents in the emergency's LGA
                         //for now we are publishing to all agents 
-                        this.pubnub.publish(
-                            {
-                                message: {
-                                    pn_gcm: {
-                                        data: {
-                                            notification_body: "Tap to open the Laser App",
-                                            data: {},
-                                            action: "send_location"
-                                        }
+                     try{
+                        const result = await this.pubnub.publish(
+                        {
+                            message: {
+                                pn_gcm: {
+                                    data: {
+                                        notification_body: "Tap to open the Laser App",
+                                        data: {},
+                                        action: "send_location"
                                     }
-                                },
-                                channel: this.state.tracked_area,
-                                sendByPost: false, // true to send via POST
-                                storeInHistory: false //override default storage options
+                                }
                             },
-                            (status, response) => {
-                                // handle status, response
-                            }
-                        );
+                            channel: this.state.tracked_area,
+                            sendByPost: false, // true to send via POST
+                            storeInHistory: false //override default storage     
+                        })
+
+                     }
+
+                    catch(status){}
 
                         //Refactor End  ---------------------------------------------------------------------
 
@@ -2217,56 +2226,56 @@ async removeAgentFromRoute(e, agent){
     let show_side_bar;
     
     if(this.state.side_bar_open){
-      show_side_bar = <Sidebar closeSidebar={this.closeSideBar} emergency={this.state.clicked_user} startMonitoring={this.startMonitoring} resolve={this.showConfirmResolveEmergency} />
+        
     }
     else{
-      show_side_bar = "";
+        show_side_bar = "";
     }
 
     return (
-        <div className="laser-parent-div" style={mapStyle}>
-            <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
-            {show_location_side_bar}
-            {show_side_bar}
-            {this.state.showConfirmManualLocation ? <ConfirmAddressNotFound closeConfirmAddressNotFoundClicked={this.continueConfirmAddressNotFoundClicked} tryAgainClicked={this.continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={this.hideConfirmManualLocation} /> : ""}
-            {this.state.manual_location_side_bar ? <AddCallManually onFieldChanged={this.onFieldChanged} closeSidebar={this.closeSideBar} selected_manual_call={this.state.selected_manual_call} selected_manual_gender={this.state.selected_manual_gender} manual_address={this.state.manual_address} manual_name={this.state.manual_name} onManualCallChanged={this.onManualCallChanged} onManualGenderChanged={this.onManualGenderChanged}  onSubmitManualCallDetails={this.onSubmitManualCallDetails}/> : "" }
+            <div className="laser-parent-div" style={mapStyle}>
+                <Latest latest={this.state.latest} latestClicked={this.latestClicked}/>
+                {show_location_side_bar}
+                {show_side_bar}
+                {this.state.showConfirmManualLocation ? <ConfirmAddressNotFound closeConfirmAddressNotFoundClicked={this.continueConfirmAddressNotFoundClicked} tryAgainClicked={this.continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={this.hideConfirmManualLocation} /> : ""}
+                {this.state.manual_location_side_bar ? <AddCallManually onFieldChanged={this.onFieldChanged} closeSidebar={this.closeSideBar} selected_manual_call={this.state.selected_manual_call} selected_manual_gender={this.state.selected_manual_gender} manual_address={this.state.manual_address} manual_name={this.state.manual_name} onManualCallChanged={this.onManualCallChanged} onManualGenderChanged={this.onManualGenderChanged}  onSubmitManualCallDetails={this.onSubmitManualCallDetails}/> : "" }
+                
+                { 
+                    this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" 
+                }
+
+                <TopPanel showMonitoredEmergency={this.showMonitoredEmergency} openManualLocation={this.openManualLocation} logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
+                onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAgentsAroundEmergency={this.getAgentsAroundEmergency}/>
+
+                <Map google={this.props.google} 
+                    style={mapStyle}
+                    onReady={this.fetchPlaces}
+                    initialCenter={this.state.center}
+                    center={this.state.center}
+                    zoom={this.state.zoom}>
             
-            { 
-                this.state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={this.removeAgentFromRoute} closeAgentSideBar={this.closeAgentSideBar} addAgentToMonitoring={this.addAgentToMonitoring} agent={this.state.clicked_agent} user={this.state.clicked_user}/> : "" 
-            }
+                    {this.getLocationsMarkers()}
+                    {this.getEmergenciesMarkers()}
+                    {this.getAgentMarkers()}
 
-            <TopPanel showMonitoredEmergency={this.showMonitoredEmergency} openManualLocation={this.openManualLocation} logout={this.logout} onCalendarOpen={this.onCalendarOpen} onDateChange={this.onDateChange} date={this.state.date} selected_call={this.state.selected_call} 
-            onCallsChanged={this.onCallsChanged} selected_emergency={this.state.selected_emergency} onEmergenciesChanged={this.onEmergenciesChanged} getAgentsAroundEmergency={this.getAgentsAroundEmergency}/>
+                </Map>
+                
+                <Loader isLoading={this.state.isLoading}/>
 
-            <Map google={this.props.google} 
-                style={mapStyle}
-                onReady={this.fetchPlaces}
-                initialCenter={this.state.center}
-                center={this.state.center}
-                zoom={this.state.zoom}>
-        
-                {this.getLocationsMarkers()}
-                {this.getEmergenciesMarkers()}
-                {this.getAgentMarkers()}
+                <Action action={this.state.action} closeAction={this.closeAction} message={this.state.action_message}/>
 
-            </Map>
-            
-            <Loader isLoading={this.state.isLoading}/>
+                <Loader isLoading={this.state.isLoading}/>
 
-            <Action action={this.state.action} closeAction={this.closeAction} message={this.state.action_message}/>
+                {sound}
 
-            <Loader isLoading={this.state.isLoading}/>
+                {
+                    this.state.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={this.state.route_responses_from_agents[this.state.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={this.removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={this.closeRouteResponse} /> : ""
+                }
 
-            {sound}
-
-            {
-                this.state.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={this.state.route_responses_from_agents[this.state.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={this.removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={this.closeRouteResponse} /> : ""
-            }
-
-            {
-                this.state.showConfirm.status===true ? <ConfirmAction  yesClicked={this.state.showConfirm.action==="emergency" ? this.resolveEmergency : this.resolveCall} noClicked={this.hideConfirm} message={this.state.message} /> : ""
-            }
-        </div>
+                {
+                    this.state.showConfirm.status===true ? <ConfirmAction  yesClicked={this.state.showConfirm.action==="emergency" ? this.resolveEmergency : this.resolveCall} noClicked={this.hideConfirm} message={this.state.message} /> : ""
+                }
+            </div>
     );
   }
 

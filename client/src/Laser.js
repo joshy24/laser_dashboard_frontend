@@ -1,10 +1,10 @@
 import React, {Component} from "react";
-import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Navigate, Routes } from "react-router-dom";
 import NewApp from "./NewApp";
 import Agents from "./components/agents/Agents";
 import Admins from "./components/agents/Admins";
 import Departments from "./components/agents/Departments";
-import Login from "./components/Login"
+import Laserlogin from "./components/Laserlogin"
 
 import AuthHelperMethods from './auth/AuthHelperMethods';
 
@@ -39,40 +39,40 @@ class Laser extends Component{
     render(){
         return (
             <div>
-                <Router>
+                <Routes>
                     <Route path="/" exact render={(props) => (
                         Auth.loggedIn() === true
                             ? <NewApp {...props} logout={this.logout}/>
-                            : <Redirect to='/login' login={this.login} />
+                            : <Navigate to='/login' login={this.login} />
                         )} />
 
                     <Route path="/agents" exact render={(props) => (
                         Auth.loggedIn() === true
-                            ?  Auth.getPriviledge() === "full_control" ? <Agents {...props} logout={this.logout} /> : <Redirect to='/' login={this.login} />
-                            : <Redirect to='/login' login={this.login} />
+                            ?  Auth.getPriviledge() === "full_control" ? <Agents {...props} logout={this.logout} /> : <Navigate to='/' login={this.login} />
+                            : <Navigate to='/login' login={this.login} />
                         )}/>
 
                     <Route path="/admins" exact render={(props) => (
                         Auth.loggedIn() === true
-                            ?  Auth.getPriviledge() === "full_control" ? <Admins {...props} logout={this.logout} /> : <Redirect to='/' login={this.login} />
-                            : <Redirect to='/login' login={this.login} />
+                            ?  Auth.getPriviledge() === "full_control" ? <Admins {...props} logout={this.logout} /> : <Navigate to='/' login={this.login} />
+                            : <Navigate to='/login' login={this.login} />
                         )}/>
 
                     <Route path="/departments" exact render={(props) => (
                         Auth.loggedIn() === true
-                            ? Auth.getPriviledge() === "full_control" ? <Departments {...props} logout={this.logout}/> : <Redirect to='/' login={this.login} />
-                            : <Redirect to='/login' login={this.login} />
+                            ? Auth.getPriviledge() === "full_control" ? <Departments {...props} logout={this.logout}/> : <Navigate to='/' login={this.login} />
+                            : <Navigate to='/login' login={this.login} />
                         )}/>
 
                     <Route path="/login" exact render={(props) => (
                         Auth.loggedIn() === false
-                            ? <Login {...props} login={this.login} />
-                            : <Redirect to='/' {...props} logout={this.logout} />
+                            ? <Laserlogin {...props} login={this.login} />
+                            : <Navigate to='/' {...props} logout={this.logout} />
                         )} />
                     {
-                        this.state.isLogin==true ? <Redirect to='/login' login={this.login} /> : ""
+                        this.state.isLogin==true ? <Navigate to='/login' login={this.login} /> : ""
                     }
-                </Router>
+                </Routes>
                 
             </div>
         );
