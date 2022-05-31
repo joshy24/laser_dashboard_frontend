@@ -101,7 +101,6 @@ class Dashboard extends Component{
           clicked_marker_id: "",
           play_sound: false,
           channels_list: ["lllaser"],
-
           agents_in_focus: [],
           laser_agents:[], //all agents
           monitoring_grid: [],
