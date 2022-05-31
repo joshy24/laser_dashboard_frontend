@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { BrowserRouter as Router, Route, Navigate, Routes } from "react-router-dom";
-import NewApp from "./NewApp";
+import App from "./App";
 import Agents from "./components/agents/Agents";
 import Admins from "./components/agents/Admins";
 import Departments from "./components/agents/Departments";
@@ -27,7 +27,7 @@ const LaserFunction = () => {
         <div>
             <Router>
             <Routes>
-                <Route path="/" exact element={<NewApp />}/>
+                <Route path="/" exact element={<App />}/>
 
                 <Route path="/agents" exact element={(props) => (
                     Auth.loggedIn() === true

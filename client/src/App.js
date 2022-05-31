@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css'; 
 
-import Dashboard from "./NewApp"
+import Dashboard from "./Dashboard"
 
 import PubNub from 'pubnub'
 import { PubNubProvider, usePubNub } from 'pubnub-react'

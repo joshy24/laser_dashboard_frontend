@@ -123,16 +123,7 @@ class Dashboard extends Component{
 
           isLoading: false
       }
-      
-      //Refactor 
-      /*this.pubnub = new PubNubReact({
-        publishKey: 'pub-c-100b3918-0e25-4fac-ade6-c58d013cd019',
-        subscribeKey: 'sub-c-21e1e450-9457-11e9-bf84-1623aee89087'
-      });
-      
-      this.pubnub.init(this);*/
-
-      //Refactor End  ---------------------------------------------------------------------
+      //end
 
       pubnub = usePubNub();
       
@@ -2283,4 +2274,4 @@ async removeAgentFromRoute(e, agent){
 
 export default GoogleApiWrapper({
     apiKey: ('AIzaSyADNxHcgsHDyx_OSbqxBg5xB5lV2YJDcKI')
-})(App)
+})(Dashboard)
