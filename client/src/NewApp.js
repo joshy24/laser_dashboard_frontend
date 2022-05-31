@@ -485,8 +485,9 @@ async removeAgentFromRoute(e, agent){
     }
   }
   
+
   async addAgentToMonitoring(e, agent){
-      const monitored_result = this.utils.checkIfEmergencyMonitoredByBrowserAdmin(this.browserAdmin._id, this.state.monitoring_grid);
+      const monitored_result = utils.checkIfEmergencyMonitoredByBrowserAdmin(browserAdmin._id, this.state.monitoring_grid);
 
       if(monitored_result){
         var check_result = await this.utils.checkIfOtherAdminIsUsingAgent(this.browserAdmin._id, agent, this.state.monitoring_grid);
@@ -669,16 +670,16 @@ async removeAgentFromRoute(e, agent){
   getAgentsAroundEmergency(){
     //show the agents around an emergency
     //search to see if an emergency is being monitored by the admin browser
-    this.utils.checkIfEmergencyMonitoredByBrowserAdmin(this.browserAdmin._id, this.state.monitoring_grid)
+    utils.checkIfEmergencyMonitoredByBrowserAdmin(browserAdmin._id, mapDetails.monitoring_grid)
                 .then( async (boolean_value) => {
                     if(boolean_value){
 
                         //Refactor  ---------------------------------------------------------------------
 
-                        //ideally this shiuld be sent to those agents in the emergency's LGA
+                        //ideally this should be sent to those agents in the emergency's LGA
                         //for now we are publishing to all agents 
                      try{
-                        const result = await this.pubnub.publish(
+                        const result = await pubnub.publish(
                         {
                             message: {
                                 pn_gcm: {
@@ -693,7 +694,6 @@ async removeAgentFromRoute(e, agent){
                             sendByPost: false, // true to send via POST
                             storeInHistory: false //override default storage     
                         })
-
                      }
 
                     catch(status){}
@@ -701,11 +701,11 @@ async removeAgentFromRoute(e, agent){
                         //Refactor End  ---------------------------------------------------------------------
 
 
-                        this.utils.getAdminEmergencyMonitored(this.browserAdmin._id, this.state.monitoring_grid)
+                        utils.getAdminEmergencyMonitored(browserAdmin._id, mapDetails.monitoring_grid)
                                 .then(emergency_monitored => {
                                     //admin is monitoring an emergency or call
                                     //check for the agents in emergency LGA
-                                    this.utils.setAgentsInFocus(this.state.agents_in_focus, emergency_monitored.emergency, this.state.laser_agents)
+                                    utils.setAgentsInFocus(this.state.agents_in_focus, emergency_monitored.emergency, this.state.laser_agents)
                                         .then(result => {
                                             //we set the state for the laser agents and the agents in focus
                                             this.setState({
@@ -980,23 +980,23 @@ async removeAgentFromRoute(e, agent){
   }
 
   onEmergencyClicked(emergency,e){
-    this.setState({
-        play_sound: false,
-        clicked_user: emergency,
-        clicked_agent: {},
-        side_bar_open: true,
-        manual_location_side_bar: false,
-        agent_side_bar_open: false,
-        location_side_bar_open: false,
-        center: {
-            lat: emergency.latitude,
-            lng: emergency.longitude
-        },
-        zoom: 19,
-        show_red_circle: true,
-        show_blue_circle: false,
-        clicked_marker_id: emergency._id
-    })
+        setMapDetails({
+            play_sound: false,
+            clicked_user: emergency,
+            clicked_agent: {},
+            side_bar_open: true,
+            manual_location_side_bar: false,
+            agent_side_bar_open: false,
+            location_side_bar_open: false,
+            center: {
+                lat: emergency.latitude,
+                lng: emergency.longitude
+            },
+            zoom: 19,
+            show_red_circle: true,
+            show_blue_circle: false,
+            clicked_marker_id: emergency._id
+        })
   }
 
   onAgentClicked(agent,e){
@@ -1005,7 +1005,7 @@ async removeAgentFromRoute(e, agent){
           clicked_agent: agent,
           manual_location_side_bar: false,
           agent_side_bar_open: true
-    })
+      })
   }
 
   getLocationsMarkers(){
@@ -1133,6 +1133,7 @@ async removeAgentFromRoute(e, agent){
       }
   }
 
+  //Nicky
   hideConfirm(){
     this.setState({
         showConfirm: {
@@ -1847,6 +1848,8 @@ async removeAgentFromRoute(e, agent){
             })
         }
   }
+
+  //Joshua Start
 
   async getEmergencies(){
         const response = await API.getEmergencies({date: today})
