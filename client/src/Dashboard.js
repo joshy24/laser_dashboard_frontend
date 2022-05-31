@@ -1,5 +1,3 @@
-
-
 import React, {useState} from 'react';
 import logo from './logo.svg';
 import red_circle from './icons/emergency_with_circle.gif';
@@ -74,7 +72,8 @@ let today = null;
 
 let pubnub = null;
 
-function Dashboard(){
+const Dashboard = ({logout}) => {
+    pubnub = usePubNub();
 
     pubnub = usePubNub();
 
@@ -126,12 +125,97 @@ function Dashboard(){
         isLoading: false
     })
 
-   
-    return <div>
+    function showLoading(){
+        setLoading(true)
+    }
+  
+    function hideLoading(){
+        setLoading(false)
+    }
+  
+    function logout(){
+        logout();
+    }
 
+    const showMonitoredEmergency = async(e) => {
+        const emergency_full_row = await utils.getAdminEmergencyMonitored(browserAdmin._id, monitoring_grid);
+        
+        if(emergency_full_row && emergency_full_row.emergency){
+            var item = emergency_full_row.emergency;
+            
+            switch(item.laser_type){
+                case "emergency":
+                    
+                    break;
+                case "call":
+                    setState({
+                      clicked_user: item,
+                      side_bar_open: false,
+                      location_side_bar_open: true,
+                      agent_side_bar_open: false,
+                      center: {
+                        lat: item.latitude,
+                        lng: item.longitude
+                      },
+                      zoom: 19,
+                      show_red_circle: false,
+                      show_blue_circle: true,
+                      clicked_marker_id: item._id
+                    })
+                    break;
+            }
+        }
+        else{
+            setState({
+                action: "message",
+                action_message: "You are not monitoring any emergency or call at the moment",
+            })
+        }
+    }
 
+    return <div className="laser-parent-div" style={mapStyle}>
+                <Latest latest={state.latest} latestClicked={latestClicked}/>
+                {show_location_side_bar}
+                {show_side_bar}
+                {state.showConfirmManualLocation ? <ConfirmAddressNotFound closeConfirmAddressNotFoundClicked={continueConfirmAddressNotFoundClicked} tryAgainClicked={continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={hideConfirmManualLocation} /> : ""}
+                {state.manual_location_side_bar ? <AddCallManually onFieldChanged={onFieldChanged} closeSidebar={closeSideBar} selected_manual_call={state.selected_manual_call} selected_manual_gender={state.selected_manual_gender} manual_address={state.manual_address} manual_name={state.manual_name} onManualCallChanged={onManualCallChanged} onManualGenderChanged={onManualGenderChanged}  onSubmitManualCallDetails={onSubmitManualCallDetails}/> : "" }
+                
+                { 
+                    state.agent_side_bar_open ? <AgentDetails removeAgentFromRoute={removeAgentFromRoute} closeAgentSideBar={closeAgentSideBar} addAgentToMonitoring={addAgentToMonitoring} agent={state.clicked_agent} user={state.clicked_user}/> : "" 
+                }
+
+                <TopPanel showMonitoredEmergency={showMonitoredEmergency} openManualLocation={openManualLocation} logout={logout} onCalendarOpen={onCalendarOpen} onDateChange={onDateChange} date={state.date} selected_call={state.selected_call} 
+                onCallsChanged={onCallsChanged} selected_emergency={state.selected_emergency} onEmergenciesChanged={onEmergenciesChanged} getAgentsAroundEmergency={getAgentsAroundEmergency}/>
+
+                <Map google={props.google} 
+                    style={mapStyle}
+                    onReady={fetchPlaces}
+                    initialCenter={state.center}
+                    center={state.center}
+                    zoom={state.zoom}>
+            
+                    {getLocationsMarkers()}
+                    {getEmergenciesMarkers()}
+                    {getAgentMarkers()}
+
+                </Map>
+                
+                <Loader isLoading={state.isLoading}/>
+
+                <Action action={state.action} closeAction={closeAction} message={state.action_message}/>
+
+                <Loader isLoading={state.isLoading}/>
+
+                {sound}
+
+                {
+                    state.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={state.route_responses_from_agents[state.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={closeRouteResponse} /> : ""
+                }
+
+                {
+                    state.showConfirm.status===true ? <ConfirmAction  yesClicked={state.showConfirm.action==="emergency" ? resolveEmergency : resolveCall} noClicked={hideConfirm} message={state.message} /> : ""
+                }
     </div>
-
 }
 
 export default Dashboard;
