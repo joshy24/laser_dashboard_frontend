@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import logo from './logo.svg';
 import red_circle from './icons/emergency_with_circle.gif';
 import blue_circle from './icons/call_with_circle.gif';
 import emergency_icon from './icons/emergency.gif';
 import call_icon from './icons/call.gif';
 import car_test from './icons/car_test.png';
+import './App.css'; 
 
 //import police_car from './icons/vector/police_car.svg'
 //import police_car_enroute from './icons/vector/police_car_yellow.svg'
@@ -54,8 +54,8 @@ import './App.css';
 import * as API from './api/Api';
 
 import AuthHelperMethods from './auth/AuthHelperMethods';
-import { map } from 'bluebird';
-import e from 'cors';
+
+const Auth = new AuthHelperMethods();
 
 const utils = new Utils();
 const persistence = new Persistence();
@@ -76,12 +76,8 @@ let pubnub = null;
 
 let browserAdmin = null;
 
-const Dashboard = ({logout,google}) => {
+const Dashboard = ({logout, google}) => {
     pubnub = usePubNub();
-
-    useEffect(() => {
-        browserAdmin = Auth.getAdmin();
-    }, [])
 
     const [mapDetails, setMapDetails] = useState({
         showConfirm: {
@@ -131,12 +127,359 @@ const Dashboard = ({logout,google}) => {
         isLoading: false
     })
 
+    useEffect(() => {
+
+        pubnub.unsubscribe({
+            channels:   mapDetails.channels_list
+        });
+
+    }, [])
+
+    useEffect(() => {
+        browserAdmin = Auth.getAdmin();
+
+        //Refactor  ---------------------------------------------------------------------
+
+        //subscribe to the parent channel to receive location updates from agents
+        pubnub.subscribe({
+            channels:   mapDetails.channels_list
+        })
+
+        //Refactor End  ---------------------------------------------------------------------
+
+        setMapDetails({...mapDetails,
+            laser_agents: []
+        })
+
+        getMonitoringGridFromServerAndReconcileAssignedAgents();
+
+        var responses = persistence.getCompletedEmergenciesResponse();
+
+        if(responses && responses.length > 0){
+            setMapDetails({...mapDetails,
+                route_responses_from_agents: responses
+            })
+        }
+
+        //Refactor  ---------------------------------------------------------------------
+
+        pubnub.addListener({
+        status: (st) => {
+                if(st.category === "PNNetworkUpCategory"){
+                    setMapDetails({...mapDetails,
+                        action: "message",
+                        action_message: "You are back online."
+                    })
+                    getMonitoringGridFromServerAndReconcileAssignedAgents();
+                }
+
+                if(st.category === "PNConnectedCategory"){
+                    //intentionally left blank
+                }
+
+                if (st.category === "PNReconnectedCategory") {
+                    setMapDetails({...mapDetails,
+                        action: "message",
+                        action_message: "You are back online."
+                    })
+                    getMonitoringGridFromServerAndReconcileAssignedAgents();
+                }
+
+                if (st.category === "PNNetworkIssuesCategory") {
+                    setMapDetails({...mapDetails,
+                        action: "message",
+                        action_message: "It appears there is a network issue."
+                    })
+                }
+
+                if (st.category === "PNNetworkDownCategory") {
+                    setMapDetails({...mapDetails,
+                        action: "message",
+                        action_message: "It appears the network is down."
+                    })
+                }
+
+                if (st.category === "PNTimeoutCategory") {
+                    setMapDetails({...mapDetails,
+                        action: "message",
+                        action_message: "Could not connect to the internet."
+                    })
+                }
+        },
+        message: (message) => {
+
+            /*var tracked_user_id =   mapDetails.tracked_users.find(id => id === message.channel);
+
+            if(tracked_user_id){
+                    //the message is from a user currently being monitored
+                    if(message.userMetadata && message.userMetadata.action === "user_location_update"){
+                        var arr =   mapDetails.emergencies.map(emergency => {
+                            if(emergency.user === tracked_user_id){
+                                emergency.latitude = message.message.latitude;
+                                emergency.longitude = message.message.longitude;
+                                return emergency;
+                            }
+                            else{
+                                return emergency;
+                            }
+                        })
+
+                        //var found_emergency =   mapDetails.emergencies.find(emergency => emergency.user ===   mapDetails.tracked_user_id);
+
+                        (state => {
+                            return{
+                                emergencies: arr
+                            }
+                        })
+                    }
+            }*/
+
+            utils.getAdminEmergencyMonitored(browserAdmin._id,   mapDetails.monitoring_grid)
+                            .then(emergency_full_row => {
+                                var emergency_monitored = emergency_full_row.emergency;
+
+                                if(message.channel === emergency_monitored._id ){
+                                    if(message.userMetadata && message.userMetadata.action === "user_location_update"){
+                                        
+                                        var arr =   mapDetails.emergencies.map(emergency => {
+                                            if(emergency.user === emergency_monitored.user){
+                                                emergency.latitude = message.message.latitude;
+                                                emergency.longitude = message.message.longitude;
+                                                return emergency;
+                                            }
+                                            else{
+                                                return emergency;
+                                            }
+                                        })
+                    
+                                        //var found_emergency =   mapDetails.emergencies.find(emergency => emergency.user ===   mapDetails.tracked_user_id);
+                    
+                                    setMapDetails({
+                                        ...mapDetails,
+                                        emergencies: arr
+                                    })
+                                    }
+                                }
+                            })
+                            .catch(err => {
+
+                            })
+            
+            //if(message.channel ===   mapDetails.tracked_area ){
+                
+                if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
+                    try{
+                        console.log(message.message.agent)
+                    }
+                    catch(err){
+
+                    }
+                    utils.updateAgentLocation(message.message,   mapDetails.laser_agents,   mapDetails.monitoring_grid, browserAdmin._id)
+                                .then(sorted_agents => {
+                                    setMapDetails({
+                                        ...mapDetails,
+                                            laser_agents: sorted_agents
+                                        
+                                    })
+                                }) 
+                                .catch(err => {
+                                    console.log(err)
+                                })
+                }
+            //}
+
+            //we check the response of an agent that has been assigned, whether the agent sent a message to decilne
+            if(message.userMetadata && message.userMetadata.action === "route_request_response"){
+                    //we check which agent is responding to the emergency request
+                    var emergency_agent = message.message;
+
+                    if(message.channel === emergency_agent._id ){
+                        showLoading();
+
+                        var assigned_agents = persistence.getAssignedAgents();
+
+                        //we get the agent full profile from the persisted listof assigned agents
+                        utils.getAgentFromAssignedAgentsInPersistence(assigned_agents, emergency_agent._id)
+                                    .then(agent_found =>{
+                                        //we proceed to remove the agent from the emergency and update the monitoring grid and all other parts of the system
+                                        removeAgentFromEmergencyAfterDecliningRequest(agent_found);
+                                    })
+                                    .catch(err => {
+                                    
+                                        setMapDetails({
+                                            ...mapDetails,
+                                            action: "message",
+                                            action_message: "Agent " +emergency_agent.firstname +" declined to attend to emergency but an error occurred updating the system. Please manually remove the agent from emergency"
+                                        })
+                                    })
+                    }
+            }
+
+            if(message.userMetadata && message.userMetadata.action === "route_completed"){
+                    //show message that agent has completed route
+
+                    var responses = persistence.getCompletedEmergenciesResponse();
+
+                    utils.getAdminEmergencyMonitored(browserAdmin._id,   mapDetails.monitoring_grid)
+                            .then(emergency_monitored => {
+
+                                var assigned_agents = persistence.getAssignedAgents();
+
+                                //we get the agent full profile from the persisted listof assigned agents
+                                utils.getAgentFromAssignedAgentsInPersistence(assigned_agents, message.message._id)
+                                            .then(agent_found =>{
+                                                if(responses && responses.length > 0){
+                                                    responses.push({agent:agent_found, user: emergency_monitored.emergency});
+                                                }
+                                                else{
+                                                    responses = [{agent:agent_found, user: emergency_monitored.emergency}];
+                                                }
+                                
+                                                persistence.saveCompletedEmergenciesResponse(responses);
+                                
+                                                setMapDetails({
+                                                    ...mapDetails,
+                                                    route_responses_from_agents: responses
+                                                })
+                                            })
+                                            .catch(err => {
+                                                
+                                            })
+
+                            })
+                            .catch(err => {
+                                
+                            })
+            } 
+            
+        }
+        });
+
+        //Refactor End  ---------------------------------------------------------------------
+
+        /*const socket = socketIOClient(socket_io_url, {
+            //withCredentials: true
+        });*/
+
+        const socket = io(socket_io_url)
+
+        socket.on("connect", 
+        () => console.log("connected to socket io")
+        );
+
+        socket.on("reconnect", attempt => {
+            console.log("Socket IO Reconnected")
+            //successfully reconnected
+            //get the lastest data
+        })
+
+        //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
+        socket.on("emergency", 
+        
+        data => {
+            if(data){
+                
+                let arr =   mapDetails.emergencies;
+                let lat =   mapDetails.latest;
+                
+                lat.push(data);
+                arr.push(data) 
+
+                setMapDetails({
+                    ...mapDetails,
+                    play_sound: true,
+                    latest: lat,
+                    clicked_marker_id: data._id,
+                    zoom: 18,
+                    emergencies: arr,
+                    center: {
+                        lat: data.latitude,
+                        lng: data.longitude
+                    }
+                })
+            }
+        }
+        );
+
+        socket.on("call", 
+        data => {
+            if(data){
+                let arr =   mapDetails.locations;
+                let lat =   mapDetails.latest;
+                
+                lat.push(data);
+                arr.push(data)
+                
+                setMapDetails({
+                    ...mapDetails,
+                    play_sound: true,
+                    latest: lat,
+                    clicked_marker_id: data._id,
+                    zoom: 18,
+                    locations: arr,
+                    center: {
+                    lat: data.latitude,
+                    lng: data.longitude
+                    }
+                })
+            }
+        }
+        );
+
+        socket.on("monitoring_update", (id) => {
+            if(id !== browserAdmin._id){
+                //pull the monitoring grid and re-evaluate variables
+                //show loading UI
+                showLoading();
+
+                var monitoring_grid = [];
+
+                API.getMonitoringGrid()
+                    .then(response => {
+                        monitoring_grid = response.data;
+
+                        utils.reconcileAllAgentsWithMonitoringGrid(  mapDetails.laser_agents, response.data, browserAdmin._id)
+                                .then(lasers => {
+                                    setMapDetails({
+                                        ...mapDetails,
+                                        monitoring_grid: monitoring_grid,
+                                        laser_agents: lasers      
+                                    })
+
+                                    hideLoading();
+                                })
+                                .catch(err => {
+                                    setMapDetails({
+                                        ...mapDetails,
+                                        monitoring_grid: monitoring_grid         
+                                    })
+
+                                    hideLoading();
+                                })
+                    })
+                    .catch(err => {
+                        setMapDetails({
+                            ...mapDetails,
+                            monitoring_grid: monitoring_grid         
+                        })
+
+                        hideLoading();
+                    })
+            }
+        });
+
+        getLocations();
+        getEmergencies();
+
+
+    }, [])
+
     function showLoading(){
-        setLoading(true)
+        setMapDetails({...mapDetails, isLoading: true})
     }
   
     function hideLoading(){
-        setLoading(false)
+        setMapDetails({...mapDetails, isLoading: false})
     }
   
     function logout(){
@@ -144,7 +487,7 @@ const Dashboard = ({logout,google}) => {
     }
 
     const showMonitoredEmergency = async(e) => {
-        const emergency_full_row = await utils.getAdminEmergencyMonitored(browserAdmin._id, monitoring_grid);
+        const emergency_full_row = await utils.getAdminEmergencyMonitored(browserAdmin._id, mapDetails.monitoring_grid);
         
         if(emergency_full_row && emergency_full_row.emergency){
             var item = emergency_full_row.emergency;
@@ -214,7 +557,7 @@ const Dashboard = ({logout,google}) => {
 const removeAgentFromRoute = async(e, agent) => {
     showLoading();
 
-    const result = await utils.removeAgentFromBrowserAdminMonitoringGrid(agent, browserAdmin._id, monitoring_grid, mapDetails.laser_agents);
+    const result = await utils.removeAgentFromBrowserAdminMonitoringGrid(agent, browserAdmin._id, mapDetails.monitoring_grid, mapDetails.laser_agents);
     
     if(result){
         //result[0] //monitoring_grid
@@ -393,7 +736,7 @@ const removeAgentFromRoute = async(e, agent) => {
     }
   }
   
-  const addAgentToMonitoring=(e, agent)=>{
+  const addAgentToMonitoring = async (e, agent)=>{
       const monitored_result = utils.checkIfEmergencyMonitoredByBrowserAdmin(browserAdmin._id,mapDetails.monitoring_grid);
 
       if(monitored_result){
@@ -576,7 +919,7 @@ const removeAgentFromRoute = async(e, agent) => {
 }
 
 
-hideConfirm=()=>{
+const hideConfirm = () => {
       setMapDetails({...mapDetails,
         showConfirm: {
           action: "",
@@ -586,34 +929,34 @@ hideConfirm=()=>{
     })
 }
 
-  closeAction=(e)=>{
-        setMapDetails({...mapDetails,
-          action: "close",
-          action_message: ""
-      })
-  }
+const closeAction = (e) => {
+    setMapDetails({...mapDetails,
+        action: "close",
+        action_message: ""
+    })
+}
 
-  closeSideBar=(e)=>{
-        setMapDetails({...mapDetails,
-          play_sound: false,
-          side_bar_open: false,
-          location_side_bar_open: false,
-          manual_location_side_bar: false,
-          agent_side_bar_open: false,
-          selected_location: {},
-          selected_emergency: {},
-          clicked_marker_id: ""
-      })
-  }
+const closeSideBar = (e) => {
+    setMapDetails({...mapDetails,
+        play_sound: false,
+        side_bar_open: false,
+        location_side_bar_open: false,
+        manual_location_side_bar: false,
+        agent_side_bar_open: false,
+        selected_location: {},
+        selected_emergency: {},
+        clicked_marker_id: ""
+    })
+}
 
-  closeAgentSideBar=(e)=>{
-        setMapDetails({...mapDetails,
-          clicked_agent: {},
-          agent_side_bar_open: false
-      })
-  }
+const closeAgentSideBar = (e) => {
+    setMapDetails({...mapDetails,
+        clicked_agent: {},
+        agent_side_bar_open: false
+    })
+}
 
-  closeRouteResponse=(route_response)=>{
+const closeRouteResponse = (route_response) => {
     let array = mapDetails.route_responses_from_agents;
 
     array.splice(array.indexOf(route_response),1);
@@ -624,16 +967,16 @@ hideConfirm=()=>{
     })
 }
 
-  getSelectedAgentsIds=()=>{
-     
-  }
+const getSelectedAgentsIds = () =>{
+    
+}
 
-  setSelectedAgentsFromIds=(ids)=>{
-     
-  }
+const setSelectedAgentsFromIds = (ids) => {
+    
+}
 
-  //we get the monitoring grid from the server and update our variables
-  const getMonitoringGridFromServerAndReconcileAssignedAgents=()=>{
+//we get the monitoring grid from the server and update our variables
+const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
         showLoading();
         const response = await API.getMonitoringGrid();
 
@@ -708,7 +1051,7 @@ hideConfirm=()=>{
         }
   }
 
-  const setUpAssignedAgentsIfAny=(monitoring_grid)=>{
+  const setUpAssignedAgentsIfAny = async(monitoring_grid) => {
       var assigned_agents = persistence.getAssignedAgents();
 
       if(assigned_agents && assigned_agents.length > 0){
@@ -721,7 +1064,7 @@ hideConfirm=()=>{
                 persistence.saveAssignedAgents(result[0]);
 
                 //we subscribe to the id of each agent
-                var list =   mapDetails.channels_list.concat(result[0]);
+                let list = mapDetails.channels_list.concat(result[0]);
                 
                 //Refactor  ---------------------------------------------------------------------
 
@@ -731,7 +1074,7 @@ hideConfirm=()=>{
 
                 //Refactor End  ---------------------------------------------------------------------
 
-             setMapDetails({...mapDetails,
+                setMapDetails({...mapDetails,
                     laser_agents: result[1],
                     channels_list: list
                 })
@@ -746,360 +1089,8 @@ hideConfirm=()=>{
       }
   }
 
-  componentWillUnmount=()=> {
 
-      //Refactor  ---------------------------------------------------------------------
-
-      pubnub.unsubscribe({
-          channels:   mapDetails.channels_list
-      });
-
-      //Refactor End  ---------------------------------------------------------------------
-  }
-
-  const componentDidMount=()=>{
-
-    //Refactor  ---------------------------------------------------------------------
-
-    //subscribe to the parent channel to receive location updates from agents
-    pubnub.subscribe({
-        channels:   mapDetails.channels_list
-    })
-
-    //Refactor End  ---------------------------------------------------------------------
-
-    setMapDetails({...mapDetails,
-        laser_agents: []
-    })
-
-    getMonitoringGridFromServerAndReconcileAssignedAgents();
-
-    var responses = persistence.getCompletedEmergenciesResponse();
-
-    if(responses && responses.length > 0){
-        setMapDetails({...mapDetails,
-            route_responses_from_agents: responses
-        })
-    }
-
-    //Refactor  ---------------------------------------------------------------------
-
-    pubnub.addListener({
-      status: (st) => {
-            if(st.category === "PNNetworkUpCategory"){
-                setMapDetails({...mapDetails,
-                    action: "message",
-                    action_message: "You are back online."
-                })
-                getMonitoringGridFromServerAndReconcileAssignedAgents();
-            }
-
-            if(st.category === "PNConnectedCategory"){
-                //intentionally left blank
-            }
-
-            if (st.category === "PNReconnectedCategory") {
-                setMapDetails({...mapDetails,
-                    action: "message",
-                    action_message: "You are back online."
-                })
-                getMonitoringGridFromServerAndReconcileAssignedAgents();
-            }
-
-            if (st.category === "PNNetworkIssuesCategory") {
-                setMapDetails({...mapDetails,
-                    action: "message",
-                    action_message: "It appears there is a network issue."
-                })
-            }
-
-            if (st.category === "PNNetworkDownCategory") {
-                setMapDetails({...mapDetails,
-                    action: "message",
-                    action_message: "It appears the network is down."
-                })
-            }
-
-            if (st.category === "PNTimeoutCategory") {
-                setMapDetails({...mapDetails,
-                    action: "message",
-                    action_message: "Could not connect to the internet."
-                })
-            }
-      },
-      message: (message) => {
-
-          /*var tracked_user_id =   mapDetails.tracked_users.find(id => id === message.channel);
-
-          if(tracked_user_id){
-                //the message is from a user currently being monitored
-                if(message.userMetadata && message.userMetadata.action === "user_location_update"){
-                    var arr =   mapDetails.emergencies.map(emergency => {
-                        if(emergency.user === tracked_user_id){
-                            emergency.latitude = message.message.latitude;
-                            emergency.longitude = message.message.longitude;
-                            return emergency;
-                        }
-                        else{
-                            return emergency;
-                        }
-                    })
-
-                    //var found_emergency =   mapDetails.emergencies.find(emergency => emergency.user ===   mapDetails.tracked_user_id);
-
-                    (state => {
-                        return{
-                            emergencies: arr
-                        }
-                    })
-                }
-          }*/
-
-          utils.getAdminEmergencyMonitored(browserAdmin._id,   mapDetails.monitoring_grid)
-                        .then(emergency_full_row => {
-                            var emergency_monitored = emergency_full_row.emergency;
-
-                            if(message.channel === emergency_monitored._id ){
-                                if(message.userMetadata && message.userMetadata.action === "user_location_update"){
-                                    
-                                    var arr =   mapDetails.emergencies.map(emergency => {
-                                        if(emergency.user === emergency_monitored.user){
-                                            emergency.latitude = message.message.latitude;
-                                            emergency.longitude = message.message.longitude;
-                                            return emergency;
-                                        }
-                                        else{
-                                            return emergency;
-                                        }
-                                    })
-                
-                                    //var found_emergency =   mapDetails.emergencies.find(emergency => emergency.user ===   mapDetails.tracked_user_id);
-                
-                                   setMapDetails({
-                                       ...mapDetails,
-                                       emergencies: arr
-                                   })
-                                }
-                            }
-                        })
-                        .catch(err => {
-
-                        })
-          
-          //if(message.channel ===   mapDetails.tracked_area ){
-            
-              if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
-                  try{
-                    console.log(message.message.agent)
-                  }
-                  catch(err){
-
-                  }
-                  utils.updateAgentLocation(message.message,   mapDetails.laser_agents,   mapDetails.monitoring_grid, browserAdmin._id)
-                            .then(sorted_agents => {
-                                setMapDetails({
-                                    ...mapDetails,
-                                        laser_agents: sorted_agents
-                                    
-                                })
-                            }) 
-                            .catch(err => {
-                                console.log(err)
-                            })
-              }
-          //}
-
-          //we check the response of an agent that has been assigned, whether the agent sent a message to decilne
-          if(message.userMetadata && message.userMetadata.action === "route_request_response"){
-                //we check which agent is responding to the emergency request
-                var emergency_agent = message.message;
-
-                if(message.channel === emergency_agent._id ){
-                    showLoading();
-
-                    var assigned_agents = persistence.getAssignedAgents();
-
-                    //we get the agent full profile from the persisted listof assigned agents
-                    utils.getAgentFromAssignedAgentsInPersistence(assigned_agents, emergency_agent._id)
-                                .then(agent_found =>{
-                                    //we proceed to remove the agent from the emergency and update the monitoring grid and all other parts of the system
-                                    removeAgentFromEmergencyAfterDecliningRequest(agent_found);
-                                })
-                                .catch(err => {
-                                  
-                                    setMapDetails({
-                                        ...mapDetails,
-                                        action: "message",
-                                        action_message: "Agent " +emergency_agent.firstname +" declined to attend to emergency but an error occurred updating the system. Please manually remove the agent from emergency"
-                                    })
-                                })
-                }
-          }
-
-          if(message.userMetadata && message.userMetadata.action === "route_completed"){
-                //show message that agent has completed route
-
-                var responses = persistence.getCompletedEmergenciesResponse();
-
-                utils.getAdminEmergencyMonitored(browserAdmin._id,   mapDetails.monitoring_grid)
-                        .then(emergency_monitored => {
-
-                            var assigned_agents = persistence.getAssignedAgents();
-
-                            //we get the agent full profile from the persisted listof assigned agents
-                            utils.getAgentFromAssignedAgentsInPersistence(assigned_agents, message.message._id)
-                                        .then(agent_found =>{
-                                            if(responses && responses.length > 0){
-                                                responses.push({agent:agent_found, user: emergency_monitored.emergency});
-                                            }
-                                            else{
-                                                responses = [{agent:agent_found, user: emergency_monitored.emergency}];
-                                            }
-                            
-                                            persistence.saveCompletedEmergenciesResponse(responses);
-                            
-                                            setMapDetails({
-                                                ...mapDetails,
-                                                route_responses_from_agents: responses
-                                            })
-                                        })
-                                        .catch(err => {
-                                            
-                                        })
-
-                        })
-                        .catch(err => {
-                            
-                        })
-          } 
-          
-      }
-    });
-
-    //Refactor End  ---------------------------------------------------------------------
-
-    /*const socket = socketIOClient(socket_io_url, {
-        //withCredentials: true
-    });*/
-
-    const socket = io(socket_io_url)
-
-    socket.on("connect", 
-      () => console.log("connected to socket io")
-    );
-
-    socket.on("reconnect", attempt => {
-        console.log("Socket IO Reconnected")
-        //successfully reconnected
-        //get the lastest data
-    })
-
-    //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
-    socket.on("emergency", 
-      
-      data => {
-         if(data){
-            
-            let arr =   mapDetails.emergencies;
-            let lat =   mapDetails.latest;
-            
-            lat.push(data);
-            arr.push(data) 
-
-            setMapDetails({
-                ...mapDetails,
-                play_sound: true,
-                latest: lat,
-                clicked_marker_id: data._id,
-                zoom: 18,
-                emergencies: arr,
-                center: {
-                    lat: data.latitude,
-                    lng: data.longitude
-                }
-            })
-         }
-      }
-    );
-
-    socket.on("call", 
-      data => {
-        if(data){
-            let arr =   mapDetails.locations;
-            let lat =   mapDetails.latest;
-            
-            lat.push(data);
-            arr.push(data)
-            
-            setMapDetails({
-                ...mapDetails,
-                play_sound: true,
-                latest: lat,
-                clicked_marker_id: data._id,
-                zoom: 18,
-                locations: arr,
-                center: {
-                lat: data.latitude,
-                lng: data.longitude
-                }
-            })
-        }
-      }
-    );
-
-    socket.on("monitoring_update", (id) => {
-        if(id !== browserAdmin._id){
-            //pull the monitoring grid and re-evaluate variables
-            //show loading UI
-            showLoading();
-
-            var monitoring_grid = [];
-
-            API.getMonitoringGrid()
-                .then(response => {
-                    monitoring_grid = response.data;
-
-                    utils.reconcileAllAgentsWithMonitoringGrid(  mapDetails.laser_agents, response.data, browserAdmin._id)
-                            .then(lasers => {
-                                setMapDetails({
-                                    ...mapDetails,
-                                    monitoring_grid: monitoring_grid,
-                                    laser_agents: lasers      
-                                })
-
-                                hideLoading();
-                            })
-                            .catch(err => {
-                                setMapDetails({
-                                    ...mapDetails,
-                                    monitoring_grid: monitoring_grid         
-                                })
-
-                                hideLoading();
-                            })
-                })
-                .catch(err => {
-                    setMapDetails({
-                        ...mapDetails,
-                        monitoring_grid: monitoring_grid         
-                    })
-
-                    hideLoading();
-                })
-        }
-    });
-
-    getLocations();
-    getEmergencies();
-  }
-
-
-
-
-
-
-
-  const removeAgentFromEmergencyAfterDecliningRequest=(agent)=>{
+  const removeAgentFromEmergencyAfterDecliningRequest = async (agent) =>{
     showLoading();
 
     const result = await utils.removeAgentFromBrowserAdminMonitoringGrid(agent, browserAdmin._id,   mapDetails.monitoring_grid,   mapDetails.laser_agents);
@@ -1175,7 +1166,7 @@ hideConfirm=()=>{
 
 
   //this is not showing the agents in the same lga
-  const getAgentsAroundEmergency = () => {
+  const getAgentsAroundEmergency = async () => {
     //show the agents around an emergency
     //search to see if an emergency is being monitored by the admin browser
     utils.checkIfEmergencyMonitoredByBrowserAdmin(browserAdmin._id, mapDetails.monitoring_grid)
@@ -1334,7 +1325,6 @@ hideConfirm=()=>{
          getEmergenciesDate(date);
     }
 
-
     const onCallsChanged = (e) => {
         e.preventDefault();
         
@@ -1344,12 +1334,12 @@ hideConfirm=()=>{
   
         let arr = [];
   
-        if(state.locations.length>0){
+        if(mapDetails.locations.length>0){
             if(value==="Calls (All)"){
               setMapDetails({
                   ...mapDetails,
                   play_sound: false,
-                  filtered_locations: state.locations,
+                  filtered_locations: mapDetails.locations,
                   side_bar_open: false, 
                   selected_call: value,
                   agent_side_bar_open: false,
@@ -1550,7 +1540,7 @@ hideConfirm=()=>{
                             title={loc.full_name}
                             position={{lat: loc.latitude, lng: loc.longitude}}
                             icon={{
-                                url: (state.clicked_marker_id===loc._id) ? blue_circle : call_icon
+                                url: (mapDetails.clicked_marker_id===loc._id) ? blue_circle : call_icon
                             }}/> 
             })
         }
@@ -1668,7 +1658,7 @@ hideConfirm=()=>{
     }
 
 
-  const getEmergencies = () => {
+  const getEmergencies = async() => {
     const response = await API.getEmergencies({date: today})
 
     if(response=="error"){
@@ -1683,7 +1673,7 @@ hideConfirm=()=>{
     }
 
     if(response&&response.data&&response.data.emergencies&&response.data.emergencies.length>0){
-        var loc = state.latest;
+        var loc = mapDetails.latest;
 
         for(var i = 0; i<response.data.emergencies.length; i++){
             loc.push(response.data.emergencies[i]);
@@ -1721,7 +1711,7 @@ hideConfirm=()=>{
 
 
 
-const getLocations = () => {
+const getLocations = async() => {
 
     const response = await API.getLocations({date: today})
 
@@ -1971,7 +1961,7 @@ const closeConfirmAddressNotFoundClicked = () => {
     this.hideConfirmManualLocation();
 }
 
-const saveManualLocation = (location) => {
+const saveManualLocation = async(location) => {
       const response = await API.createManualLocation(location)
       
       if(response=="error"){
@@ -2030,10 +2020,92 @@ const saveManualLocation = (location) => {
 }
 
 
+const getLocationsDate = async(date) => {
+    const response = await API.getLocations({date})
+    
+    if(response=="error"){
+        setMapDetails({
+            ...mapDetails,
+            action: "err_calls_load",
+            locations: [],
+            filtered_locations: []
+        })
+
+        return;
+    }
+
+    if(response&&response.data&&response.data.locations){
+        if(mapDetails.action === "loading"){
+            setMapDetails({
+                ...mapDetails,
+                action: "close",
+                locations: response.data.locations,
+                filtered_locations: response.data.locations
+            })
+        }
+        else{
+            setMapDetails({
+                ...mapDetails,
+                locations: response.data.locations,
+                filtered_locations: response.data.locations
+            })
+        }
+    }
+    else{
+        setMapDetails({
+            ...mapDetails,
+            action: "close",
+            locations: [],
+            filtered_locations: []
+        })
+    }
+}
+
+const getEmergenciesDate = async(date) => {
+    const response = await API.getEmergencies({date})
+    
+    if(response=="error"){
+        setMapDetails({
+            ...mapDetails,
+            action: "err_emergency_load",
+            emergencies: [],
+            filtered_emergencies: []
+        })
+        return;
+    }
+
+    if(response&&response.data&&response.data.emergencies){
+        if(mapDetails.action === "loading"){
+            setMapDetails({
+                ...mapDetails,
+                action: "close",
+                emergencies: response.data.emergencies,
+                filtered_emergencies: response.data.emergencies
+            })
+        }
+        else{
+            setMapDetails({
+                ...mapDetails,
+                emergencies: response.data.emergencies,
+                filtered_emergencies: response.data.emergencies
+            })
+        }
+    }
+    else{
+        setMapDetails({
+            ...mapDetails,
+            action: "close",
+            emergencies: [],
+            filtered_emergencies: []
+        })
+    }
+}
+
+
 return <div className="laser-parent-div" style={mapStyle}>
             <Latest latest={  mapDetails.latest} latestClicked={latestClicked}/>
-            {show_location_side_bar}
-            {show_side_bar}
+            {mapDetails.show_location_side_bar}
+            {mapDetails.show_side_bar}
             {  mapDetails.showConfirmManualLocation ? <ConfirmAddressNotFound closeConfirmAddressNotFoundClicked={continueConfirmAddressNotFoundClicked} tryAgainClicked={continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={hideConfirmManualLocation} /> : ""}
             {  mapDetails.manual_location_side_bar ? <AddCallManually onFieldChanged={onFieldChanged} closeSidebar={closeSideBar} selected_manual_call={  mapDetails.selected_manual_call} selected_manual_gender={  mapDetails.selected_manual_gender} manual_address={  mapDetails.manual_address} manual_name={  mapDetails.manual_name} onManualCallChanged={onManualCallChanged} onManualGenderChanged={onManualGenderChanged}  onSubmitManualCallDetails={onSubmitManualCallDetails}/> : "" }
             
@@ -2044,9 +2116,9 @@ return <div className="laser-parent-div" style={mapStyle}>
             <TopPanel showMonitoredEmergency={showMonitoredEmergency} openManualLocation={openManualLocation} logout={logout} onCalendarOpen={onCalendarOpen} onDateChange={onDateChange} date={  mapDetails.date} selected_call={  mapDetails.selected_call} 
             onCallsChanged={onCallsChanged} selected_emergency={  mapDetails.selected_emergency} onEmergenciesChanged={onEmergenciesChanged} getAgentsAroundEmergency={getAgentsAroundEmergency}/>
 
-            <Map google={props.google} 
+            <Map google={google} 
                 style={mapStyle}
-                onReady={fetchPlaces}
+                onReady={mapDetails.fetchPlaces}
                 initialCenter={  mapDetails.center}
                 center={  mapDetails.center}
                 zoom={  mapDetails.zoom}>
@@ -2063,17 +2135,18 @@ return <div className="laser-parent-div" style={mapStyle}>
 
             <Loader isLoading={  mapDetails.isLoading}/>
 
-            {sound}
+            {mapDetails.sound}
 
             {
                 mapDetails.route_responses_from_agents.length > 0 ?  <RouteStatus route_response={  mapDetails.route_responses_from_agents[  mapDetails.route_responses_from_agents.length - 1]} removeAgentFromRouteAndCloseRouteResponse={removeAgentFromRouteAndCloseRouteResponse} closeRouteResponse={closeRouteResponse} /> : ""
             }
 
             {
-                mapDetails.showConfirm.status===true ? <ConfirmAction  yesClicked={  mapDetails.showConfirm.action==="emergency" ? resolveEmergency : resolveCall} noClicked={hideConfirm} message={  mapDetails.message} /> : ""
+                mapDetails.showConfirm.status===true ? <ConfirmAction  yesClicked={  mapDetails.showConfirm.action==="emergency" ? mapDetails.resolveEmergency : mapDetails.resolveCall} noClicked={hideConfirm} message={  mapDetails.message} /> : ""
             }
-</div>
+    </div>
 }
 
-
-export default Dashboard;
+export default GoogleApiWrapper({
+    apiKey: ('AIzaSyADNxHcgsHDyx_OSbqxBg5xB5lV2YJDcKI')
+})(Dashboard)
