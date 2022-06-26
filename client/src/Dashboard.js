@@ -66,7 +66,7 @@ const mapStyle = {
 }
 
 //const socket_io_url = 'http://18.192.254.193';
-const socket_io_url = 'http://localhost:3077';
+const socket_io_url = 'http://192.168.203.39:3080';
 
 let todays_date = new Date().toISOString();
 
@@ -364,7 +364,7 @@ const Dashboard = ({logout, google}) => {
         const socket = io(socket_io_url)
 
         socket.on("connect", 
-        () => console.log("connected to socket io")
+            () => console.log("connected to socket io")
         );
 
         socket.on("reconnect", attempt => {
@@ -849,6 +849,8 @@ const removeAgentFromRoute = async(e, agent) => {
         //check if another admin is monitoring the emergency
         const boolean_value = await utils.checkIfEmergencyMonitoredByOtherAdmin(  mapDetails.monitoring_grid, item, browserAdmin._id);
 
+        console.log(boolean_value);
+
         if(boolean_value){
             //the emergency is being monitored by another admin
             //tell the browser admin about this
@@ -861,13 +863,19 @@ const removeAgentFromRoute = async(e, agent) => {
             //we continue by editing the monitoring_grid and persisting it
             const new_monitoring_grid = await utils.setEmergencyOnMonitoringGrid(item,mapDetails.monitoring_grid, browserAdmin._id);
             
+            console.log(new_monitoring_grid);
+
             const result = await API.saveMonitoringGrid(new_monitoring_grid);
             
-            if(result.data==="successful"){
+            console.log({result});
+
+            if(result && result.result){
                 //the grid was successfully saved 
                 //change monitoring grid in local state
                 //subscribe to channel if user chose to be tracked
                 //show message
+
+                console.log(result);
 
                 var list =mapDetails.channels_list ?mapDetails.channels_list : [];
 
@@ -897,7 +905,7 @@ const removeAgentFromRoute = async(e, agent) => {
                 })  
             }
 
-            if(result.data==="unsuccessful"){
+            if(!result){
                 //the grid was NOT successfully saved 
                 //show message
                 setMapDetails({...mapDetails,
@@ -1445,6 +1453,7 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
         
               if(arr.length>0){
                     setMapDetails({
+                        ...mapDetails,
                         play_sound: false,
                         filtered_emergencies:arr,
                         selected_emergency: value,
@@ -1480,6 +1489,7 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
 
     const onCallClicked = (location,e) => {
             setMapDetails({
+                ...mapDetails,
                 play_sound: false,
                 clicked_user: location,
                 clicked_agent: {},
@@ -1499,9 +1509,9 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
     }
 
     const onEmergencyClicked = (emergency,e) => {
-        e.preventDefault()
-
+       
         setMapDetails({
+            ...mapDetails,
             play_sound: false,
             clicked_user: emergency,
             clicked_agent: {},
@@ -1533,7 +1543,7 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
     const getLocationsMarkers = () => {
         let locations_ui;
 
-        if(mapDetails.filtered_locations.length>0){
+        if(mapDetails.filtered_locations && mapDetails.filtered_locations.length>0){
             locations_ui = mapDetails.filtered_locations.map(loc => {
                 return  <Marker key={loc._id} onClick={e => onCallClicked(loc,e)}
                             name={loc.reason} 
@@ -1550,7 +1560,6 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
         
         return locations_ui;
     }
-
 
     const getEmergenciesMarkers = () => {
         let emergencies_ui;
@@ -2104,8 +2113,8 @@ const getEmergenciesDate = async(date) => {
 
 return <div className="laser-parent-div" style={mapStyle}>
             <Latest latest={  mapDetails.latest} latestClicked={latestClicked}/>
-            {mapDetails.show_location_side_bar}
-            {mapDetails.show_side_bar}
+            {  mapDetails.show_location_side_bar}
+            {  mapDetails.side_bar_open && <Sidebar closeSidebar={closeSideBar} startMonitoring={startMonitoring} emergency={mapDetails.clicked_user} resolve={showConfirmResolveEmergency} /> }
             {  mapDetails.showConfirmManualLocation ? <ConfirmAddressNotFound closeConfirmAddressNotFoundClicked={continueConfirmAddressNotFoundClicked} tryAgainClicked={continueConfirmAddressNotFoundClicked} hideConfirmManualLocation={hideConfirmManualLocation} /> : ""}
             {  mapDetails.manual_location_side_bar ? <AddCallManually onFieldChanged={onFieldChanged} closeSidebar={closeSideBar} selected_manual_call={  mapDetails.selected_manual_call} selected_manual_gender={  mapDetails.selected_manual_gender} manual_address={  mapDetails.manual_address} manual_name={  mapDetails.manual_name} onManualCallChanged={onManualCallChanged} onManualGenderChanged={onManualGenderChanged}  onSubmitManualCallDetails={onSubmitManualCallDetails}/> : "" }
             

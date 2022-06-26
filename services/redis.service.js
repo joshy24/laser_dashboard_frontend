@@ -1,24 +1,25 @@
+
 module.exports.setAdminMonitoring = function(content, cb){
-    client.hset("admin_monitorings", "content", JSON.stringify(content), (err, result) => {
+    client.HSET("admin_monitorings", "content", JSON.stringify(content), (err, result) => {
         if(err){
             console.log({err})
             cb(false);
         }
         else{
+            console.log({saveResult: result})
             cb(true);
         }
-        
     })
 }
 
+module.exports.getAdminMonitoring = async (cb) => {
+    try{
+        const result = await client.HGET("admin_monitorings", "content")
 
-module.exports.getAdminMonitoring = function(cb){
-    client.hget("admin_monitorings", "content", (err, result) => {
-        if(err){
-            cb(false);
-        }
-        else{
-            cb(JSON.parse(result));
-        }
-    })
+        cb(JSON.parse(result));
+    }
+    catch(err){
+        cb(false)
+        console.log(err)
+    }
 }

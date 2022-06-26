@@ -9,6 +9,9 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const bunyan = require('bunyan');
 
+const client =  require("./modules/redis.config")
+global.client;
+
 global.path = require('path');
 
 require('dotenv').config();
@@ -32,25 +35,6 @@ app.disable('x-powered-by');
 
 
 
-//redis code
-const redis = require("redis")
-
-const client = redis.createClient();
-
-client.connect()
-
-client.on('connect', () => {
-    console.log("Connected to redis server");
-});
-
-client.on('error', err => {
-    console.log(`Error: ${err}`);
-});
-//end of redis code
-
-
-
-
 var NodeGeocoder = require('node-geocoder');
  
 var options = {
@@ -70,6 +54,10 @@ global.geocoder = NodeGeocoder(options);
 /* Start of socket-io stuff*/
 
 var http = require('http').createServer(app);
+
+//const { Server } = require("socket.io");
+//const io = new Server(http);
+
 global.io = require('socket.io')(http, {
     cors: {
         origin: "http://localhost:3000",

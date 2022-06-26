@@ -32,6 +32,8 @@ module.exports.login = function(req,res){
     UserService.readUserPhoneNumberFirstname(new_number, firstname)
                 .then(user => {
                     if(!user){
+                        console.log({user});
+                        
                         return res.status(404).send({"response": "not found"});
                     }
                     else{

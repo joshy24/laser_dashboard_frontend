@@ -2223,7 +2223,7 @@ async removeAgentFromRoute(e, agent){
     let show_side_bar;
     
     if(state.side_bar_open){
-        
+        show_side_bar = <Sidebar closeSidebar={closeSideBar} startMonitoring={startMonitoring} emergency={state.clicked_user} resolve={this.showConfirmResolveEmergency} />
     }
     else{
         show_side_bar = "";

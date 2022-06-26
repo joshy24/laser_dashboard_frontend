@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import LatestItem from './LatestItem';
 
+import "../App.css"
+
 import ScrollToBottom from 'react-scroll-to-bottom';
 
 const styling = {
@@ -12,12 +14,23 @@ export default class Latest extends Component{
     constructor(props){
         super(props);
 
-        this.state= {
-
-        }
-
-
         this.itemClicked = this.itemClicked.bind(this);
+    }
+
+    state= {
+        latest: new Set()
+    }
+
+    componentDidMount(){
+        const ourSet = new Set()
+        
+        this.props.latest.forEach(latestItem => {
+            ourSet.add(latestItem)
+        })
+
+        this.setState({
+            latest: ourSet
+        })
     }
 
     itemClicked(e, item){
@@ -32,7 +45,7 @@ export default class Latest extends Component{
                 <ScrollToBottom style={styling}>
                     {
                         this.props.latest.map(item => {
-                            return <LatestItem key={item._id} itemClicked={this.itemClicked} item={item}/>
+                            return this.state.latest.has(item) ? <></> : <LatestItem key={item._id} itemClicked={this.itemClicked} item={item}/>
                         })
                     }
                 </ScrollToBottom>
