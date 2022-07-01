@@ -3,7 +3,6 @@ import red_circle from './icons/emergency_with_circle.gif';
 import blue_circle from './icons/call_with_circle.gif';
 import emergency_icon from './icons/emergency.gif';
 import call_icon from './icons/call.gif';
-import car_test from './icons/car_test.png';
 import './App.css'; 
 
 //import police_car from './icons/vector/police_car.svg'
@@ -49,8 +48,6 @@ import Geocode from "react-geocode";
 
 import Loader from './components/Loader';
 
-import './App.css';
-
 import * as API from './api/Api';
 
 import AuthHelperMethods from './auth/AuthHelperMethods';
@@ -66,7 +63,7 @@ const mapStyle = {
 }
 
 //const socket_io_url = 'http://18.192.254.193';
-const socket_io_url = 'http://192.168.203.39:3080';
+const socket_io_url = 'http://192.168.211.39:3080';
 
 let todays_date = new Date().toISOString();
 
@@ -128,7 +125,6 @@ const Dashboard = ({logout, google}) => {
     })
 
     useEffect(() => {
-
         pubnub.unsubscribe({
             channels:   mapDetails.channels_list
         });
@@ -150,7 +146,7 @@ const Dashboard = ({logout, google}) => {
         setMapDetails({...mapDetails,
             laser_agents: []
         })
-
+        
         getMonitoringGridFromServerAndReconcileAssignedAgents();
 
         var responses = persistence.getCompletedEmergenciesResponse();
@@ -164,7 +160,9 @@ const Dashboard = ({logout, google}) => {
         //Refactor  ---------------------------------------------------------------------
 
         pubnub.addListener({
-        status: (st) => {
+
+            status: (st) => {
+
                 if(st.category === "PNNetworkUpCategory"){
                     setMapDetails({...mapDetails,
                         action: "message",
@@ -206,7 +204,9 @@ const Dashboard = ({logout, google}) => {
                     })
                 }
         },
-        message: (message) => {
+        message: (event) => {
+
+            const message = event.message;
 
             /*var tracked_user_id =   mapDetails.tracked_users.find(id => id === message.channel);
 
@@ -266,26 +266,27 @@ const Dashboard = ({logout, google}) => {
                             })
             
             //if(message.channel ===   mapDetails.tracked_area ){
-                
-                if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
-                    try{
-                        console.log(message.message.agent)
-                    }
-                    catch(err){
-
-                    }
-                    utils.updateAgentLocation(message.message,   mapDetails.laser_agents,   mapDetails.monitoring_grid, browserAdmin._id)
-                                .then(sorted_agents => {
-                                    setMapDetails({
-                                        ...mapDetails,
-                                            laser_agents: sorted_agents
-                                        
-                                    })
-                                }) 
-                                .catch(err => {
-                                    console.log(err)
-                                })
+            
+            if(message.userMetadata && message.userMetadata.action === "agent_location_update"){
+                try{
+                    console.log(message.message.agent)
                 }
+                catch(err){
+                    
+                }
+
+                utils.updateAgentLocation(message.message,   mapDetails.laser_agents,   mapDetails.monitoring_grid, browserAdmin._id)
+                            .then(sorted_agents => {
+                                setMapDetails({
+                                    ...mapDetails,
+                                        laser_agents: sorted_agents
+                                    
+                                })
+                            }) 
+                            .catch(err => {
+                                console.log(err)
+                            })
+            }
             //}
 
             //we check the response of an agent that has been assigned, whether the agent sent a message to decilne
@@ -374,13 +375,14 @@ const Dashboard = ({logout, google}) => {
         })
 
         //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
-        socket.on("emergency", 
-        
-        data => {
+        socket.on("emergency", data => {
             if(data){
                 
                 let arr =   mapDetails.emergencies;
                 let lat =   mapDetails.latest;
+
+                let fe = mapDetails.filtered_emergencies
+                fe.push(data)
                 
                 lat.push(data);
                 arr.push(data) 
@@ -392,6 +394,7 @@ const Dashboard = ({logout, google}) => {
                     clicked_marker_id: data._id,
                     zoom: 18,
                     emergencies: arr,
+                    filtered_emergencies: fe,
                     center: {
                         lat: data.latitude,
                         lng: data.longitude
@@ -401,8 +404,7 @@ const Dashboard = ({logout, google}) => {
         }
         );
 
-        socket.on("call", 
-        data => {
+        socket.on("call", data => {
             if(data){
                 let arr =   mapDetails.locations;
                 let lat =   mapDetails.latest;
@@ -440,6 +442,7 @@ const Dashboard = ({logout, google}) => {
 
                         utils.reconcileAllAgentsWithMonitoringGrid(  mapDetails.laser_agents, response.data, browserAdmin._id)
                                 .then(lasers => {
+                                    
                                     setMapDetails({
                                         ...mapDetails,
                                         monitoring_grid: monitoring_grid,
@@ -471,7 +474,6 @@ const Dashboard = ({logout, google}) => {
         getLocations();
         getEmergencies();
 
-
     }, [])
 
     function showLoading(){
@@ -488,7 +490,7 @@ const Dashboard = ({logout, google}) => {
 
     const showMonitoredEmergency = async(e) => {
         const emergency_full_row = await utils.getAdminEmergencyMonitored(browserAdmin._id, mapDetails.monitoring_grid);
-        
+
         if(emergency_full_row && emergency_full_row.emergency){
             var item = emergency_full_row.emergency;
             
@@ -843,13 +845,11 @@ const removeAgentFromRoute = async(e, agent) => {
     
 
 
-  const startMonitoring= async (e, item)=>{
+  const startMonitoring = async (e, item)=>{
         
     try{
         //check if another admin is monitoring the emergency
         const boolean_value = await utils.checkIfEmergencyMonitoredByOtherAdmin(  mapDetails.monitoring_grid, item, browserAdmin._id);
-
-        console.log(boolean_value);
 
         if(boolean_value){
             //the emergency is being monitored by another admin
@@ -863,21 +863,15 @@ const removeAgentFromRoute = async(e, agent) => {
             //we continue by editing the monitoring_grid and persisting it
             const new_monitoring_grid = await utils.setEmergencyOnMonitoringGrid(item,mapDetails.monitoring_grid, browserAdmin._id);
             
-            console.log(new_monitoring_grid);
-
             const result = await API.saveMonitoringGrid(new_monitoring_grid);
             
-            console.log({result});
-
-            if(result && result.result){
+            if(result.data==="successful"){
                 //the grid was successfully saved 
                 //change monitoring grid in local state
                 //subscribe to channel if user chose to be tracked
                 //show message
 
-                console.log(result);
-
-                var list =mapDetails.channels_list ?mapDetails.channels_list : [];
+                var list = mapDetails.channels_list ? mapDetails.channels_list : [];
 
                 //we subscribe to the items channel ONLY if the item is trackable
                 if(item.is_trackable){ 
@@ -905,7 +899,7 @@ const removeAgentFromRoute = async(e, agent) => {
                 })  
             }
 
-            if(!result){
+            if(result.data==="unsuccessful"){
                 //the grid was NOT successfully saved 
                 //show message
                 setMapDetails({...mapDetails,
@@ -986,6 +980,7 @@ const setSelectedAgentsFromIds = (ids) => {
 //we get the monitoring grid from the server and update our variables
 const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
         showLoading();
+
         const response = await API.getMonitoringGrid();
 
         if(response){
@@ -993,13 +988,15 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
            
             utils.getAdminEmergencyMonitored(browserAdmin._id, response.data)
                     .then(emergency_full_row => {
+
                         var admin_emergency = emergency_full_row.emergency;
 
                         if(admin_emergency){
-                            
+
                             //we need to subscribe to the emergencies user id to receive location updates
-                            if(  mapDetails.channels_list.indexOf(admin_emergency.user) === -1){
-                                var list =   mapDetails.channels_list.concat([admin_emergency.user]);
+                            if( mapDetails.channels_list.indexOf(admin_emergency.user) === -1){
+                                
+                                var list = mapDetails.channels_list.concat([admin_emergency.user]);
                                 
                                 //Refactor  ---------------------------------------------------------------------
 
@@ -1009,16 +1006,16 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
 
                                 //Refactor End ---------------------------------------------------------------------
             
-                                  setMapDetails({...mapDetails,
+                                setMapDetails({...mapDetails,
                                     action: "message",
                                     action_message: "You are monitoring "+admin_emergency.full_name,
                                     monitoring_grid: response.data,
                                     channels_list: list
                                 })
+
                                 hideLoading();
                             }
                             else{
-
                                 //Refactor  ---------------------------------------------------------------------
 
                                 pubnub.subscribe({
@@ -1027,22 +1024,24 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
 
                                 //Refactor End  ---------------------------------------------------------------------
             
-                                  setMapDetails({...mapDetails,
+                                setMapDetails({...mapDetails,
                                     action: "message",
                                     action_message: "You are monitoring "+admin_emergency.full_name,
                                     monitoring_grid: response.data
-                                })
+                                });
+                                
                                 hideLoading();
                             }
                         }
                         else{
                               setMapDetails({...mapDetails,
                                 monitoring_grid: response.data
-                            })
-                            hideLoading();
+                              })
+                              hideLoading();
                         }
                     })
                     .catch(err => {
+                        console.log(err)
                         setMapDetails({...mapDetails,
                             monitoring_grid: response.data
                         })
@@ -1096,7 +1095,6 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
             }
       }
   }
-
 
   const removeAgentFromEmergencyAfterDecliningRequest = async (agent) =>{
     showLoading();
@@ -1322,7 +1320,7 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
             date: date,
             show_red_circle: false,
             show_blue_circle: false,
-            clicked_marker_id: "",
+            clicked_marker_id: " ",
             action: "loading",
             action_message: "",
             selected_call:"Calls (All)", 
@@ -1563,9 +1561,11 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
 
     const getEmergenciesMarkers = () => {
         let emergencies_ui;
-  
-        if(mapDetails.filtered_emergencies.length>0){
-            emergencies_ui = mapDetails.filtered_emergencies.map(emer => {
+
+        let emergencies_to_show = mapDetails.filtered_emergencies.concat(mapDetails.filtered_emergencies);
+        
+        if(emergencies_to_show.length>0){
+            emergencies_ui = emergencies_to_show.map(emer => {
               
               return <Marker key={emer._id} onClick={e => onEmergencyClicked(emer,e)}
                         name={emer.reasons[0]} 
@@ -2141,8 +2141,6 @@ return <div className="laser-parent-div" style={mapStyle}>
             <Loader isLoading={  mapDetails.isLoading}/>
 
             <Action action={  mapDetails.action} closeAction={closeAction} message={  mapDetails.action_message}/>
-
-            <Loader isLoading={  mapDetails.isLoading}/>
 
             {mapDetails.sound}
 

@@ -450,9 +450,7 @@ module.exports.setAdminMonitorings = (req,res) => {
     const id = req.admin._id;
 
     RedisService.setAdminMonitoring(monitorings, (result => {
-        console.log(result)
         if(result){
-            
             io.emit("monitoring_update", id);
             return res.status(200).send("successful");
         }

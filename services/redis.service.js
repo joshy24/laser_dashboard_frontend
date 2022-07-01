@@ -1,15 +1,14 @@
 
-module.exports.setAdminMonitoring = function(content, cb){
-    client.HSET("admin_monitorings", "content", JSON.stringify(content), (err, result) => {
-        if(err){
-            console.log({err})
-            cb(false);
-        }
-        else{
-            console.log({saveResult: result})
-            cb(true);
-        }
-    })
+module.exports.setAdminMonitoring = async (content, cb) => {
+    try{
+        const result = await client.HSET("admin_monitorings", "content", JSON.stringify(content))
+        
+        cb(true);
+    }
+    catch(err){
+        console.log({err})
+        cb(false);
+    }
 }
 
 module.exports.getAdminMonitoring = async (cb) => {
@@ -19,7 +18,7 @@ module.exports.getAdminMonitoring = async (cb) => {
         cb(JSON.parse(result));
     }
     catch(err){
-        cb(false)
         console.log(err)
+        cb(false)
     }
 }
