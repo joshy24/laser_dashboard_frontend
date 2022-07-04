@@ -63,7 +63,7 @@ const mapStyle = {
 }
 
 //const socket_io_url = 'http://18.192.254.193';
-const socket_io_url = 'http://192.168.211.39:3080';
+const socket_io_url = 'http://localhost:3080';
 
 let todays_date = new Date().toISOString();
 
@@ -124,15 +124,14 @@ const Dashboard = ({logout, google}) => {
         isLoading: false
     })
 
-    useEffect(() => {
-        pubnub.unsubscribe({
-            channels:   mapDetails.channels_list
-        });
-
-    }, [])
+    
 
     useEffect(() => {
         browserAdmin = Auth.getAdmin();
+
+        if(!browserAdmin){
+            //logout
+        }
 
         //Refactor  ---------------------------------------------------------------------
 
@@ -146,8 +145,7 @@ const Dashboard = ({logout, google}) => {
         setMapDetails({...mapDetails,
             laser_agents: []
         })
-        
-        getMonitoringGridFromServerAndReconcileAssignedAgents();
+    
 
         var responses = persistence.getCompletedEmergenciesResponse();
 
@@ -157,8 +155,15 @@ const Dashboard = ({logout, google}) => {
             })
         }
 
-        //Refactor  ---------------------------------------------------------------------
+        loadSocketIO();
 
+        loadPubnub();
+
+        loadShit();
+
+    }, [])
+
+    const loadPubnub = () => {
         pubnub.addListener({
 
             status: (st) => {
@@ -355,10 +360,10 @@ const Dashboard = ({logout, google}) => {
             
         }
         });
+    }
 
-        //Refactor End  ---------------------------------------------------------------------
-
-        /*const socket = socketIOClient(socket_io_url, {
+    const loadSocketIO = () => {
+         /*const socket = socketIOClient(socket_io_url, {
             //withCredentials: true
         });*/
 
@@ -470,11 +475,17 @@ const Dashboard = ({logout, google}) => {
                     })
             }
         });
+    }
 
-        getLocations();
-        getEmergencies();
+    const loadShit = async () => {
+        await getMonitoringGridFromServerAndReconcileAssignedAgents();
+        await getLocations();
+        await getEmergencies();
+    }
 
-    }, [])
+    useEffect(() => {
+        console.log(mapDetails.latest)
+    }, [mapDetails])
 
     function showLoading(){
         setMapDetails({...mapDetails, isLoading: true})
@@ -489,6 +500,7 @@ const Dashboard = ({logout, google}) => {
     }
 
     const showMonitoredEmergency = async(e) => {
+        console.log(mapDetails.monitoring_grid)
         const emergency_full_row = await utils.getAdminEmergencyMonitored(browserAdmin._id, mapDetails.monitoring_grid);
 
         if(emergency_full_row && emergency_full_row.emergency){
@@ -527,8 +539,7 @@ const Dashboard = ({logout, google}) => {
             }
         }
         else{
-            setMapDetails({...mapDetails, action: "message",
-            action_message: "You are not monitoring any emergency or call at the moment",})
+            setMapDetails({...mapDetails, action: "message", action_message: "You are not monitoring any emergency or call at the moment",})
         }
     }
     
@@ -978,75 +989,63 @@ const setSelectedAgentsFromIds = (ids) => {
 }
 
 //we get the monitoring grid from the server and update our variables
-const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
-        showLoading();
+const getMonitoringGridFromServerAndReconcileAssignedAgents = async() => {
 
         const response = await API.getMonitoringGrid();
 
         if(response){
             setUpAssignedAgentsIfAny(response.data);
            
-            utils.getAdminEmergencyMonitored(browserAdmin._id, response.data)
-                    .then(emergency_full_row => {
+            const emergency_full_row = await utils.getAdminEmergencyMonitored(browserAdmin._id, response.data)
 
-                        var admin_emergency = emergency_full_row.emergency;
+            var admin_emergency = emergency_full_row.emergency;
 
-                        if(admin_emergency){
+            if(admin_emergency){
 
-                            //we need to subscribe to the emergencies user id to receive location updates
-                            if( mapDetails.channels_list.indexOf(admin_emergency.user) === -1){
-                                
-                                var list = mapDetails.channels_list.concat([admin_emergency.user]);
-                                
-                                //Refactor  ---------------------------------------------------------------------
+                //we need to subscribe to the emergencies user id to receive location updates
+                if( mapDetails.channels_list.indexOf(admin_emergency.user) === -1){
+                    
+                    var list = mapDetails.channels_list.concat([admin_emergency.user]);
+                    
+                    //Refactor  ---------------------------------------------------------------------
 
-                                pubnub.subscribe({
-                                    channels: list
-                                })
-
-                                //Refactor End ---------------------------------------------------------------------
-            
-                                setMapDetails({...mapDetails,
-                                    action: "message",
-                                    action_message: "You are monitoring "+admin_emergency.full_name,
-                                    monitoring_grid: response.data,
-                                    channels_list: list
-                                })
-
-                                hideLoading();
-                            }
-                            else{
-                                //Refactor  ---------------------------------------------------------------------
-
-                                pubnub.subscribe({
-                                    channels:   mapDetails.channels_list
-                                })
-
-                                //Refactor End  ---------------------------------------------------------------------
-            
-                                setMapDetails({...mapDetails,
-                                    action: "message",
-                                    action_message: "You are monitoring "+admin_emergency.full_name,
-                                    monitoring_grid: response.data
-                                });
-                                
-                                hideLoading();
-                            }
-                        }
-                        else{
-                              setMapDetails({...mapDetails,
-                                monitoring_grid: response.data
-                              })
-                              hideLoading();
-                        }
+                    pubnub.subscribe({
+                        channels: list
                     })
-                    .catch(err => {
-                        console.log(err)
-                        setMapDetails({...mapDetails,
-                            monitoring_grid: response.data
-                        })
-                        hideLoading();
+
+                    setMapDetails({...mapDetails, 
+                        action: "message",
+                        action_message: "You are monitoring "+admin_emergency.full_name,
+                        monitoring_grid: response.data,
+                        channels_list: list
+                    });
+
+                    hideLoading();
+                }
+                else{
+                    //Refactor  ---------------------------------------------------------------------
+
+                    pubnub.subscribe({
+                        channels:   mapDetails.channels_list
                     })
+                    
+                    //Refactor End  ---------------------------------------------------------------------
+
+                    setMapDetails({...mapDetails,
+                        action: "message",
+                        action_message: "You are monitoring "+admin_emergency.full_name,
+                        monitoring_grid: response.data
+                    });
+                    
+                    hideLoading();
+                }
+            }
+            else{
+                setMapDetails({...mapDetails,
+                    monitoring_grid: response.data
+                })
+                hideLoading();
+            }
         }
         else{
             //show appropriate message
@@ -1609,65 +1608,64 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
         return agents_ui;
     }
 
-    const getAgentIcon = (agent) => {
-
-        if(agent){
-              //we got the icon
-              switch(agent.agent.department){
-                  case "police":
-                      switch(agent.status){
-                          case "idle":
-                              return police_car;
-                          break;
-                          case "infocus":
-                              return police_car_in_focus;
-                          break;
-                          case "using":
-                              return police_car_using;
-                          break;
-                          case "using_by_other":
-                              return police_car_using_other;
-                          break;
-                      }
-                  break;
-                  case "fire":
-                      switch(agent.status){
-                          case "idle":
-                              return fire_car;
-                          break;
-                          case "infocus":
-                              return fire_car_in_focus;
-                          break;
-                          case "using":
-                              return fire_car_using;
-                          break;
-                          case "using_by_other":
-                              return fire_car_using_other;
-                          break;
-                      }
-                  break;
-                  case "hospital":
-                      switch(agent.status){
-                          case "idle":
-                              return ambulance;
-                          break;
-                          case "infocus":
-                              return ambulance_in_focus;
-                          break;
-                          case "using":
-                              return ambulance_using;
-                          break;
-                          case "using_by_other":
-                              return ambulance_using_other;
-                          break;
-                      }
-                  break;
-              }
+const getAgentIcon = (agent) => {
+    if(agent){
+        //we got the icon
+        switch(agent.agent.department){
+            case "police":
+                switch(agent.status){
+                    case "idle":
+                        return police_car;
+                    break;
+                    case "infocus":
+                        return police_car_in_focus;
+                    break;
+                    case "using":
+                        return police_car_using;
+                    break;
+                    case "using_by_other":
+                        return police_car_using_other;
+                    break;
+                }
+            break;
+            case "fire":
+                switch(agent.status){
+                    case "idle":
+                        return fire_car;
+                    break;
+                    case "infocus":
+                        return fire_car_in_focus;
+                    break;
+                    case "using":
+                        return fire_car_using;
+                    break;
+                    case "using_by_other":
+                        return fire_car_using_other;
+                    break;
+                }
+            break;
+            case "hospital":
+                switch(agent.status){
+                    case "idle":
+                        return ambulance;
+                    break;
+                    case "infocus":
+                        return ambulance_in_focus;
+                    break;
+                    case "using":
+                        return ambulance_using;
+                    break;
+                    case "using_by_other":
+                        return ambulance_using_other;
+                    break;
+                }
+            break;
         }
     }
+}
 
 
-  const getEmergencies = async() => {
+const getEmergencies = async() => {
     const response = await API.getEmergencies({date: today})
 
     if(response=="error"){
@@ -1685,10 +1683,14 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
         var loc = mapDetails.latest;
 
         for(var i = 0; i<response.data.emergencies.length; i++){
-            loc.push(response.data.emergencies[i]);
+            if(!loc.includes(response.data.emergencies[i])){
+                
+            }
         }
 
         loc = utils.sortDates(loc);
+
+        console.log(loc)
 
         if(mapDetails.action === "loading"){
             setMapDetails({
@@ -1718,8 +1720,6 @@ const getMonitoringGridFromServerAndReconcileAssignedAgents = async () => {
     }
 }
 
-
-
 const getLocations = async() => {
 
     const response = await API.getLocations({date: today})
@@ -1739,11 +1739,13 @@ const getLocations = async() => {
         var loc = mapDetails.latest;
 
         for(var i = 0; i<response.data.locations.length; i++){
-            loc.push(response.data.locations[i]);
+            if(!loc.includes(response.data.locations[i])){
+                loc.push(response.data.locations[i]);
+            }
         }
-
+        
         loc = utils.sortDates(loc);
-
+        
         if(mapDetails.action === "loading"){
             setMapDetails({
                 ...mapDetails,
@@ -1781,31 +1783,31 @@ const handleSongFinishedPlaying = () => {
 }
 
 const onFieldChanged = (e) => {
-  const target = e.target;
-  const value = target.type === 'checkbox' ? target.checked : target.value;
-  const name = target.name;
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
 
-  setMapDetails({...mapDetails, [name]: value})
+    setMapDetails({...mapDetails, [name]: value})
 }
 
 const onManualCallChanged = (e) => {
-  const target = e.target;
-  const value = target.value;
+    const target = e.target;
+    const value = target.value;
 
-  setMapDetails({
-      ...mapDetails,
-      selected_manual_call: value
+    setMapDetails({
+        ...mapDetails,
+        selected_manual_call: value
   })
 }
 
 const onManualGenderChanged = (e) => {
-  const target = e.target;
-  const value = target.value;
+    const target = e.target;
+    const value = target.value;
 
-  setMapDetails({
-      ...mapDetails,
-      selected_manual_gender: value
-  })
+    setMapDetails({
+        ...mapDetails,
+        selected_manual_gender: value
+    })
 }
 
 const onSubmitManualCallDetails = (e) => {
@@ -1881,14 +1883,14 @@ const onSubmitManualCallDetails = (e) => {
 
           },
           error => {
-          console.error(error);
+            console.error(error);
 
-          setMapDetails({
-              ...mapDetails,
-              action: "message",
-              action_message: "We could not find that address",
-              showConfirmManualLocation: true
-          })
+            setMapDetails({
+                ...mapDetails,
+                action: "message",
+                action_message: "We could not find that address",
+                showConfirmManualLocation: true
+            })
           }
     );
 }

@@ -17,22 +17,6 @@ export default class Latest extends Component{
         this.itemClicked = this.itemClicked.bind(this);
     }
 
-    state= {
-        latest: new Set()
-    }
-
-    componentDidMount(){
-        const ourSet = new Set()
-        
-        this.props.latest.forEach(latestItem => {
-            ourSet.add(latestItem)
-        })
-
-        this.setState({
-            latest: ourSet
-        })
-    }
-
     itemClicked(e, item){
         e.preventDefault();
         this.props.latestClicked(item);
@@ -44,8 +28,8 @@ export default class Latest extends Component{
                 <h4 className="text-center laser-black-text">Latest Reports</h4>    
                 <ScrollToBottom style={styling}>
                     {
-                        this.props.latest.map(item => {
-                            return this.state.latest.has(item) ? <></> : <LatestItem key={item._id} itemClicked={this.itemClicked} item={item}/>
+                        this.props.latest.forEach(item => {
+                            return <LatestItem key={item._id} itemClicked={this.itemClicked} item={item}/>
                         })
                     }
                 </ScrollToBottom>

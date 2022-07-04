@@ -25,7 +25,8 @@ const dateStyle = {
 
 const controls_style = {
     marginLeft:"8px",
-    marginRight: "8px"
+    marginRight: "8px",
+    fontSize: "14px"
 }
 
 export default class TopPanel extends Component{
@@ -34,7 +35,7 @@ export default class TopPanel extends Component{
         return (
             <div className="laser-top-panel">
                 
-                <h4 className="laser-inline laser-header-text"> Laser Emergency Admin - Monitoring and Dispatch</h4>
+                <h4 className="laser-inline laser-header-text"> Laser Monitoring and Dispatch</h4>
                 
                 <div className="laser-controls">
                     {
@@ -52,10 +53,11 @@ export default class TopPanel extends Component{
                             onCalendarOpen={this.props.onCalendarOpen}
                             maxDate={new Date()}
                             style={dateStyle}
+                            className="laser-date-picker"
                             onChange={this.props.onDateChange}
                             value={this.props.date}/>
                     </div>  
-
+                    
                     <select style={controls_style} className="form-control laser-inline laser-150-width" id="calls" name="calls" value={this.props.selected_call} onChange={this.props.onCallsChanged}>
                         <option>Calls (All)</option>
                         <option>Emergency Management(LASEMA)</option>

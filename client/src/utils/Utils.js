@@ -22,8 +22,24 @@ export default class Util{
             return dateA - dateB;
         });
           
-        return arr;
+        let uniqueChars = [...new Set(arr)];
+
+        return uniqueChars;
     }
+
+    removeDuplicates = (arr) => {
+
+    }
+
+    /*sortDates(aSet){
+        const arr = Array.from(aSet).sort(function compare(a, b) {
+            var dateA = new Date(a.created);
+            var dateB = new Date(b.created);
+            return dateA - dateB;
+        });
+          
+        return arr;
+    }*/
 
     //idle
     //infocus
