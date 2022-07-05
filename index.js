@@ -53,19 +53,19 @@ global.geocoder = NodeGeocoder(options);
 
 /* Start of socket-io stuff*/
 
-var http = require('http').createServer(app, {
-    cors: {
-        origin: ["https://laser-dashboard-react.vercel.app", "https://pristine-haleakala-89476.herokuapp.com", "http://localhost:3000"],
-        methods: ["GET", "POST"],
-        //allowedHeaders: ["my-custom-header"],
-        //credentials: true
-    }
-});
+var http = require('http').createServer(app);
 
 //const { Server } = require("socket.io");
 //const io = new Server(http);
 
-global.io = require('socket.io')(http);
+global.io = require('socket.io')(http, {
+    cors: {
+        origin: ["https://laser-dashboard-react.vercel.app", "https://pristine-haleakala-89476.herokuapp.com", "http://localhost:3000"],
+        methods: ["GET", "POST"],
+        //allowedHeaders: ["my-custom-header"],
+        credentials: true
+    }
+});
 
 io.on("connection", socket => {
     console.log("New client connected");
