@@ -1,6 +1,8 @@
 const redis = require("redis")
 
-client = redis.createClient();
+let client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
+
+//let client = redis.createClient();
 
 client.on('connect', () => {
     console.log("Connected to redis server");
