@@ -53,7 +53,14 @@ global.geocoder = NodeGeocoder(options);
 
 /* Start of socket-io stuff*/
 
-var http = require('http').createServer(app);
+var http = require('http').createServer(app, {
+    cors: {
+      origin: "https://laser-dashboard-react.vercel.app",
+      methods: ["GET", "POST"],
+      //allowedHeaders: ["my-custom-header"],
+      credentials: false
+    }
+  });
 
 //const { Server } = require("socket.io");
 //const io = new Server(http);
