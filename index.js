@@ -73,7 +73,7 @@ io.on("connection", socket => {
     socket.on("disconnect", () => console.log("Client disconnected"));
 });
 
-http.listen(config.socket.port, () => console.log(`Socket IO listening on port ${config.socket.port}`));
+//http.listen(config.socket.port, () => console.log(`Socket IO listening on port ${config.socket.port}`));
 
 /* End of socket-io stuff*/
 
@@ -131,6 +131,9 @@ const PORT = process.env.PORT || 3077;
 const server = app.listen(PORT, function(){
     console.log("Express started on " +config.base_url +' in '+config.env +' environment. Press Ctrl + C to terminate');
     mongoose.connect(config.db.uri , config.db.options)
-    .then(()=> { log.info(`Succesfully Connected to the Mongodb Database`)})
+    .then(()=> { 
+        log.info(`Succesfully Connected to the Mongodb Database`)
+        log.info('Socket IO listening on *:'+process.env.PORT);
+    })
     .catch((error)=> { log.error(error)})
 });
