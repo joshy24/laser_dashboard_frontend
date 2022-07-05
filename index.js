@@ -55,12 +55,12 @@ global.geocoder = NodeGeocoder(options);
 
 var http = require('http').createServer(app, {
     cors: {
-      origin: "https://laser-dashboard-react.vercel.app",
-      methods: ["GET", "POST"],
-      //allowedHeaders: ["my-custom-header"],
-      credentials: true
+        origin: ["https://laser-dashboard-react.vercel.app", "https://pristine-haleakala-89476.herokuapp.com"],
+        methods: ["GET", "POST"],
+        //allowedHeaders: ["my-custom-header"],
+        credentials: true
     }
-  });
+});
 
 //const { Server } = require("socket.io");
 //const io = new Server(http);
