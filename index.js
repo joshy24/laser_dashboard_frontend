@@ -58,7 +58,7 @@ var http = require('http').createServer(app, {
       origin: "https://laser-dashboard-react.vercel.app",
       methods: ["GET", "POST"],
       //allowedHeaders: ["my-custom-header"],
-      credentials: false
+      credentials: true
     }
   });
 
