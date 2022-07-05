@@ -58,13 +58,7 @@ var http = require('http').createServer(app);
 //const { Server } = require("socket.io");
 //const io = new Server(http);
 
-global.io = require('socket.io')(http, {
-    cors: {
-        origin: "*",
-        //credentials: true,
-        methods: ["GET", "POST"],
-    }
-});
+global.io = require('socket.io')(http);
 
 io.on("connection", socket => {
     console.log("New client connected");
