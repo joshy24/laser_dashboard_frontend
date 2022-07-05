@@ -58,7 +58,7 @@ var http = require('http').createServer(app, {
         origin: ["https://laser-dashboard-react.vercel.app", "https://pristine-haleakala-89476.herokuapp.com", "http://localhost:3000"],
         methods: ["GET", "POST"],
         //allowedHeaders: ["my-custom-header"],
-        credentials: true
+        //credentials: true
     }
 });
 
