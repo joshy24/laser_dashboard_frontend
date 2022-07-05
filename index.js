@@ -61,7 +61,7 @@ var http = require('http').createServer(app);
 global.io = require('socket.io')(http, {
     cors: {
         origin: "https://laser-dashboard-react.vercel.app/",
-        credentials: true,
+        //credentials: true,
         methods: ["GET", "POST"],
     }
 });
