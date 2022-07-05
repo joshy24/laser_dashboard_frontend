@@ -123,7 +123,7 @@ app.get('*', (req, res) => {
 http.listen(process.env.PORT, function(){
     console.log("Express started on " +process.env.PORT +' in '+config.env +' environment. Press Ctrl + C to terminate');
 
-    log.info('Socket IO listening on *:'+process.env.PORT);
+    log.info('Socket IO listening on :'+process.env.PORT);
 
     mongoose.connect(config.db.uri , config.db.options)
     .then(()=> { 
