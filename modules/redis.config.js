@@ -12,6 +12,6 @@ client.on('error', err => {
     console.log(`Error: ${err}`);
 });
 
-//client.connect()
+client.connect();
 
 module.exports.client = client;
