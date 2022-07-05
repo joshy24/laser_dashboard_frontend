@@ -118,16 +118,14 @@ app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 
-const PORT = process.env.PORT || 3077;
-
-
 //DB connection
-const server = app.listen(PORT, function(){
+const server = app.listen(process.env.PORT, function(){
     console.log("Express started on " +config.base_url +' in '+config.env +' environment. Press Ctrl + C to terminate');
+
     mongoose.connect(config.db.uri , config.db.options)
     .then(()=> { 
         log.info(`Succesfully Connected to the Mongodb Database`)
         log.info('Socket IO listening on *:'+process.env.PORT);
     })
-    .catch((error)=> { log.error(error)})
+    .catch((error)=> { log.error(error) })
 });
