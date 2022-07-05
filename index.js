@@ -93,6 +93,7 @@ app.use(function(req, res, next) {
 
 app.use(helmet({
     frameguard: {action: 'deny'},
+    contentSecurityPolicy: false,
 }))
 
 
@@ -119,7 +120,7 @@ app.get('*', (req, res) => {
 });
 
 //DB connection
-const server = app.listen(process.env.PORT, function(){
+http.listen(process.env.PORT, function(){
     console.log("Express started on " +config.base_url +' in '+config.env +' environment. Press Ctrl + C to terminate');
 
     mongoose.connect(config.db.uri , config.db.options)
