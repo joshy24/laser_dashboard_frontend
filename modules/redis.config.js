@@ -9,7 +9,7 @@ client.on('connect', () => {
 });
 
 client.on('error', err => {
-    console.log(`Error: ${err}`);
+    //console.log(`Error: ${err}`);
 });
 
 client.connect();
