@@ -1,6 +1,6 @@
 const redis = require("redis")
 
-CONST client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
+const client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
 
 //let client = redis.createClient();
 
