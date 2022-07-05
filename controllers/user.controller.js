@@ -308,6 +308,7 @@ module.exports.saveEmergencyLocation = function(req,res){
     }
 }
 
+
 module.exports.sendEmergencyMessage = function(req,res){
     var lat = req.body.latitude;
     var lng = req.body.longitude;
