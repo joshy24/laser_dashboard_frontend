@@ -4,6 +4,7 @@ const client = redis.createClient({url: process.env.REDIS_URL});
 
 //let client = redis.createClient();
 
+
 client.on('connect', () => {
     console.log("Connected to redis server");
 });
