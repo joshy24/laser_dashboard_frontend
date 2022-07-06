@@ -10,6 +10,7 @@ const cors = require('cors');
 const bunyan = require('bunyan');
 
 const client =  require("./modules/redis.config")
+
 global.client;
 
 global.path = require('path');

@@ -1,6 +1,6 @@
 const redis = require("redis")
 
-const client = redis.createClient({url: process.env.REDISCLOUD_URL});
+const client = redis.createClient({url: process.env.REDIS_URL});
 
 //let client = redis.createClient();
 
@@ -9,7 +9,7 @@ client.on('connect', () => {
 });
 
 client.on('error', err => {
-    //console.log(`Error: ${err}`);
+    console.log(`Error: ${err}`);
 });
 
 client.connect();
